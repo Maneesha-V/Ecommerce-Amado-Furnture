@@ -1,0 +1,128 @@
+<style>
+    .wishlist-item {
+        width: 100%;
+        /* Makes the item take full width of its container */
+        box-sizing: border-box;
+        /* Includes padding and border in the element's total width */
+        margin-bottom: 1.5rem;
+        /* Adds spacing between items */
+    }
+
+    .wishlist_product_img img {
+        width: 100%;
+        /* Makes sure the image fits the container */
+        height: auto;
+        /* Keeps the aspect ratio of the image */
+    }
+
+    .wishlist_product_desc {
+        padding: 15px;
+        /* Adjust padding as needed */
+    }
+
+    .wishlist-table {
+        width: 100%;
+        /* Ensures the table takes full width of the container */
+    }
+
+    .add-to-cart-btn {
+        display: flex;
+        align-items: center;
+        /* Aligns items vertically in the center */
+    }
+
+    .add-to-cart-btn a,
+    .add-to-cart-btn button {
+        margin-right: 10px;
+        /* Spacing between the buttons */
+    }
+</style>
+<%- include('../layouts/user/header.ejs')%>
+    <div class="wishlist-table-area section-padding-100">
+        <nav aria-label="breadcrumb" class="breadcrumb-nav">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
+                </ol>
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="wishlist-title mt-3 mb-3">
+                        <h2>Your Wishlist</h2>
+                    </div>
+                    <% if(products.length===0) { %>
+                        <div class="no-items">
+                            <h4>Your wishlist is empty</h4>
+                            <p>It looks like you have no items in your wishlist. Start exploring!</p>
+                            <a href="/shop" class="btn btn-primary">Continue Shopping</a>
+                        </div>
+                        <% } else { %>
+                            <div class="wishlist-table clearfix">
+                                <div id="wishlist-items">
+                                    <% products.forEach(product=> { %>
+                                        <!-- Wishlist Item with Unified Background Color -->
+                                        <div class="wishlist-item d-flex flex-column flex-sm-row align-items-center mb-3 p-4"
+                                            data-product-id="<%= product._id %>" data-price="<%= product.price %>"
+                                            style="background-color: #f8f9fa; border-radius: 8px;">
+
+                                            <!-- Product Image -->
+                                            <div class="wishlist_product_img col-12 col-sm-4 p-0">
+                                                <a href="/product-details/<%= product._id %>">
+                                                    <img src="<%= product.prodImages[0] %>" alt="<%= product.name %>"
+                                                        class="img-fluid">
+                                                </a>
+                                            </div>
+
+                                            <!-- Product Description -->
+                                            <div
+                                                class="wishlist_product_desc flex-grow-1 pl-sm-3 pt-3 pt-sm-0 col-12 col-sm-6">
+                                                <h5 class="mb-2">
+                                                    <%= product.name %>
+                                                </h5>
+                                                <span class="product-price d-block">Rs <%= product.price %></span>
+
+                                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                                    <div class="d-flex align-items-center">
+
+                                                        <!-- Add to Cart Form -->
+                                                        <form id="add-to-cart-form-<%= product._id %>"
+                                                            action="/shop-to-cart/<%= product._id %>" method="post">
+                                                            <input type="hidden" name="productId"
+                                                                value="<%= product._id %>">
+                                                            <input type="hidden" name="quantity" value="1" min="1"
+                                                                max="<%= product.stock %>">
+                                                            <button type="submit" class="btn btn-primary btn-sm"
+                                                                data-stock="<%= product.stock %>"
+                                                                onclick="addToCart('<%= product._id %>', event)">
+                                                                Add Cart
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Remove from Wishlist Button -->
+                                            <div class="col-12 col-sm-2 p-0 mt-2">
+                                                <form action="/wishlist/remove/<%= product._id %>" method="post">
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        <i class="fas fa-minus-circle"></i> Remove
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                </div>
+                            </div>
+                            <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+    <%- include('../layouts/user/footer.ejs')%>

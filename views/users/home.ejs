@@ -1,0 +1,36 @@
+<%- include('../layouts/user/header.ejs')%>
+    <div class="products-catagories-area clearfix">
+        <div class="amado-pro-catagory clearfix" style="display: flex;">
+            <% if (products.length> 0) { %>
+                <%products.forEach(product=>{%>
+                    <!-- Single Catagory -->
+                    <div class="single-products-catagory clearfix">
+                        <a href="/product-details/<%= product._id %>">
+                            <!-- <img src="/img/bg-img/1.jpg" alt=""> -->
+                            <img src="<%=product.prodImages[0]%>" alt="">
+                            <!-- Hover Content -->
+                            <div class="hover-content">
+                                <div class="line"></div>
+                                <p>From Rs <%=product.price%>
+                                </p>
+                                <h4>
+                                    <%=product.name%>
+                                </h4>
+                            </div>
+                        </a>
+                    </div>
+                    <%})%>
+                        <% } else { %>
+                            <!-- If no products found, show a message -->
+                            <div class="mt-5 p-5">
+                                <h2>No items found</h2>
+                                <p>Try searching with a different keyword.</p>
+                            </div>
+                            <% } %>
+        </div>
+    </div>
+    </div>
+    <!-- ##### Main Content Wrapper End ##### -->
+
+
+    <%- include('../layouts/user/footer.ejs')%>

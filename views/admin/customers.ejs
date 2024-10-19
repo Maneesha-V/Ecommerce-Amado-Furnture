@@ -1,0 +1,52 @@
+<%- include('../layouts/admin/header.ejs')%>
+  <div class="single-product-area section-padding-100 clearfix">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <h4>Customer Details</h4>
+          <table class="table table-warning table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Mobile</th>
+                <!-- <th scope="col">DOB</th> -->
+                <th scope="col">Email</th>
+                <th scope="col">Action</th>
+                <!-- <th></th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <% customers.forEach(customer=> {%>
+                <tr style="<%= customer.is_block ? 'background-color:#d13434ab;' : ''%>">
+                  <td>
+                    <%= customer._id %>
+                  </td>
+                  <td>
+                    <%= customer.firstname %>
+                  </td>
+                  <td>
+                    <%= customer.mobile %>
+                  </td>
+                  <!-- <td><%= customer.dob %></td> -->
+                  <td>
+                    <%= customer.email %>
+                  </td>
+                  <td>
+                    <form action="/admin/hide-customer/<%= customer._id %>" method="POST">
+                      <button type="submit" style="background: none; border: none; color: red; cursor: pointer;">
+                        <%= customer.is_block ? 'Unblock' : 'Block' %>
+                      </button>
+                    </form>
+                  </td>
+                  <!-- <td></td>                   -->
+                </tr>
+                <%})%>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <%- include('../layouts/admin/footer.ejs')%>

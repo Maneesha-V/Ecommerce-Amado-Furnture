@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <!-- Add your CSS files here -->
+    <link rel="stylesheet" href="/css/core-style.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        /* Container styling */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+        }
+
+        /* Header styling */
+        table thead tr {
+            background-color: #333;
+            color: #fff;
+            text-align: left;
+        }
+
+        table th,
+        table td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+
+        /* Body styling */
+        table tbody tr {
+            border-bottom: 1px solid #ddd;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* List in table cells */
+        table td ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        table td ul li {
+            margin-bottom: 5px;
+        }
+
+        /* Button styling */
+        button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #c0392b;
+        }
+
+        span {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        /* Form select dropdown */
+        select {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        select:focus {
+            border-color: #333;
+            outline: none;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pagination a,
+        .pagination span {
+            margin: 0 5px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .pagination a:hover {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .pagination span {
+            background-color: #333;
+            color: white;
+        }
+
+        /* Mobile responsiveness */
+        @media screen and (max-width: 768px) {
+            table thead {
+                display: none;
+            }
+
+            table,
+            table tbody,
+            table tr,
+            table td {
+                display: block;
+                width: 100%;
+            }
+
+            table tr {
+                margin-bottom: 15px;
+                border-bottom: 2px solid #ddd;
+                padding-bottom: 10px;
+            }
+
+            table td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+
+            table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 50%;
+                padding-left: 15px;
+                font-weight: bold;
+                text-align: left;
+            }
+
+            button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h3>Order Management</h3>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <!-- Go Back Button -->
+            <a href="/admin/dashboard" class="btn btn-secondary">
+                &larr; Go Back
+            </a>
+        </div>
+        <div class="col-12">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>User</th>
+                        <th>Items</th>
+                        <th>Total Amount</th>
+                        <th>Shipping Address</th>
+                        <th>Payment Status</th>
+                        <th>Payment Method</th>
+                        <th>Created At</th>
+                        <!-- <th>Actions</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (orders.length> 0) { %>
+                        <% orders.forEach(order=> { %>
+                            <tr>
+                                <td>
+                                    <%= order.orderNumber %>
+                                </td>
+                                <td>
+                                    <%= order.user.firstname %>
+                                        <%= order.user.lastname %>
+                                </td>
+                                <td>
+                                    <a href="/admin/items-status/<%= order._id%>" class="text-primary">View Items</a>
+                                </td>
+                                <td>₹<%= order.totalAmount %>
+                                </td>
+                                <td>
+                                    <ul>
+                                        <% if (order.matchingAddress) { %>
+                                            <li>
+                                                <%= order.matchingAddress.name %>,
+                                                    <%= order.matchingAddress.addressLine1 %>,
+                                                        <%= order.matchingAddress.addressLine2 ?
+                                                            order.matchingAddress.addressLine2 + ',' : '' %>
+                                                            <%= order.matchingAddress.district %>
+                                            </li>
+                                            <% } else { %>
+                                                <li>No Address Provided</li>
+                                                <% } %>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <form action="/admin/orders/<%= order._id%>/status?_method=PATCH" method="POST">
+                                        <select name="status"
+                                            onchange="updateOrderStatus('<%= order._id %>', this.value)">
+                                            <option value="Paid" <%=order.status==='Paid' ? 'selected' : '' %>>Paid
+                                            </option>
+                                            <option value="Pending" <%=order.status==='Pending' ? 'selected' : '' %>
+                                                >Pending</option>
+                                            <option value="Failed" <%=order.status==='Failed' ? 'selected' : '' %>
+                                                >Failed</option>
+                                        </select>
+                                    </form>
+                                </td>
+                                <td>
+                                    <%= order.paymentMethod %>
+                                </td>
+                                <td>
+                                    <%= order.createdAt.toLocaleDateString() %>
+                                </td>
+                                <!-- <td>
+                        <% if (order.status !== 'Canceled') { %>
+                            <form action="/admin/orders/<%= order._id %>/cancel" method="POST" onsubmit="return confirm('Are you sure you want to cancel this order?');">
+                                <button type="submit">Cancel</button>
+                            </form>
+                        <% } else { %>
+                            <span>Order Canceled</span>
+                        <% } %>
+                      </td> -->
+                            </tr>
+                            <% }) %>
+                                <%}%>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+
+        <div class="pagination">
+            <% if (currentPage> 1) { %>
+                <a href="?page=<%= currentPage - 1 %>">&laquo; Previous</a>
+                <% } %>
+                    <% for (let i=1; i <=totalPages; i++) { %>
+                        <% if (i===currentPage) { %>
+                            <span>
+                                <%= i %>
+                            </span>
+                            <% } else { %>
+                                <a href="?page=<%= i %>">
+                                    <%= i %>
+                                </a>
+                                <% } %>
+                                    <% } %>
+                                        <% if (currentPage < totalPages) { %>
+                                            <a href="?page=<%= currentPage + 1 %>">Next &raquo;</a>
+                                            <% } %>
+        </div>
+    </div>
+
+    <!-- Add your JavaScript files here -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function updateOrderStatus(orderId, newStatus) {
+            fetch(`/admin/orders/${orderId}/status?_method=PATCH`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus }),
+            })
+                .then(response => {
+                    return response.json().then(data => {
+                        if (!response.ok) {
+                            // Show SweetAlert for error
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: data.error || 'An unexpected error occurred',
+                            });
+                        } else {
+                            // Show SweetAlert for success
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: data.message || 'Order status updated successfully',
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error("Error occurred:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'An unexpected error occurred',
+                    });
+                });
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title  -->
+    <title>Amado - Furniture Ecommerce Template | Home</title>
+
+    <!-- Favicon  -->
+    <link rel="icon" href="/img/core-img/favicon.ico">
+
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="/css/core-style.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        .account-nav {
+            display: flex;
+            justify-content: start;
+            margin: 20px 0;
+            list-style: none;
+            padding: 0;
+        }
+
+        .account-nav li {
+            margin: 0 10px;
+        }
+
+        .account-nav li a {
+            display: block;
+            padding: 10px 15px;
+            background-color: #f8f8f8;
+            color: #333;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .account-nav li a:hover {
+            background-color: #e0e0e0;
+        }
+
+        .account-nav li a.active {
+            background-color: #d4d4d4;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Search Wrapper Area Start -->
+    <div class="search-wrapper section-padding-100">
+        <div class="search-close">
+            <i class="fa fa-close" aria-hidden="true"></i>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="search-content">
+                        <form action="#" method="get">
+                            <input type="search" name="search" id="search" placeholder="Type your keyword...">
+                            <button type="submit"><img src="/img/core-img/search.png" alt=""></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Search Wrapper Area End -->
+
+    <!-- ##### Main Content Wrapper Start ##### -->
+    <div class="main-content-wrapper d-flex clearfix">
+
+        <!-- Mobile Nav (max width 767px)-->
+        <div class="mobile-nav">
+            <!-- Navbar Brand -->
+            <div class="amado-navbar-brand">
+                <a href="index.html"><img src="/img/core-img/logo.png" alt=""></a>
+            </div>
+            <!-- Navbar Toggler -->
+            <div class="amado-navbar-toggler">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+
+        <!-- Header Area Start -->
+        <header class="header-area clearfix">
+            <!-- Close Icon -->
+            <div class="nav-close">
+                <i class="fa fa-close" aria-hidden="true"></i>
+            </div>
+            <!-- Logo -->
+            <div class="logo">
+                <a href="index.html"><img src="/img/core-img/logo.png" alt=""></a>
+            </div>
+            <!-- Amado Nav -->
+            <nav class="amado-nav">
+                <ul>
+                    <li class="active"><a href="/home">Home</a></li>
+                    <li><a href="/shop">Shop</a></li>
+                    <li><a href="/cart">Cart</a></li>
+                    <li><a href="/account">Account</a></li>
+                    <!-- <li class="profile-menu">
+                        <a href="javascript:void(0);">Account</a>
+                        <ul class="submenu">
+                            <li><a href="/profile/address">Address</a></li>
+                            <li><a href="/profile/orders">Orders</a></li>
+                            <li><a href="/profile/cart">Cart</a></li>
+                            <li><a href="/profile/edit">Profile Edit</a></li>
+                            <li><a href="/profile/forgot-password">Forgot Password</a></li>
+                        </ul>
+                    </li> -->
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </nav>
+            <!-- Button Group -->
+            <div class="amado-btn-group mt-30 mb-100">
+                <a href="#" class="btn amado-btn mb-15">%Coupon%</a>
+                <a href="#" class="btn amado-btn active">New this week</a>
+            </div>
+            <!-- Cart Menu -->
+            <div class="cart-fav-search mb-100">
+                <!-- <a href="cart.html" class="cart-nav"><img src="/img/core-img/cart.png" alt=""> Cart
+                    <span>(0)</span></a> -->
+                <a href="/wishlist" class="fav-nav"><img src="/img/core-img/favorites.png" alt=""> WISHLIST</a>
+                <!-- <a href="#" class="search-nav"><img src="/img/core-img/search.png" alt=""> Search</a> -->
+            </div>
+            <!-- Social Button -->
+            <div class="social-info d-flex justify-content-between">
+                <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+            </div>
+        </header>
+        <!-- Header Area End -->
+
+        <!-- ##### Account Page Content Start ##### -->
+        <div class="account-content-wrapper">
+            <div class="account-details-content mt-5">
+                <!-- Content for each section goes here -->
+                <h3>Account settings</h3>
+                <p>Select an option from the navigation below to view your account details, cart, orders, forget passord
+                    or to reset your password.</p>
+            </div>
+            <ul class="account-nav">
+                <li><a href="#" class="nav-link active" data-url="/account/account-details">Account Details</a></li>
+                <li><a href="#" class="nav-link" data-url="/account/address">Address</a></li>
+                <li><a href="#" class="nav-link" data-url="/account/orders">Orders</a></li>
+                <li><a href="#" class="nav-link" data-url="/account/wallet">Wallet</a></li>
+                <li><a href="#" class="nav-link" data-url="/account/change-password">Change Password</a></li>
+            </ul>
+            <div class="account-details-content mt-5" id="account-content-display">
+
+            </div>
+
+        </div>
+        <!-- ##### Account Page Content End ##### -->
+
+    </div>
+
+    <!-- ##### Footer Area Start ##### -->
+    <footer class="footer_area clearfix">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Single Widget Area -->
+                <div class="col-12 col-lg-4">
+                    <div class="single_widget_area">
+                        <!-- Logo -->
+                        <div class="footer-logo mr-50">
+                            <a href="index.html"><img src="/img/core-img/logo2.png" alt=""></a>
+                        </div>
+                        <!-- Copywrite Text -->
+                        <p class="copywrite">
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            Copyright &copy;
+                            <script>document.write(new Date().getFullYear());</script> All rights reserved | This
+                            template
+                            is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a
+                                href="https://colorlib.com" target="_blank">Colorlib</a> & Re-distributed by <a
+                                href="https://themewagon.com/" target="_blank">Themewagon</a>
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </p>
+                    </div>
+                </div>
+                <!-- Single Widget Area -->
+                <div class="col-12 col-lg-8">
+                    <div class="single_widget_area">
+                        <!-- Footer Menu -->
+                        <div class="footer_menu">
+                            <nav class="navbar navbar-expand-lg justify-content-end">
+                                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                    data-target="#footerNavContent" aria-controls="footerNavContent"
+                                    aria-expanded="false" aria-label="Toggle navigation"><i
+                                        class="fa fa-bars"></i></button>
+                                <div class="collapse navbar-collapse" id="footerNavContent">
+                                    <ul class="navbar-nav ml-auto">
+                                        <li class="nav-item active">
+                                            <a class="nav-link" href="index.html">Home</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="shop.html">Shop</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="product-details.html">Product</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="cart.html">Cart</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="checkout.html">Checkout</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- ##### Footer Area End ##### -->
+
+    <!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
+    <script src="js/jquery/jquery-2.2.4.min.js"></script>
+    <!-- Popper js -->
+    <script src="js/popper.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Plugins js -->
+    <script src="js/plugins.js"></script>
+    <!-- Active js -->
+    <script src="js/active.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script>
+        function togglePasswordVisibility(inputId, iconId) {
+            const passwordField = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(iconId);
+            console.log("pass", passwordField);
+            console.log("toggleIcon", toggleIcon);
+            // Toggle password field type and change icon
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.classList.remove("fa-eye");
+                toggleIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.classList.remove("fa-eye-slash");
+                toggleIcon.classList.add("fa-eye");
+            }
+        }
+
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const navLinks = document.querySelectorAll('.nav-link')
+            const contentContainer = document.getElementById('account-content-display');
+            console.log("contentContainer", contentContainer);
+
+            const user = <% - JSON.stringify(user) %>
+                // const user = <% - JSON.stringify(user || {}) %>;
+
+                // Function to update billing address
+                function updateBillingAddress(address) {
+                    const billingAddressDiv = document.getElementById('billing-address');
+                    if (billingAddressDiv) {
+                        billingAddressDiv.innerHTML = `
+            <p>
+                ${address.name || ''}<br>
+                ${address.addressLine1 || ''}<br>
+                ${address.addressLine2 || ''}<br>
+                ${address.mobile || ''}<br>
+                ${address.city || ''}<br>
+                ${address.district || ''}<br>
+                ${address.state || ''}, ${address.zip || ''}
+            </p>
+        `;
+                    }
+                }
+            if (user && user.defaultAddress) {
+                // console.log("default", user.defaultAddress);
+                const defaultAddress = user.addresses.find(address => address._id === user.defaultAddress.toString())
+
+
+                if (defaultAddress) {
+                    // console.log("defaultadd", defaultAddress);
+                    updateBillingAddress(defaultAddress)
+                    // console.log("update", updateBillingAddress(defaultAddress));
+
+                    const defaultCheckbox = document.querySelector(`.select-default-address[data-address-index="${user.addresses.findIndex(address => address._id === user.defaultAddress.toString())}"]`)
+                    if (defaultCheckbox) {
+                        defaultCheckbox.checked = true
+                    }
+                    // location.reload();
+                }
+            }
+
+            function loadContent(url, callback) {
+                fetch(url)
+                    .then(response => response.text())
+                    .then(data => {
+                        contentContainer.innerHTML = data
+                        if (callback)
+                            callback()
+                    })
+                    .catch(error => console.error('Error loading content:', error));
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    const url = this.getAttribute('data-url');
+                    loadContent(url, () => {
+                        navLinks.forEach(link => link.classList.remove('active'))
+                        this.classList.add('active')
+                    })
+                })
+            })
+
+            document.addEventListener('click', function (event) {
+
+                if (event.target.closest('.delete-address-link')) {
+                    const url = event.target.closest('.delete-address-link').getAttribute('data-url');
+                    const addressId = event.target.closest('.address-item').dataset.addressId;
+
+                    console.log(`URL for deletion: ${url}/${addressId}`); // Log the URL
+                    console.log(`Address ID: ${addressId}`); // Log the Address ID
+
+                    // Use SweetAlert2 for confirmation
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this address!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33', // Optional: Change confirm button color
+                        confirmButtonText: 'Delete',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Proceed with deletion
+                            fetch(`${url}/${addressId}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            })
+                                .then(response => {
+                                    // Ensure we get a valid response
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    if (data.success) {
+                                        // Remove the address item from the DOM
+                                        event.target.closest('.address-item').remove();
+                                        Swal.fire("Deleted!", "Your address has been deleted.", "success");
+                                    } else {
+                                        Swal.fire("Failed!", "There was a problem deleting the address.", "error");
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    Swal.fire("Error!", "An error occurred. Please try again.", "error");
+                                });
+                        } else {
+                            Swal.fire("Cancelled", "Your address is safe.", "info");
+                        }
+                    });
+                }
+
+                if (event.target.closest('.select-default-address')) {
+                    const checkbox = event.target
+                    console.log("check", checkbox);
+                    const addressIndex = checkbox.getAttribute('data-address-index')
+                    console.log("index", addressIndex);
+                    // console.log("useradd0", user[0].addresses);
+                    // console.log("useradd",user[0].addresses[addressIndex]);
+                    const selectedAddress = user.addresses[addressIndex]
+                    console.log("select", selectedAddress);
+
+                    // Update the billing address section
+                    updateBillingAddress(selectedAddress);
+                    //uncheck other checkboxes
+                    const checkboxes = document.querySelectorAll('.select-default-address');
+                    checkboxes.forEach(cb => {
+                        cb.checked = cb === checkbox;
+                    });
+                    fetch('/account/set-default-address', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'Application/json'
+                        },
+                        body: JSON.stringify({ addressId: selectedAddress._id })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (!data.success) {
+                                alert('Failed to set default address.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred. Please try again.');
+                        });
+                }
+
+            })
+
+            document.addEventListener('click', function (event) {
+                const isCancelButton = event.target.closest('.cancel-btn');
+                const isReturnButton = event.target.closest('.return-btn');
+
+                if (isCancelButton || isReturnButton) {
+                    event.preventDefault(); // Prevent default form submission
+                    const form = (isCancelButton || isReturnButton).closest('form');
+                    const itemId = form.getAttribute('data-item-id');
+                    const button = event.target;
+
+                    // Open the SweetAlert modal for entering the reason
+                    Swal.fire({
+                        title: isCancelButton ? 'Cancel Item' : 'Return Item',
+                        input: 'textarea',
+                        inputLabel: 'Please provide a reason',
+                        inputPlaceholder: 'Enter your reason here...',
+                        showCancelButton: true,
+                        confirmButtonText: isCancelButton ? 'Submit Cancellation' : 'Submit Return',
+                        cancelButtonText: 'Cancel',
+                        preConfirm: (reason) => {
+                            console.log("reason", reason);
+                            if (!reason) {
+                                Swal.showValidationMessage('Reason is required');
+                            }
+                            return reason; // Return the reason input
+                        }
+                    }).then((result) => {
+                        console.log("result", result);
+                        if (result.isConfirmed) {
+                            const reason = result.value;
+                            console.log("reason.isconf", reason);
+                            // Attach reason to the form data
+                            const formData = new FormData(form);
+                            formData.append('reason', reason); // Add the reason to the form data
+                            for (let pair of formData.entries()) {
+                                console.log(pair[0] + ': ' + pair[1]); // Log key-value pairs in FormData
+                            }
+                            console.log("formData", formData);
+                            // Send an AJAX request with the form data (including the reason)
+                            fetch(form.action, {
+                                method: 'POST',
+                                body: formData
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log("data", data);
+                                    if (!data.success) {
+                                        Swal.fire({
+                                            title: 'Action not allowed!',
+                                            text: data.message,
+                                            icon: 'error'
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Success!',
+                                            text: data.message,
+                                            icon: 'success'
+                                        }).then(() => {
+                                            // Update the item container status based on action
+                                            const itemContainer = document.getElementById(`item-${itemId}`);
+                                            // const statusElement = itemContainer.querySelector('.item-status p');
+                                            const itemStatusElement = itemContainer.querySelector('.item-status .item-status-text');
+                                            const returnStatusElement = itemContainer.querySelector('.item-status .return-status-text');
+
+                                            if (isReturnButton) {
+                                                button.textContent = 'Returned'; // Update button text
+                                                // button.disabled = true; // Disable further actions
+                                                // statusElement.innerHTML = `<span class="text-warning"><strong>Status:</strong> ${data.itemStatus}</span>`;
+                                                // Update item status if applicable
+                                                if (data.itemStatus) {
+                                                    let statusClass = 'text-success'; // Default for other statuses
+                                                    if (data.itemStatus === 'Canceled') {
+                                                        statusClass = 'text-danger';
+                                                    } else if (data.itemStatus === 'Returned') {
+                                                        statusClass = 'text-warning';
+                                                    }
+                                                    itemStatusElement.innerHTML = `<span class="${statusClass}"><strong>Delivery status:</strong> ${data.itemStatus}</span>`;
+                                                }
+
+                                                // Update return status if applicable
+                                                if (data.returnStatus) {
+                                                    let returnText;
+                                                    if (data.returnStatus === 'Approved') {
+                                                        returnText = 'Return request approved';
+                                                    } else if (data.returnStatus === 'Rejected') {
+                                                        returnText = 'Return request rejected';
+                                                    } else if (data.returnStatus === 'Pending') {
+                                                        returnText = 'Return request sent';
+                                                    }
+                                                    returnStatusElement.innerHTML = `<strong>Return status:</strong> ${returnText}`;
+                                                }
+
+                                                // Disable the cancel button if status changes to 'Canceled' or 'Returned'
+                                                // if (data.itemStatus === 'Canceled' || data.itemStatus === 'Returned') {
+                                                //     console.log("data",data);
+
+                                                //     const cancelButton = itemContainer.querySelector('.cancel-btn');
+                                                //     if (cancelButton) {
+                                                //         cancelButton.disabled = true; // Disable the button
+                                                //         cancelButton.textContent = 'Action not allowed'; // Optional: Change button text
+                                                //     }
+                                                // }
+
+                                                form.remove(); // Remove the form
+                                            }
+                                            // } else if (isCancelButton) {
+                                            //     statusElement.innerHTML = `<span class="text-danger"><strong>Delivery status:</strong> ${data.itemStatus}</span>`;
+                                            //     form.remove(); // Remove the form after cancel
+                                            // }
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire('Error', 'An error occurred.', 'error');
+                                });
+                        }
+                    });
+                }
+            });
+
+            document.addEventListener('click', function (event) {
+                if (event.target.closest('.edit-link')) {
+                    event.preventDefault()
+                    const url = event.target.closest('.edit-link').getAttribute('data-url')
+                    loadContent(url)
+                }
+
+            })
+            document.addEventListener('click', function (event) {
+                if (event.target.closest('.add-address-link')) {
+                    event.preventDefault()
+                    const url = event.target.closest('.add-address-link').getAttribute('data-url')
+                    loadContent(url)
+                }
+            })
+            document.addEventListener('click', function (event) {
+                if (event.target.closest('.edit-address-link')) {
+                    event.preventDefault()
+                    const url = event.target.closest('.edit-address-link').getAttribute('data-url')
+                    loadContent(url)
+                }
+            })
+            document.addEventListener('click', function (event) {
+                if (event.target.closest('.view-order-status-link')) {
+                    event.preventDefault()
+                    const url = event.target.closest('.view-order-status-link').getAttribute('data-url')
+                    loadContent(url)
+                }
+            })
+            document.addEventListener('click', function (event) {
+                if (event.target.closest('.back-link')) {
+                    event.preventDefault()
+                    const url = event.target.closest('.back-link').getAttribute('data-url')
+                    loadContent(url)
+                }
+            })
+
+            document.addEventListener('click', function (event) {
+                if (event.target.closest('.repay-now-btn')) {
+                    event.preventDefault();
+                    const form = event.target.closest('.repayment-form'); // Get the closest form element
+                    const url = form.getAttribute('action');
+                    console.log("url", url);
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "Do you want to proceed with the repayment?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, repay now!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch(url, {
+                                method: 'GET', // or 'POST' based on your server implementation
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                }
+                            }).then(response => {
+                                if (response.ok) {
+                                    // Handle successful repayment (assuming it returns a redirect URL or something similar)
+                                    // Optionally redirect to the order summary page
+                                    window.location.href = url; // Adjust the URL as necessary
+                                } else {
+                                    Swal.fire('Error!', 'There was a problem with your repayment.', 'error');
+                                }
+                            }).catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire('Error!', 'An error occurred. Please try again.', 'error');
+                            });
+                        }
+                    });
+                }
+            });
+
+            const defaultNavLink = document.querySelector('.nav-link.active');
+            if (defaultNavLink) {
+                defaultNavLink.click();
+            }
+            document.addEventListener('submit', function (event) {
+                if (event.target.closest('#edit-address-form')) {
+                    event.preventDefault();
+                    console.log("event", event);
+                    const form = event.target;
+                    console.log("form", form);
+                    const formData = new FormData(form);
+                    console.log("formData", formData);
+                    const data = {};
+                    formData.forEach((value, key) => {
+                        data[key] = value;
+                    });
+                    console.log("data", data);
+                    // Reset previous error messages
+                    document.querySelectorAll('.error-message').forEach(span => {
+                        span.style.display = 'none';
+                        span.textContent = '';
+                    });
+
+                    let isValid = true;
+                    // Validate name
+                    if (!/^[a-zA-Z\s]+$/.test(data.name)) {
+                        document.getElementById('name-error').textContent = 'Invalid name. Only letters allowed.';
+                        document.getElementById('name-error').style.display = 'block';
+                        isValid = false; // Set isValid to false if validation fails
+                    }
+
+                    // Validate address line 1
+                    if (data.addressLine1.trim() === '') {
+                        document.getElementById('addressLine1-error').textContent = 'Address Line 1 is required.';
+                        document.getElementById('addressLine1-error').style.display = 'block';
+                        isValid = false;
+                    }
+
+                    // Validate mobile
+                    if (!/^\d{10}$/.test(data.mobile)) {
+                        document.getElementById('mobile-error').textContent = 'Invalid mobile number. Must be 10 digits.';
+                        document.getElementById('mobile-error').style.display = 'block';
+                        isValid = false;
+                    }
+
+                    // Validate city, district, and state
+                    [data.city, data.district, data.state].forEach((field, index) => {
+                        if (field.trim() === '') {
+                            const errorMessages = ['City is required.', 'District is required.', 'State is required.'];
+                            document.getElementById(`${['city', 'district', 'state'][index]}-error`).textContent = errorMessages[index];
+                            document.getElementById(`${['city', 'district', 'state'][index]}-error`).style.display = 'block';
+                            isValid = false; // Set isValid to false if validation fails
+                        }
+                    });
+
+                    // Validate ZIP Code
+                    if (!/^\d{6}$/.test(data.zip)) {
+                        document.getElementById('zip-error').textContent = 'Invalid ZIP Code. Must be 5 digits.';
+                        document.getElementById('zip-error').style.display = 'block';
+                        isValid = false;
+                    }
+
+                    if (isValid) {
+                        const defAddressId = form.action.split('/').pop();
+                        console.log("defAddressId", defAddressId);
+                        fetch(`/account/edit-address/${defAddressId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        })
+                            .then(response => {
+                                return response.json(); // Convert response to JSON
+                            })
+                            .then(data => {
+                                console.log("response data", data);
+                                // Handle success or show SweetAlert message
+                                if (data.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Address Updated',
+                                        text: data.message,
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    }).then(() => {
+                                        window.location.href = '/account'; // Redirect after success
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: data.message
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'An error occurred',
+                                    text: 'Please try again later.'
+                                });
+                            });
+
+                    }
+
+                }
+            });
+
+            document.addEventListener('submit', async function (event) {
+                if (event.target.closest('#add-address-form')) {
+                    event.preventDefault(); // Prevent the default form submission
+
+                    const form = event.target;
+                    const name = form.name.value.trim();
+                    const addressLine1 = form.addressLine1.value.trim();
+                    const addressLine2 = form.addressLine2.value.trim(); // Added trim for addressLine2
+                    const mobile = form.mobile.value.trim();
+                    const city = form.city.value.trim();
+                    const district = form.district.value.trim();
+                    const state = form.state.value.trim();
+                    const zip = form.zip.value.trim();
+
+                    // Reset previous error messages
+                    document.querySelectorAll('.error-message').forEach(span => {
+                        span.style.display = 'none';
+                        span.textContent = '';
+                    });
+
+                    let isValid = true; // Track overall validity
+
+                    // Validate name
+                    if (!/^[a-zA-Z\s]+$/.test(name)) {
+                        document.getElementById('name-error').textContent = 'Invalid name. Only letters allowed.';
+                        document.getElementById('name-error').style.display = 'block';
+                        isValid = false; // Set isValid to false if validation fails
+                    }
+
+                    // Validate address line 1
+                    if (addressLine1 === '') {
+                        document.getElementById('addressLine1-error').textContent = 'Address Line 1 is required.';
+                        document.getElementById('addressLine1-error').style.display = 'block';
+                        isValid = false;
+                    }
+
+                    // Validate address line 2 (optional, but ensure it's a valid format if provided)
+                    if (addressLine2 !== '' && !/^[a-zA-Z0-9\s,.-]+$/.test(addressLine2)) {
+                        document.getElementById('addressLine2-error').textContent = 'Invalid Address Line 2. Only letters, numbers, spaces, commas, periods, and dashes allowed.';
+                        document.getElementById('addressLine2-error').style.display = 'block';
+                        isValid = false;
+                    }
+
+                    // Validate mobile
+                    if (!/^\d{10}$/.test(mobile)) {
+                        document.getElementById('mobile-error').textContent = 'Invalid mobile number. Must be 10 digits.';
+                        document.getElementById('mobile-error').style.display = 'block';
+                        isValid = false;
+                    }
+
+                    // Validate city, district, and state
+                    const fields = { city, district, state };
+                    for (const [key, value] of Object.entries(fields)) {
+                        if (value === '') {
+                            document.getElementById(`${key}-error`).textContent = `${capitalizeFirstLetter(key)} is required.`;
+                            document.getElementById(`${key}-error`).style.display = 'block';
+                            isValid = false; // Set isValid to false if validation fails
+                        }
+                    }
+
+                    // Validate ZIP Code
+                    if (!/^\d{6}$/.test(zip)) {
+                        document.getElementById('zip-error').textContent = 'Invalid ZIP Code. Must be 6 digits.';
+                        document.getElementById('zip-error').style.display = 'block';
+                        isValid = false;
+                    }
+
+                    // Proceed with form submission only if all validations pass
+                    if (isValid) {
+                        try {
+                            // Use fetch to send form data
+                            const response = await fetch(form.action, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    name,
+                                    addressLine1,
+                                    addressLine2,
+                                    mobile,
+                                    city,
+                                    district,
+                                    state,
+                                    zip,
+                                }),
+                            });
+
+                            const data = await response.json();
+                            if (data.success) {
+                                // Show success message with SweetAlert
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: 'Address added successfully!',
+                                    icon: 'success',
+                                    confirmButtonText: 'Okay',
+                                }).then(() => {
+                                    // Optionally redirect or clear form
+                                    window.location.href = '/account'; // Redirect to account page
+                                });
+                            } else {
+                                // Handle errors from server response
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: data.message || 'Something went wrong!',
+                                    icon: 'error',
+                                    confirmButtonText: 'Okay',
+                                });
+                            }
+                        } catch (error) {
+                            console.error(error);
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Server error. Please try again later.',
+                                icon: 'error',
+                                confirmButtonText: 'Okay',
+                            });
+                        }
+                    }
+                }
+            });
+
+            // Helper function to capitalize the first letter of a string
+            function capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+
+            function capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+
+            document.addEventListener('submit', function (event) {
+                if (event.target.closest('#editAccountForm')) {
+                    event.preventDefault(); // Prevent the default form submission
+
+                    const form = event.target;
+                    const firstname = form.firstname.value;
+                    const lastname = form.lastname.value;
+                    const mobile = form.mobile.value;
+
+                    // Reset previous error messages
+                    document.querySelectorAll('.error-message').forEach(span => {
+                        span.style.display = 'none';
+                        span.textContent = '';
+                    });
+
+                    let isValid = true; // Track overall validity
+
+                    // Validate first name
+                    if (!/^[a-zA-Z\s]+$/.test(firstname)) {
+                        document.getElementById('firstname-error').textContent = 'Invalid first name. Only letters allowed.';
+                        document.getElementById('firstname-error').style.display = 'block';
+                        isValid = false; // Set isValid to false if validation fails
+                    }
+
+                    // Validate last name
+                    if (!/^[a-zA-Z\s]+$/.test(lastname)) {
+                        document.getElementById('lastname-error').textContent = 'Invalid last name. Only letters allowed.';
+                        document.getElementById('lastname-error').style.display = 'block';
+                        isValid = false; // Set isValid to false if validation fails
+                    }
+
+                    // Validate mobile
+                    if (!/^\d{10}$/.test(mobile)) {
+                        document.getElementById('mobile-error').textContent = 'Invalid mobile number. Must be 10 digits.';
+                        document.getElementById('mobile-error').style.display = 'block';
+                        isValid = false;
+                    }
+
+
+                    // Proceed with form submission only if all validations pass
+                    if (isValid) {
+                        const formData = new FormData(form);
+
+                        fetch(form.action, {
+                            method: 'POST',
+                            body: formData
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire({
+                                        title: 'Success!',
+                                        text: data.message,
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        window.location.href = '/account'; // Redirect to the account page
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: data.message,
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'An unexpected error occurred. Please try again later.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            });
+
+                    }
+
+                }
+            });
+            document.addEventListener('submit', function (event) {
+                if (event.target.closest('#change-password-form')) {
+                    event.preventDefault();
+                    const form = event.target;
+                    const formData = new FormData(form);
+                    console.log("formdata", formData);
+                    const newPassword = formData.get('newPassword');
+                    const confirmPassword = formData.get('confirmPassword');
+                    document.querySelectorAll('.error-message').forEach(span => {
+                        span.style.display = 'none';
+                        span.textContent = '';
+                    });
+                    let isValid = true;
+
+                    // Validate newPassword (only allow numbers)
+                    if (!/^\d+$/.test(newPassword)) {
+                        document.getElementById('new-password-error').textContent = 'New password must contain only numbers.';
+                        document.getElementById('new-password-error').style.display = 'block';
+                        isValid = false;
+                    }
+
+                    // Validate confirmPassword (only allow numbers)
+                    if (!/^\d+$/.test(confirmPassword)) {
+                        document.getElementById('confirm-password-error').textContent = 'Confirm password must contain only numbers.';
+                        document.getElementById('confirm-password-error').style.display = 'block';
+                        isValid = false;
+                    }
+
+                    // Check if newPassword matches confirmPassword
+                    if (newPassword !== confirmPassword) {
+                        document.getElementById('confirm-password-error').textContent = 'Passwords do not match.';
+                        document.getElementById('confirm-password-error').style.display = 'block';
+                        isValid = false;
+                    }
+                    if (isValid) {
+                        const jsonData = {};
+                        formData.forEach((value, key) => {
+                            jsonData[key] = value;
+                        });
+
+                        fetch(form.action, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(jsonData)
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                console.log("data", data);
+
+                                // Show success or error message based on server response
+                                if (data.message.includes("success")) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Password Updated',
+                                        text: 'Your password has been updated successfully!',
+                                        showConfirmButton: true
+                                    }).then(() => {
+                                        // Optionally, redirect after success
+                                        window.location.href = '/account';
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: data.message,
+                                        showConfirmButton: true
+                                    });
+                                }
+                            })
+                            .catch((error) => {
+                                console.error('Error:', error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Server Error',
+                                    text: 'An error occurred while processing your request.',
+                                    showConfirmButton: true
+                                });
+                            });
+                    }
+
+                }
+            })
+        })     
+    </script>
+</body>
+
+</html>

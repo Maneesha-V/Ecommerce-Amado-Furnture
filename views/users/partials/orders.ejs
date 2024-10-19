@@ -1,0 +1,150 @@
+<style>
+    .account-details-container {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        position: relative;
+    }
+
+    .order-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        background-color: #f9f9f9;
+        transition: background-color 0.3s ease;
+    }
+
+    .order-card:hover {
+        background-color: #f1f1f1;
+    }
+
+    .order-card-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    /* First column for Product Details and View Details */
+    .order-info-left {
+        flex: 1;
+        margin-right: 20px;
+    }
+
+    .order-info-left .product-details {
+        font-size: 14px;
+    }
+
+    /* Second column for Total Amount */
+    .order-info-center {
+        flex: 0.2;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    /* Third column for Status and Date */
+    .order-info-right {
+        flex: 1;
+        font-size: 16px;
+        display: flex;
+        justify-content: end;
+    }
+
+    .order-status {
+        margin-bottom: 10px;
+    }
+
+    /* Color classes for different statuses */
+    .status-paid {
+        color: green;
+    }
+
+    .status-pending {
+        color: orange;
+    }
+
+    .status-failed {
+        color: red;
+    }
+
+    .order-actions {
+        text-align: left;
+        margin-top: 10px;
+    }
+
+    .view-order-status-link {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .view-order-status-link:hover {
+        text-decoration: underline;
+    }
+
+    /* Responsive layout */
+    @media (max-width: 768px) {
+        .order-card-content {
+            flex-direction: column;
+        }
+
+        .order-info-center {
+            margin: 10px 0;
+        }
+    }
+</style>
+
+<div class="account-details-container">
+    <h4>Order History</h4>
+    <%if(orders.length> 0){%>
+        <% orders.forEach(order=> { %>
+            <div class="order-card">
+                <div class="order-card-content">
+                    <!-- First Column: Product Details and View Details -->
+                    <div class="order-info-left">
+                        <div class="product-details">
+                            <% order.items.forEach((item, index)=> { %>
+                                <span>
+                                    <%= item.prodName %>
+                                        <%= index < order.items.length - 1 ? ', ' : '' %>
+                                </span>
+                                <% }); %>
+                        </div>
+                        <div class="order-actions">
+                            <a href="" class="view-order-status-link"
+                                data-url="/account/order-status/<%= order._id %>">View Details</a>
+                        </div>
+                    </div>
+
+                    <!-- Second Column: Total Amount -->
+                    <div class="order-info-center">
+                        <span>₹<%= order.totalAmount.toFixed(2) %></span>
+                    </div>
+
+                    <!-- Third Column: Status -->
+                    <div class="order-info-right">
+                        <div
+                            class="order-status 
+                        <% if (order.status === 'Paid') { %>status-paid<% } else if (order.status === 'Pending') { %>status-pending<% } else if (order.status === 'Failed') { %>status-failed<% } %>">
+                            <span>
+                                <%= order.status %>
+                            </span>
+                        </div>
+                        <span>&nbsp;on
+                            <% if (order.status==='Canceled' && order.canceledAt) { %>
+                                <%= order.canceledAt.toDateString() %>
+                                    <% } else if (order.statusUpdatedAt) { %>
+                                        <%= order.statusUpdatedAt.toDateString() %>
+                                            <% } else { %>
+                                                <%= order.createdAt.toDateString() %>
+                                                    <% } %>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+                <% } else { %>
+                    <div class="order-card">
+                        <p>No orders found.</p>
+                    </div>
+                    <% } %>
+</div>

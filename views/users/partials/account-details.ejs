@@ -1,0 +1,27 @@
+<div class="account-details-container"
+    style="border: 1px solid #ddd; border-radius: 10px; padding: 20px; position: relative;">
+
+    <h4 class="mb-3">Personal Information</h4>
+    <div class="card" style="border: 1px solid #ddd; border-radius: 10px; padding: 20px;">
+        <div class="card-body" style="position: relative;">
+            <div class="account-info">
+                <p>Name: <span class="text-dark">
+                        <%= user.firstname %>
+                            <%= user.lastname %>
+                    </span></p>
+                <p>Mobile: <span class="text-dark">
+                        <%= user.mobile %>
+                    </span></p>
+                <p>Email: <span class="text-dark">
+                        <%= user.email %>
+                    </span></p>
+            </div>
+            <div class="edit-icon" style="position: absolute; top: 20px; right: 20px; cursor: pointer;">
+                <a href="#" class="edit-link" data-url="/account/edit-account">
+                    <img src="/img/core-img/edit.jpg" alt="Edit" style="width: 20px; height: 20px;"> Edit
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>

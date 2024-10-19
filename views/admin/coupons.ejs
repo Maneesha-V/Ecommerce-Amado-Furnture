@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/core-style.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div class="single-product-area section-padding-100 clearfix ">
+        <div class="container-fluid">
+            <div class="row mx-5">
+                <div class="col-12">
+                    <h4 class="text-center">Existing Coupons</h4>
+                </div>
+                <div class="col-12 d-flex justify-content-between mb-3">
+                    <div class="d-flex">
+                        <a href="/admin/dashboard" class="btn btn-secondary">Go Back</a>
+                    </div>
+                    <div class="d-flex">
+                        <a href="/admin/add-coupon" class="btn btn-warning">Add Coupon</a>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table class="table table-warning table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Type</th>
+                                    <th>Dis Value</th>
+                                    <th>Min Amount</th>
+                                    <th>Max Amount</th>
+                                    <th>Description</th>
+                                    <th>ValidFrom</th>
+                                    <th>ValidUntil</th>
+                                    <th>couponLimit</th>
+                                    <th>UsedBy</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% coupons.forEach(coupon=> {%>
+                                    <%if(coupon.isActive){%>
+                                        <tr>
+                                            <% } else{ %>
+                                        <tr style="background-color: #d13434ab;">
+                                            <%}%>
+
+                                                <td>
+                                                    <%= coupon.code %>
+                                                </td>
+                                                <td>
+                                                    <%= coupon.discountType %>
+                                                </td>
+                                                <td>
+                                                    <%= coupon.discountValue %>
+                                                </td>
+                                                <td>
+                                                    <%= coupon.minAmount %>
+                                                </td>
+                                                <td>
+                                                    <%= coupon.maxAmount===null ? '0' : coupon.maxAmount %>
+                                                </td>
+                                                <td>
+                                                    <%= coupon.description %>
+                                                </td>
+                                                <td>
+                                                    <%= formatDate(coupon.validFrom) %>
+                                                </td>
+                                                <td>
+                                                    <%= formatDate(coupon.validUntil) %>
+                                                </td>
+                                                <td>
+                                                    <%= coupon.couponLimit %>
+                                                </td>
+                                                <td>
+                                                    <ul>
+                                                        <% coupon.usedBy.forEach(function(user){%>
+                                                            <li>
+                                                                <%= user.email %>
+                                                            </li>
+                                                            <%})%>
+                                                    </ul>
+                                                </td>
+                                                <td>
+                                                    <form action="/admin/hide-coupon/<%= coupon._id%>" method="POST">
+                                                        <button type="submit"
+                                                            style="background: none; border: none; color: red; cursor: pointer;">
+                                                            <%= coupon.isActive ? 'Unhide' : 'Hide' %>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                                <!-- <td></td>                   -->
+                                        </tr>
+                                        <%})%>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+    </script>
+</body>
+
+</html>

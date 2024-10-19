@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Coupon</title>
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="/css/core-style.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <a href="/admin/coupons" class="btn btn-secondary mt-5 ml-5">Go Back</a>
+            </div>
+        </div>
+        <h3 class="text-center">Add Coupon</h3>
+        <div class="row d-flex justify-content-center">
+            <div class="col-6">
+                <form id="couponForm" action="/admin/add-coupon" method="POST">
+                    <div class="form-group">
+                        <label for="code">Coupon Code</label>
+                        <input type="text" class="form-control" id="code" name="code" required>
+                        <span id="codeError" class="text-danger"></span>
+                        <%if(typeof errorMessage !=='undefined' ){%>
+                            <div class="alert alert-danger">
+                                <%= errorMessage %>
+                            </div>
+                            <% } %>
+                    </div>
+                    <div class="form-group">
+                        <label for="discountType">Discount Type</label>
+                        <select class="form-control" id="discountType" name="discountType" required>
+                            <option value="flat">Flat</option>
+                            <option value="percentage">Percentage</option>
+                        </select>
+                        <span id="discountTypeError" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="discountValue">Discount Value</label>
+                        <input type="number" class="form-control" id="discountValue" name="discountValue" required>
+                        <span id="discountValueError" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="minAmount">Minimum Amount</label>
+                        <input type="number" class="form-control" id="minAmount" name="minAmount" required>
+                        <span id="minAmountError" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="maxAmount">Maximum Discount (optional)</label>
+                        <input type="number" class="form-control" id="maxAmount" name="maxAmount">
+                        <span id="maxAmountError" class="text-danger"></span>
+                    </div>
+                    <!-- Valid From -->
+                    <div class="form-group">
+                        <label for="validFrom">Valid From</label>
+                        <input type="date" class="form-control" id="validFrom" name="validFrom" required>
+                        <span id="validFromError" class="text-danger"></span>
+                    </div>
+                    <!-- Expiry Date -->
+                    <div class="form-group">
+                        <label for="validUntil">Expiry Date</label>
+                        <input type="date" class="form-control" id="validUntil" name="validUntil" required>
+                        <span id="validUntilError" class="text-danger"></span>
+                    </div>
+                    <!-- Usage Limit -->
+                    <div class="form-group">
+                        <label for="couponLimit">Usage Limit</label>
+                        <input type="number" class="form-control" id="couponLimit" name="couponLimit" value="1"
+                            required>
+                        <span id="couponLimitError" class="text-danger"></span>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" name="description"></textarea>
+                        <span id="descriptionError" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-success">Create Coupon</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function validateCouponCode() {
+            const couponCode = document.getElementById('code').value;
+            const couponCodeRegex = /^AMADOGIFT\d{4}$/;
+            const codeError = document.getElementById('codeError');
+            if (!couponCodeRegex.test(couponCode)) {
+                codeError.textContent = 'Coupon code must start with "AMADOGIFT" followed by exactly 4 digits.';
+                return false;
+            } else {
+                codeError.textContent = '';
+                return true;
+            }
+        }
+
+        function validateDiscountValue() {
+            const discountValue = parseFloat(document.getElementById('discountValue').value);
+            const discountValueError = document.getElementById('discountValueError');
+            if (isNaN(discountValue) || discountValue <= 0) {
+                discountValueError.textContent = 'Discount value must be greater than 0.';
+                return false;
+            } else {
+                discountValueError.textContent = '';
+                return true;
+            }
+        }
+
+        function validateMinAmount() {
+            const minAmount = parseFloat(document.getElementById('minAmount').value);
+            const minAmountError = document.getElementById('minAmountError');
+            if (isNaN(minAmount) || minAmount <= 0) {
+                minAmountError.textContent = 'Minimum amount must be greater than 0.';
+                return false;
+            } else {
+                minAmountError.textContent = '';
+                return true;
+            }
+        }
+
+        function validateMaxAmount() {
+            const maxAmount = parseFloat(document.getElementById('maxAmount').value);
+            const maxAmountError = document.getElementById('maxAmountError');
+            if (maxAmount && (isNaN(maxAmount) || maxAmount <= 0)) {
+                maxAmountError.textContent = 'Maximum discount must be greater than 0.';
+                return false;
+            } else {
+                maxAmountError.textContent = '';
+                return true;
+            }
+        }
+        function validateValidFrom() {
+            const validFrom = document.getElementById('validFrom').value;
+            const validFromError = document.getElementById('validFromError');
+            const today = new Date().toISOString().split('T')[0];
+
+            if (validFrom < today) {
+                validFromError.textContent = 'Valid from date must not be in the past.';
+                return false;
+            } else {
+                validFromError.textContent = '';
+                return true;
+            }
+        }
+
+        function validateValidUntil() {
+            const validFrom = document.getElementById('validFrom').value;
+            const validUntil = document.getElementById('validUntil').value;
+            const validUntilError = document.getElementById('validUntilError');
+
+            if (validUntil <= validFrom) {
+                validUntilError.textContent = 'Expiry date must be later than the valid from date.';
+                return false;
+            } else {
+                validUntilError.textContent = '';
+                return true;
+            }
+        }
+        function validateCouponLimit() {
+            const couponLimit = parseInt(document.getElementById('couponLimit').value);
+            const couponLimitError = document.getElementById('couponLimitError');
+
+            if (isNaN(couponLimit) || couponLimit <= 0) {
+                couponLimitError.textContent = 'Usage limit must be a positive number greater than 0.';
+                return false;
+            } else {
+                couponLimitError.textContent = '';
+                return true;
+            }
+        }
+
+        function validateDescription() {
+            const description = document.getElementById('description').value;
+            const descriptionError = document.getElementById('descriptionError');
+
+            if (description.length > 500) {
+                descriptionError.textContent = 'Description must be less than 500 characters.';
+                return false;
+            } else {
+                descriptionError.textContent = '';
+                return true;
+            }
+        }
+
+
+        function validateForm() {
+            return validateCouponCode() && validateDiscountValue() && validateMinAmount() &&
+                validateMaxAmount() && validateValidFrom() && validateValidUntil() &&
+                validateCouponLimit() && validateDescription();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('couponForm');
+
+            // Add event listeners for real-time validation
+            document.getElementById('code').addEventListener('input', validateCouponCode);
+            document.getElementById('discountValue').addEventListener('input', validateDiscountValue);
+            document.getElementById('minAmount').addEventListener('input', validateMinAmount);
+            document.getElementById('maxAmount').addEventListener('input', validateMaxAmount);
+            document.getElementById('validFrom').addEventListener('change', validateValidFrom);
+            document.getElementById('validUntil').addEventListener('change', validateValidUntil);
+            document.getElementById('couponLimit').addEventListener('input', validateCouponLimit);
+            document.getElementById('description').addEventListener('input', validateDescription);
+
+            // Validate form on submit
+            form.addEventListener('submit', function (event) {
+                if (!validateForm()) {
+                    event.preventDefault(); // Prevent form submission if validation fails
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

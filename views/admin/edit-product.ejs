@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="/css/core-style.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <a href="/admin/products" class="btn btn-success mt-5 ml-5">Go Back</a>
+            </div>
+        </div>
+        <h3 class="text-center">Edit Product</h3>
+        <div class="row d-flex justify-content-center">
+            <div class="col-6">
+                <form action="/admin/edit-product/<%= products._id%>" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="prodId" value="<%= products._id%>" id="prodId">
+                    <div class="form-group">
+                        <label for="name">Product Name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="<%=products.name%>">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"
+                            value=""><%=products.description%></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="number" class="form-control" id="price" name="price" value="<%=products.price%>">
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Stock</label>
+                        <input type="number" class="form-control" id="stock" name="stock" value="<%=products.stock%>">
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select class="form-control" id="category" name="category">
+                            <%categories.forEach(category=>{%>
+                                <option value="<%= category._id%>">
+                                    <%= category.name%>
+                                </option>
+                                <%})%>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="brand">Brand</label>
+                        <select class="form-control" id="brand" name="brand">
+                            <%brands.forEach(brand=>{%>
+                                <option value="<%= brand._id%>">
+                                    <%= brand.brand_name%>
+                                </option>
+                                <%})%>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="image">Product Images</label>
+                        <div id="existing-images">
+                            <%products.prodImages.forEach(images=>{%>
+                                <div class="image-wrapper" style="display: inline-block; position: relative;">
+                                    <img src="/<%= images%>" alt="" style="width:100px;height:auto">
+                                    <input type="hidden" name="existingImages" value="<%= images%>">
+                                    <button type="button" class="btn btn-danger btn-sm delete-image"
+                                        data-image="<%= images %>"
+                                        style="position: absolute; top: 0; right: 0;">X</button>
+                                </div>
+                                <%})%>
+                        </div>
+
+                        <input type="file" class="form-control-file" id="prodImages" name="prodImages" accept="image/*"
+                            multiple>
+                    </div>
+                    <button type="submit" class="btn btn-success">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.delete-image').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const image = event.target.getAttribute('data-image');
+                    const prodId = document.getElementById('prodId').value;
+                    console.log("image", image)
+                    console.log("id", image)
+                    fetch(`/admin/delete-image/${prodId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ image })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                event.target.parentElement.remove();
+                            } else {
+                                alert('Error deleting image');
+                            }
+                        });
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

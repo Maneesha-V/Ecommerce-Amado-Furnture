@@ -1,0 +1,62 @@
+<%- include('../layouts/user/header.ejs')%>
+    <div class="cart-table-area section-padding-100">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="container mt-5">
+                        <% console.log("order-ejs", order) %>
+                            <% console.log("address-ejs", address) %>
+                                <% console.log("razorpayKeyId", razorpayKeyId) %>
+
+                                    <div class="card">
+                                        <% console.log("order-ejs", order) %>
+                                            <% console.log("address-ejs", address) %>
+
+                                                <!-- Card Header -->
+                                                <div class="card-header alert alert-success text-center" role="alert">
+                                                    <h2 class="card-title text-success">Thank You for Your
+                                                        Order!</h2>
+                                                    <p class="card-text">Your order has been successfully
+                                                        placed.</p>
+                                                </div>
+
+                                                <!-- Card Body -->
+                                                <div class="card-body text-center">
+                                                    <p class="card-text">Order Number: <strong>
+                                                            <%= order.orderNumber %>
+                                                        </strong></p>
+                                                    <p class="card-text">Total Amount: <strong>₹ <%= order.totalAmount
+                                                                %></strong></p>
+                                                    <p class="card-text">Payment Method: <strong>
+                                                            <%= order.paymentMethod %>
+                                                        </strong></p>
+
+                                                    <!-- Shipping Address -->
+                                                    <p class="card-text">Shipping Address:</p>
+                                                    <address>
+                                                        <strong>
+                                                            <%= address.name %>
+                                                        </strong><br>
+                                                        <%= address.addressLine1 %><br>
+                                                            <%= address.city %>, <%= address.district %><br>
+                                                                    <%= address.state %><br>
+                                                                        <%= address.zip %>
+                                                    </address>
+                                                </div>
+
+                                                <!-- Card Footer -->
+                                                <div class="card-footer text-center bg-body-secondary">
+                                                    <p class="card-text">You will receive an email confirmation
+                                                        shortly.</p>
+                                                    <a href="/shop" class="btn btn-primary">Continue
+                                                        Shopping</a>
+                                                </div>
+                                    </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <%- include('../layouts/user/footer.ejs')%>

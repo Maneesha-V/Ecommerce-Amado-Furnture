@@ -1,0 +1,181 @@
+<%- include('../layouts/user/header.ejs')%>
+    <!-- ##### Main Content Wrapper Start ##### -->
+    <div class="cart-table-area section-padding-100">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <div class="cart-title mt-5">
+                        <h2>Shopping Cart</h2>
+                    </div>
+                    <%console.log("cartrt",cart)%>
+                        <% if(cart.length===0){%>
+                            <div class="no-items">
+                                <h4>Your cart is empty</h4>
+                                <p>It looks like you have no items in your cart. Start shopping now!</p>
+                                <a href="/shop" class="btn btn-primary">Continue Shopping</a>
+                            </div>
+                            <%}else {%>
+                                <div class="cart-table clearfix">
+                                    <div id="cart-items">
+                                        <% cart.forEach(item=> { %>
+                                            <% const displayPrice=item.product.offerDiscountedPrice ||
+                                                item.product.price; %>
+                                                <% console.log("dispPrice-ejs",displayPrice)%>
+                                                    <div class="cart-item d-flex flex-column flex-sm-row align-items-start mb-3"
+                                                        data-product-id="<%= item.product._id %>"
+                                                        data-price="<%= displayPrice %>"
+                                                        data-discount-price="<%= item.product.offerDiscountedPrice %>">
+                                                        <div class="cart_product_img col-12 col-sm-4 p-0">
+                                                            <a href="#"><img src="<%= item.product.prodImages[0] %>"
+                                                                    alt="Product" class="img-fluid"></a>
+                                                        </div>
+                                                        <div
+                                                            class="cart_product_desc flex-grow-1 pl-sm-3 pt-3 pt-sm-0 col-12 col-sm-8">
+                                                            <h5 class="mb-2">
+                                                                <%= item.product.name %>
+                                                            </h5>
+                                                            <!-- <span class="product-price d-block">₹<%= displayPrice %>
+                                                            </span> -->
+                                                            <p class="product-price">
+                                                                <% if (item.product.offerDiscountedPrice &&
+                                                                    item.product.offerDiscountedPrice <
+                                                                    item.product.price) { %>
+                                                                    <span
+                                                                        style="text-decoration: line-through; color: red;font-size: 18px;">
+                                                                        ₹<%= item.product.price %>
+                                                                    </span>
+                                                                    &nbsp;
+                                                                    <span style="font-weight: bold;">
+                                                                        ₹<%= item.product.offerDiscountedPrice %>
+                                                                    </span>
+                                                                    <% } else { %>
+                                                                        ₹<%= item.product.price %>
+                                                                            <% } %>
+                                                            </p>
+
+                                                            <div
+                                                                class="d-flex justify-content-between align-items-center mt-2">
+                                                                <div
+                                                                    class="qty-btn d-flex align-items-center p-2 qty-background">
+                                                                    <p class="mr-2 mb-0">Qty</p>
+                                                                    <div class="quantity d-flex align-items-center">
+                                                                        <button class="btn btn-outline-secondary btn-sm"
+                                                                            onclick="changeQty('<%= item.product._id %>', -1)">
+                                                                            <i class="fa fa-caret-down"
+                                                                                aria-hidden="true"></i>
+                                                                        </button>
+                                                                        <input type="number"
+                                                                            class="qty-text form-control-sm text-center mx-2"
+                                                                            id="qty-<%= item.product._id %>" step="1"
+                                                                            min="1" max="<%= item.product.stock %>"
+                                                                            name="quantity" value="<%= item.quantity %>"
+                                                                            onchange="updateCartTotal()" readonly>
+                                                                        <button class="btn btn-outline-secondary btn-sm"
+                                                                            onclick="changeQty('<%= item.product._id %>', 1)">
+                                                                            <i class="fa fa-caret-up"
+                                                                                aria-hidden="true"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="d-flex flex-column mt-2 mt-sm-0">
+                                                                    <form action="/cart/remove/<%= item.product._id %>"
+                                                                        method="post">
+                                                                        <button type="submit"
+                                                                            class="btn btn-danger btn-sm">
+                                                                            <i class="fas fa-minus-circle"></i> Remove
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <% }) %>
+                                    </div>
+                                </div>
+                                <%}%>
+                </div>
+                <div class="col-12 col-lg-4 <% if (cart.length === 0) { %> d-none <% } %>">
+                    <div class="cart-summary">
+                        <h5>Cart Total</h5>
+                        <% console.log("total-ejs",total)%>
+                            <% const discountToShow=typeof totalDiscountPrice !=='undefined' ? totalDiscountPrice : 0;
+                                %>
+                                <% console.log("totAmtAftDisc-ejs",discountToShow)%>
+                                    <ul class="summary-table list-unstyled font-size-15">
+                                        <li><span>Price (<span id="item-count">
+                                                    <%= qty %>
+                                                </span> items):</span> <span id="cart-total">₹<%= total.toFixed(2) %>
+                                            </span></li>
+                                        <li><span>Discount:</span>
+                                            <span class="discount-amount">
+                                                <% if (discountToShow> 0) { %>
+                                                    -₹<%= discountToShow.toFixed(2) %>
+                                                        <% } else { %>
+                                                            ₹0
+                                                            <% } %>
+                                            </span>
+                                        </li>
+                                        <li><span>Delivery:</span> <span>Free</span></li>
+                                        <hr>
+                                        <li><span>Total:</span> <span id="final-total">₹<%= (typeof totAmtAftDisc
+                                                    !=='undefined' ? totAmtAftDisc.toFixed(2) : 0) %>
+                                            </span></li>
+                                    </ul>
+                                    <div class="cart-btn mt-50">
+                                        <a href="/checkout" class="btn btn-warning btn-block">Checkout</a>
+                                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### Main Content Wrapper End ##### -->
+    </div>
+    <%- include('../layouts/user/footer.ejs')%>
+        <script>
+            function changeQty(productId, change) {
+                var qtyInput = document.getElementById('qty-' + productId);
+                var qty = parseInt(qtyInput.value);
+                var maxQty = parseInt(qtyInput.max);
+
+                if (change < 0 && qty > 1) {
+                    qtyInput.value = qty - 1;
+                } else if (change > 0 && qty < maxQty) {
+                    qtyInput.value = qty + 1;
+                }
+
+                // Send updated quantity to the server to update session
+                fetch('/cart/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        productId: productId,
+                        quantity: qtyInput.value
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Response data:", data);
+                        if (data) {
+                            // Update cart totals on the frontend with the returned values
+                            document.getElementById('cart-total').textContent = '₹' + data.total;
+                            document.getElementById('final-total').textContent = '₹' + data.totalAfterDiscount;
+                            document.getElementById('item-count').textContent = data.qty;
+
+                            var discountElement = document.querySelector('.discount-amount');
+                            if (parseFloat(data.totalDiscountPrice) > 0) {
+                                discountElement.textContent = '-₹' + data.totalDiscountPrice;
+                            } else {
+                                discountElement.textContent = '₹0';
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error updating cart:", error);
+                    });
+            }
+
+        </script>
+        

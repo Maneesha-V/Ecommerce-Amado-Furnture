@@ -1,0 +1,96 @@
+<style>
+    .wallet-container {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        background-color: #f2f2f2;
+        margin-bottom: 20px;
+    }
+
+    .wallet-container h4 {
+        margin-top: 0;
+    }
+
+    .wallet-transaction {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+    .wallet-transaction .transaction-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .wallet-transaction .transaction-status {
+        text-align: center;
+    }
+
+    .font-size-12 {
+        font-size: 12px;
+    }
+
+    @media (max-width: 767px) {
+        .wallet-transaction .transaction-details {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
+
+<div class="account-details-container">
+    <% console.log("wallet-ejs",user) %>
+        <!-- Wallet Details Section -->
+        <div class="wallet-container">
+            <h4>My Wallet</h4>
+            <% if (user && user.walletBalance) { %>
+                <p><strong>Wallet Balance:</strong> ₹<%= user.walletBalance.toFixed(2) %>
+                </p>
+                <% } else { %>
+                    <p><strong>Wallet Balance:</strong> ₹<%= 0 %>
+                    </p>
+                    <% } %>
+
+                        <% if (Array.isArray(user.walletTransactions) && user.walletTransactions.length> 0) { %>
+                            <h5>Transaction History</h5>
+                            <% user.walletTransactions.forEach(transaction=> { %>
+                                <div class="wallet-transaction">
+                                    <div class="row transaction-details">
+                                        <div class="col-md-4 col-12 font-size-12">
+                                            <span><strong>Transaction ID:</strong>
+                                                <%= transaction.transactionId %>
+                                            </span><br>
+                                            <span>
+                                                <%= transaction.description %>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-2 col-12">
+                                            <p>₹<%= transaction.amount.toFixed(2) %>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6 col-12 transaction-status">
+                                            <% if (transaction.type==='credit' ) { %>
+                                                <p class="text-success"><strong>Credited</strong></p>
+                                                <% } else if (transaction.type==='debit' ) { %>
+                                                    <p class="text-danger"><strong>Debited</strong></p>
+                                                    <% } else if (transaction.type==='Canceled' ) { %>
+                                                        <!-- <p class="text-danger"><strong>Canceled</strong></p>
+                                    <p><%= transaction.description %></p> -->
+                                                        <span class="text-danger">Canceled on <%= new
+                                                                Date(transaction.date).toDateString() %></span><br>
+                                                        <span class="font-size-12">Reason : <%= transaction.reason %>
+                                                                </span>
+                                                        <%}%>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }) %>
+                                    <% } else { %>
+                                        <p>No wallet transactions available.</p>
+                                        <% } %>
+        </div>
+
+</div>

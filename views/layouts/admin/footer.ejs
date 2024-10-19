@@ -1,0 +1,157 @@
+
+<!-- ##### Footer Area Start ##### -->
+<footer class="footer_area clearfix">
+</footer>
+<!-- ##### Footer Area End ##### -->
+
+<!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
+<script src="js/jquery/jquery-2.2.4.min.js"></script>
+<!-- Popper js -->
+<script src="js/popper.min.js"></script>
+<!-- Bootstrap js -->
+<script src="js/bootstrap.min.js"></script>
+<!-- Plugins js -->
+<script src="js/plugins.js"></script>
+<!-- Active js -->
+<script src="js/active.js"></script>
+
+<script>
+    document.getElementById('filterType').addEventListener('change', function() {
+        let filter = this.value;
+        let startDate = document.getElementById('startDate');
+        let endDate = document.getElementById('endDate');
+    
+        if (filter === 'custom') {
+            startDate.disabled = false;
+            endDate.disabled = false;
+        } else {
+            startDate.disabled = true;
+            endDate.disabled = true;
+            startDate.value = '';
+            endDate.value = '';
+        }
+    });
+    
+    function fetchSalesReport() {
+        let filterType = document.getElementById('filterType').value;
+        let startDate = document.getElementById('startDate').value;
+        let endDate = document.getElementById('endDate').value;
+        console.log("filter,start,end",filterType,startDate,endDate);
+        
+        // Send data to server via AJAX
+        fetch('/admin/sales-report', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filterType, startDate, endDate })
+        })
+        // .then(response => response.json())
+        .then(response => {
+        // Check if response is HTML
+        return response.text().then(text => {
+            if (response.headers.get('content-type').includes('application/json')) {
+                return JSON.parse(text);
+            } else {
+                console.error("HTML response received instead of JSON:", text);
+                throw new Error('Server returned HTML, not JSON');
+            }
+        });
+    })
+        .then(data => {
+            console.log("data",data);
+            
+            // Populate the sales report table
+            let tableBody = document.getElementById('salesReportTable');
+            tableBody.innerHTML = ''; // Clear previous data
+    
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="8" class="text-center">No transactions found</td></tr>';
+            } else {
+                data.forEach(order => {
+                    let row = `
+                        <tr>
+                            <td>${order.orderId}</td>
+                            <td>${order.userName}</td>
+                            <td>${order.products.map(p => p.name).join(', ')}</td>
+                            <td>${order.totalAmount}</td>
+                            <td>${order.discount}</td>
+                            <td>${order.coupon}</td>
+                            <td>${order.paymentMethod}</td>
+                            <td>${order.orderStatus}</td>
+                        </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            }
+        });
+    }
+</script>
+   
+<script>
+    // Enable custom date fields if selected
+    // document.getElementById('filterType').addEventListener('change', function() {
+    //     const customSelected = this.value === 'custom';
+    //     console.log("customSelected",customSelected);           
+    //     document.getElementById('startDate').disabled = !customSelected;
+    //     document.getElementById('endDate').disabled = !customSelected;
+    // });
+    // // Fetch sales report based on filter
+    // function fetchSalesReport() {
+    //     const type = document.getElementById('filterType').value;
+    //     console.log("type",type); 
+    //     const startDate = document.getElementById('startDate').value;
+    //     console.log("startDate",startDate); 
+    //     const endDate = document.getElementById('endDate').value;
+    //     console.log("endDate",endDate); 
+
+    //     let url = `/admin/sales-report?type=${type}`;
+    //     console.log("url",url);
+        
+    //     if (type === 'custom') {
+    //         url += `&startDate=${startDate}&endDate=${endDate}`;
+    //     }
+    //     console.log("url",url);
+
+    //     fetch(url,{
+    //         method:'GET'
+    //     })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             console.log("data",data);
+                
+    //             // Update sales report table
+    //             const tableBody = document.getElementById('salesReportTable');
+    //             tableBody.innerHTML = `
+    //                 <tr>
+    //                     <td>${data.orders.totalSales || 0}</td>
+    //                     <td>${data.orders.totalDiscount || 0}</td>
+    //                     <td>${data.totalCoupons || 0}</td>
+    //                     <td>${data.orders.orderCount || 0}</td>
+    //                 </tr>
+    //             `;
+    //         })
+    //         .catch(error => console.error('Error fetching sales report:', error));
+    // }
+   
+    // function downloadPDF() {
+    //     const element = document.getElementById('contentToDownload');
+    //     const options = {
+    //         margin: 1,
+    //         filename: 'Sales_Report.pdf',
+    //         image: { type: 'jpeg', quality: 0.98 },
+    //         html2canvas: { scale: 2 },
+    //         jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    //     };
+
+    //     html2pdf()
+    //         .from(element)
+    //         .set(options)
+    //         .save();
+    // }
+
+    // function downloadExcel() {
+    //     // Implement your Excel download logic here
+    //     alert("Excel download functionality not implemented.");
+    // }
+</script>
+</body>
+
+</html>

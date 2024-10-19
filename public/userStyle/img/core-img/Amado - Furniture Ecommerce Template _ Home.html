@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<!-- saved from url=(0026)http://localhost:3000/shop -->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title  -->
+    <title>Amado - Furniture Ecommerce Template | Home</title>
+
+    <!-- Favicon  -->
+    <link rel="icon" href="http://localhost:3000/img/core-img/favicon.ico">
+
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="./Amado - Furniture Ecommerce Template _ Home_files/core-style.css">
+    <link rel="stylesheet" href="./Amado - Furniture Ecommerce Template _ Home_files/style.css">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        .account-nav {
+            display: flex;
+            justify-content: start;
+            margin: 20px 0;
+            list-style: none;
+            padding: 0;
+        }
+
+        .account-nav li {
+            margin: 0 10px;
+        }
+
+        .account-nav li a {
+            display: block;
+            padding: 10px 15px;
+            background-color: #f8f8f8;
+            color: #333;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .account-nav li a:hover {
+            background-color: #e0e0e0;
+        }
+
+        .account-nav li a.active {
+            background-color: #d4d4d4;
+            font-weight: bold;
+        }
+
+        .edit-icon img {
+            width: 20px;
+            height: 20px;
+        }
+        .qty-background {
+            background-color: #f5f7fa;
+            opacity: 1;
+        }
+        .font-size-15 {
+            font-size: 15px;
+        }
+        #stock-not-error {
+            color: green; 
+        }
+        #stock-error {
+            color: red; 
+        }
+        .cart-image-btn {
+            background: none;
+            
+            /* background-color: white; */
+        }
+    </style>
+<style>@font-face {
+              font-family: 'Open Sans Regular';
+              font-style: normal;
+              font-weight: 400;
+              src: url('chrome-extension://gkkdmjjodidppndkbkhhknakbeflbomf/fonts/open_sans/open-sans-v18-latin-regular.woff');
+          }</style><style>@font-face {
+              font-family: 'Open Sans Bold';
+              font-style: normal;
+              font-weight: 800;
+              src: url('chrome-extension://gkkdmjjodidppndkbkhhknakbeflbomf/fonts/open_sans/OpenSans-Bold.woff');
+          }</style><style>@font-face {
+              font-family: 'Open Sans ExtraBold';
+              font-style: normal;
+              font-weight: 800;
+              src: url('chrome-extension://gkkdmjjodidppndkbkhhknakbeflbomf/fonts/open_sans/open-sans-v18-latin-800.woff');
+          }</style></head>
+
+<body>
+    <!-- Search Wrapper Area Start -->
+    <div class="search-wrapper section-padding-100" style="height: 130px;
+    padding-bottom: 100px;
+    padding-top: 46px;">
+        <div class="search-close">
+            <i class="fa fa-close" aria-hidden="true"></i>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="search-content">
+                        <form action="http://localhost:3000/shop#" method="get">
+                            <input type="search" name="search" id="search" placeholder="Type your keyword...">
+                            <button type="submit"><img src="./Amado - Furniture Ecommerce Template _ Home_files/search.png" alt=""></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Search Wrapper Area End -->
+
+    <!-- ##### Main Content Wrapper Start ##### -->
+    <div class="main-content-wrapper d-flex clearfix">
+
+        <!-- Mobile Nav (max width 767px)-->
+        <div class="mobile-nav">
+            <!-- Navbar Brand -->
+            <div class="amado-navbar-brand">
+                <a href="http://localhost:3000/index.html"><img src="./Amado - Furniture Ecommerce Template _ Home_files/logo.png" alt=""></a>
+            </div>
+            <!-- Navbar Toggler -->
+            <div class="amado-navbar-toggler">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+
+        <!-- Header Area Start -->
+        <header class="header-area clearfix">
+            <!-- Close Icon -->
+            <div class="nav-close">
+                <i class="fa fa-close" aria-hidden="true"></i>
+            </div>
+            <!-- Logo -->
+            <div class="logo">
+                <a href="http://localhost:3000/index.html"><img src="./Amado - Furniture Ecommerce Template _ Home_files/logo.png" alt=""></a>
+            </div>
+            <!-- Amado Nav -->
+            <nav class="amado-nav">
+                <ul>
+                    <li class="active"><a href="http://localhost:3000/home">Home</a></li>
+                    <li><a href="http://localhost:3000/shop">Shop</a></li>
+                    <li><a href="http://localhost:3000/cart">Cart</a></li>
+                    <li><a href="http://localhost:3000/account">Account</a></li>
+                    <!-- <li class="profile-menu">
+                        <a href="javascript:void(0);">Account</a>
+                        <ul class="submenu">
+                            <li><a href="/profile/address">Address</a></li>
+                            <li><a href="/profile/orders">Orders</a></li>
+                            <li><a href="/profile/cart">Cart</a></li>
+                            <li><a href="/profile/edit">Profile Edit</a></li>
+                            <li><a href="/profile/forgot-password">Forgot Password</a></li>
+                        </ul>
+                    </li> -->
+                    <li><a href="http://localhost:3000/logout">Logout</a></li>
+                </ul>
+            </nav>
+            <!-- Button Group -->
+            <div class="amado-btn-group mt-30 mb-100">
+                <a href="http://localhost:3000/shop#" class="btn amado-btn mb-15">%Coupon%</a>
+                <a href="http://localhost:3000/shop#" class="btn amado-btn active">New this week</a>
+            </div>
+            <!-- Cart Menu -->
+            <div class="cart-fav-search mb-100">
+                <a href="http://localhost:3000/cart.html" class="cart-nav"><img src="./Amado - Furniture Ecommerce Template _ Home_files/cart.png" alt=""> Cart
+                    <span>(0)</span></a>
+                <a href="http://localhost:3000/shop#" class="fav-nav"><img src="./Amado - Furniture Ecommerce Template _ Home_files/favorites.png" alt=""> Favourite</a>
+                <a href="http://localhost:3000/shop#" class="search-nav"><img src="./Amado - Furniture Ecommerce Template _ Home_files/search.png" alt=""> Search</a>
+            </div>
+            <!-- Social Button -->
+            <div class="social-info d-flex justify-content-between">
+                <a href="http://localhost:3000/shop#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                <a href="http://localhost:3000/shop#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                <a href="http://localhost:3000/shop#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                <a href="http://localhost:3000/shop#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+            </div>
+        </header>
+        <!-- Header Area End -->
+
+        <!-- ##### Newsletter Area End ##### -->
+
+    <div class="shop_sidebar_area">
+
+        <!-- ##### Single Widget ##### -->
+        <div class="widget catagory mb-50">
+            <!-- Widget Title -->
+            <h6 class="widget-title mb-30">Categories</h6>
+
+            <!--  Catagories  -->
+            <div class="catagories-menu">
+                <ul>
+                    
+                        <li>
+                            <a href="http://localhost:3000/shop/advanced-search?category=66aa693c1a1b42c006e18a98&amp;search=&amp;sort=&amp;page=1">
+                                Outdoor Decors
+                            </a>
+                            <!-- <a href="/shop/category/66aa693c1a1b42c006e18a98">
+                                Outdoor Decors
+                            </a> -->
+                        </li>
+                        
+                        <li>
+                            <a href="http://localhost:3000/shop/advanced-search?category=66acb2362544de894f8a3c2f&amp;search=&amp;sort=&amp;page=1">
+                                Table
+                            </a>
+                            <!-- <a href="/shop/category/66acb2362544de894f8a3c2f">
+                                Table
+                            </a> -->
+                        </li>
+                        
+                        <li>
+                            <a href="http://localhost:3000/shop/advanced-search?category=66acb2532544de894f8a3c33&amp;search=&amp;sort=&amp;page=1">
+                                Wall Decors
+                            </a>
+                            <!-- <a href="/shop/category/66acb2532544de894f8a3c33">
+                                Wall Decors
+                            </a> -->
+                        </li>
+                        
+                        <li>
+                            <a href="http://localhost:3000/shop/advanced-search?category=66acb2742544de894f8a3c37&amp;search=&amp;sort=&amp;page=1">
+                                Chair
+                            </a>
+                            <!-- <a href="/shop/category/66acb2742544de894f8a3c37">
+                                Chair
+                            </a> -->
+                        </li>
+                        
+                        <li>
+                            <a href="http://localhost:3000/shop/advanced-search?category=66acb2882544de894f8a3c3b&amp;search=&amp;sort=&amp;page=1">
+                                Sofa
+                            </a>
+                            <!-- <a href="/shop/category/66acb2882544de894f8a3c3b">
+                                Sofa
+                            </a> -->
+                        </li>
+                        
+                        <li>
+                            <a href="http://localhost:3000/shop/advanced-search?category=66acb2a62544de894f8a3c3f&amp;search=&amp;sort=&amp;page=1">
+                                Bed Coat
+                            </a>
+                            <!-- <a href="/shop/category/66acb2a62544de894f8a3c3f">
+                                Bed Coat
+                            </a> -->
+                        </li>
+                        
+                </ul>
+            </div>
+        </div>
+
+        <!-- ##### Single Widget ##### -->
+        <!--  Brands  -->
+        <div class="widget brands mb-50">
+            <!-- Widget Title -->
+            <h6 class="widget-title mb-30">Brands</h6>
+
+            <form action="http://localhost:3000/shop/advanced-search" method="GET" id="brandFilterForm">
+            <!-- <form action="/shop/brand" method="GET" id="brandFilterForm"> -->
+                <input type="hidden" name="search" value="">
+                <input type="hidden" name="sort" value="">
+                <input type="hidden" name="category" value="">
+                <div class="widget-desc">
+                    <!-- Single Form Check -->
+                    
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="brand" value="66b50ad5662f65aeec09ade5" id="brand_66b50ad5662f65aeec09ade5" onchange="document.getElementById(&#39;brandFilterForm&#39;).submit()">
+                            <label class="form-check-label" for="brand_66b50ad5662f65aeec09ade5">
+                                IKEA
+                            </label>
+                        </div>
+                        
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="brand" value="66b50b6e662f65aeec09adf9" id="brand_66b50b6e662f65aeec09adf9" onchange="document.getElementById(&#39;brandFilterForm&#39;).submit()">
+                            <label class="form-check-label" for="brand_66b50b6e662f65aeec09adf9">
+                                Ashley Furniture
+                            </label>
+                        </div>
+                        
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="brand" value="66b50b91662f65aeec09ae05" id="brand_66b50b91662f65aeec09ae05" onchange="document.getElementById(&#39;brandFilterForm&#39;).submit()">
+                            <label class="form-check-label" for="brand_66b50b91662f65aeec09ae05">
+                                Herman Miller
+                            </label>
+                        </div>
+                        
+
+                </div>
+            </form>
+        </div>
+
+        <!-- ##### Single Widget ##### -->
+        <!-- <div class="widget color mb-50"> -->
+            <!-- Widget Title -->
+            <!-- <h6 class="widget-title mb-30">Color</h6> -->
+<!-- 
+            <div class="widget-desc">
+                <ul class="d-flex">
+                    <li><a href="#" class="color1"></a></li>
+                    <li><a href="#" class="color2"></a></li>
+                    <li><a href="#" class="color3"></a></li>
+                    <li><a href="#" class="color4"></a></li>
+                    <li><a href="#" class="color5"></a></li>
+                    <li><a href="#" class="color6"></a></li>
+                    <li><a href="#" class="color7"></a></li>
+                    <li><a href="#" class="color8"></a></li>
+                </ul>
+            </div>
+        </div> -->
+
+        <!-- ##### Single Widget ##### -->
+        <div class="widget price mb-50">
+            <!-- Widget Title -->
+            <!-- <h6 class="widget-title mb-30">Price</h6> -->
+
+            <!-- <div class="widget-desc">
+                <div class="slider-range">
+                    <div data-min="10" data-max="1000" data-unit="$"
+                        class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
+                        data-value-min="10" data-value-max="1000" data-label-result="">
+                        <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
+                        <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
+                        <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
+                    </div>
+                    <div class="range-price">$10 - $1000</div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+    <div class="amado_product_area section-padding-100">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="product-topbar d-xl-flex align-items-end justify-content-between">
+                        <!-- Total Products -->
+                        <div class="total-products">
+                            <p>Showing 1-8 0f 25</p>
+                            <div class="view d-flex">
+                                <a href="http://localhost:3000/shop#"><i class="fa fa-th-large" aria-hidden="true"></i></a>
+                                <a href="http://localhost:3000/shop#"><i class="fa fa-bars" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                        <!-- Sorting -->
+                        <form action="http://localhost:3000/shop/advanced-search" method="GET">
+                            <div class="pb-3">
+                                <input type="text" name="search" placeholder="Search products..." value="">
+                                    <button type="submit">Search</button>
+                            </div>
+                        <div class="product-sorting d-flex">
+                            
+                            <div class="sort-by-date d-flex align-items-center mr-15">
+                                <p style="width: auto;">Sort by</p>
+                                <!-- Advanced Search and Sort Form -->
+                                
+                                    <select name="sort" id="sortByselect" onchange="this.form.submit()" style="display: none;">
+                                       
+                                        <!-- <option value="price-low-high" 
+                                            >Price: Low to High</option> -->
+                                            <option value="popularity">Popularity</option>
+                                            <option value="price-low-high">Price: Low to High</option>
+                                            <option value="price-high-low">Price: High to Low</option>
+                                            <option value="average-rating">Average Rating</option>
+                                            <option value="featured">Featured</option>
+                                            <option value="new-arrivals">New Arrivals</option>
+                                            <option value="a-z">Alphabetical: A-Z</option>
+                                            <option value="z-a">Alphabetical: Z-A</option>
+                                                                            
+                                    </select><div class="nice-select" tabindex="0"><span class="current">Popularity</span><ul class="list"><li data-value="popularity" class="option selected">Popularity</li><li data-value="price-low-high" class="option">Price: Low to High</li><li data-value="price-high-low" class="option">Price: High to Low</li><li data-value="average-rating" class="option">Average Rating</li><li data-value="featured" class="option">Featured</li><li data-value="new-arrivals" class="option">New Arrivals</li><li data-value="a-z" class="option">Alphabetical: A-Z</li><li data-value="z-a" class="option">Alphabetical: Z-A</li></ul></div>
+
+                            </div>
+                            <div class="view-product d-flex align-items-center">
+                                <p>View</p>
+                                
+                                    <select name="select" id="viewProduct" style="display: none;">
+                                        <option value="value">12</option>
+                                        <option value="value">24</option>
+                                        <option value="value">48</option>
+                                        <option value="value">96</option>
+                                    </select><div class="nice-select" tabindex="0"><span class="current">12</span><ul class="list"><li data-value="value" class="option selected">12</li><li data-value="value" class="option">24</li><li data-value="value" class="option">48</li><li data-value="value" class="option">96</li></ul></div>
+                                
+                            </div>
+                        
+                        </div></form>
+                    
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <!-- Single Product Area -->
+                
+
+                    <div class="col-12 col-sm-6 col-md-12 col-xl-6">
+                        <div class="single-product-wrapper">
+                            <!-- Product Image -->
+                            <div class="product-img">
+                                <img src="./Amado - Furniture Ecommerce Template _ Home_files/1723873640207.jfif" alt="">
+                                <!-- Hover Thumb -->
+                                <img class="hover-img" src="./Amado - Furniture Ecommerce Template _ Home_files/1723873640208.jfif" alt="">
+                            </div>
+
+                            <!-- Product Description -->
+                            <div class="product-description d-flex align-items-center justify-content-between">
+                                <!-- Product Meta Data -->
+                                <div class="product-meta-data">
+                                    <div class="line"></div>
+                                    <p class="product-price">Rs 750
+                                    </p>
+                                    <a href="http://localhost:3000/product-details/66ab57d55a8efc093792844c">
+                                        <h6>
+                                            Modern Chair
+                                        </h6>
+                                    </a>
+                                </div>
+                                <!-- Ratings & Cart -->
+                                <div class="ratings-cart text-right">
+                                    <div class="ratings">
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                    </div>
+                                    <div>
+                                        
+                                        <h6 id="stock-error">(0) left</h6>
+                                        
+                                    </div>
+                                    <div class="cart">
+                                        <!-- <a href="/add-to-cart" data-toggle="tooltip" data-placement="left"
+                                            title="Add to Cart"><img src="img/core-img/cart.png" alt=""></a> -->
+                                            <form class="cart" action="http://localhost:3000/add-to-cart/66ab57d55a8efc093792844c" method="post">
+                                                <input type="hidden" name="productId" value="66ab57d55a8efc093792844c">
+                                                <button type="submit" data-toggle="tooltip" data-placement="left" title="" class="btn cart-image-btn" data-original-title="Add to Cart">
+                                                    <img src="./Amado - Furniture Ecommerce Template _ Home_files/cart.png" alt="">
+                                                </button>
+                                            </form>
+                                    </div>
+                            
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <div class="col-12 col-sm-6 col-md-12 col-xl-6">
+                        <div class="single-product-wrapper">
+                            <!-- Product Image -->
+                            <div class="product-img">
+                                <img src="./Amado - Furniture Ecommerce Template _ Home_files/1723873781344.jfif" alt="">
+                                <!-- Hover Thumb -->
+                                <img class="hover-img" src="./Amado - Furniture Ecommerce Template _ Home_files/1723873781345.jfif" alt="">
+                            </div>
+
+                            <!-- Product Description -->
+                            <div class="product-description d-flex align-items-center justify-content-between">
+                                <!-- Product Meta Data -->
+                                <div class="product-meta-data">
+                                    <div class="line"></div>
+                                    <p class="product-price">Rs 22995
+                                    </p>
+                                    <a href="http://localhost:3000/product-details/66ab58285a8efc0937928455">
+                                        <h6>
+                                            Dining Table
+                                        </h6>
+                                    </a>
+                                </div>
+                                <!-- Ratings & Cart -->
+                                <div class="ratings-cart text-right">
+                                    <div class="ratings">
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                    </div>
+                                    <div>
+                                        
+                                       <h6 id="stock-not-error"> (1)  left</h6>
+                                       
+                                    </div>
+                                    <div class="cart">
+                                        <!-- <a href="/add-to-cart" data-toggle="tooltip" data-placement="left"
+                                            title="Add to Cart"><img src="img/core-img/cart.png" alt=""></a> -->
+                                            <form class="cart" action="http://localhost:3000/add-to-cart/66ab58285a8efc0937928455" method="post">
+                                                <input type="hidden" name="productId" value="66ab58285a8efc0937928455">
+                                                <button type="submit" data-toggle="tooltip" data-placement="left" title="" class="btn cart-image-btn" data-original-title="Add to Cart">
+                                                    <img src="./Amado - Furniture Ecommerce Template _ Home_files/cart.png" alt="">
+                                                </button>
+                                            </form>
+                                    </div>
+                            
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <div class="col-12 col-sm-6 col-md-12 col-xl-6">
+                        <div class="single-product-wrapper">
+                            <!-- Product Image -->
+                            <div class="product-img">
+                                <img src="./Amado - Furniture Ecommerce Template _ Home_files/1722533185273.jpg" alt="">
+                                <!-- Hover Thumb -->
+                                <img class="hover-img" src="./Amado - Furniture Ecommerce Template _ Home_files/1722533267801.jpg" alt="">
+                            </div>
+
+                            <!-- Product Description -->
+                            <div class="product-description d-flex align-items-center justify-content-between">
+                                <!-- Product Meta Data -->
+                                <div class="product-meta-data">
+                                    <div class="line"></div>
+                                    <p class="product-price">Rs 3200
+                                    </p>
+                                    <a href="http://localhost:3000/product-details/66abc5419a6073438701cd81">
+                                        <h6>
+                                            Wall Frame
+                                        </h6>
+                                    </a>
+                                </div>
+                                <!-- Ratings & Cart -->
+                                <div class="ratings-cart text-right">
+                                    <div class="ratings">
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                    </div>
+                                    <div>
+                                        
+                                        <h6 id="stock-error">(-3) left</h6>
+                                        
+                                    </div>
+                                    <div class="cart">
+                                        <!-- <a href="/add-to-cart" data-toggle="tooltip" data-placement="left"
+                                            title="Add to Cart"><img src="img/core-img/cart.png" alt=""></a> -->
+                                            <form class="cart" action="http://localhost:3000/add-to-cart/66abc5419a6073438701cd81" method="post">
+                                                <input type="hidden" name="productId" value="66abc5419a6073438701cd81">
+                                                <button type="submit" data-toggle="tooltip" data-placement="left" title="" class="btn cart-image-btn" data-original-title="Add to Cart">
+                                                    <img src="./Amado - Furniture Ecommerce Template _ Home_files/cart.png" alt="">
+                                                </button>
+                                            </form>
+                                    </div>
+                            
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <div class="col-12 col-sm-6 col-md-12 col-xl-6">
+                        <div class="single-product-wrapper">
+                            <!-- Product Image -->
+                            <div class="product-img">
+                                <img src="./Amado - Furniture Ecommerce Template _ Home_files/1722533739510.jpg" alt="">
+                                <!-- Hover Thumb -->
+                                <img class="hover-img" src="./Amado - Furniture Ecommerce Template _ Home_files/1722533756476.jpg" alt="">
+                            </div>
+
+                            <!-- Product Description -->
+                            <div class="product-description d-flex align-items-center justify-content-between">
+                                <!-- Product Meta Data -->
+                                <div class="product-meta-data">
+                                    <div class="line"></div>
+                                    <p class="product-price">Rs 450
+                                    </p>
+                                    <a href="http://localhost:3000/product-details/66abc76b9a6073438701cdd2">
+                                        <h6>
+                                            Plant Pot
+                                        </h6>
+                                    </a>
+                                </div>
+                                <!-- Ratings & Cart -->
+                                <div class="ratings-cart text-right">
+                                    <div class="ratings">
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                    </div>
+                                    <div>
+                                        
+                                        <h6 id="stock-error">(0) left</h6>
+                                        
+                                    </div>
+                                    <div class="cart">
+                                        <!-- <a href="/add-to-cart" data-toggle="tooltip" data-placement="left"
+                                            title="Add to Cart"><img src="img/core-img/cart.png" alt=""></a> -->
+                                            <form class="cart" action="http://localhost:3000/add-to-cart/66abc76b9a6073438701cdd2" method="post">
+                                                <input type="hidden" name="productId" value="66abc76b9a6073438701cdd2">
+                                                <button type="submit" data-toggle="tooltip" data-placement="left" title="" class="btn cart-image-btn" data-original-title="Add to Cart">
+                                                    <img src="./Amado - Furniture Ecommerce Template _ Home_files/cart.png" alt="">
+                                                </button>
+                                            </form>
+                                    </div>
+                            
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+
+
+                        <div class="row">
+                            <div class="col-12">
+                                <!-- Pagination -->
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-end mt-50">
+                                        
+                        
+                                        
+                                            <li class="page-item active">
+                                                <a class="page-link" href="http://localhost:3000/shop?search=&amp;sort=&amp;category=&amp;brand=&amp;page=1">1</a>
+                                            </li>
+                                        
+                                            <li class="page-item ">
+                                                <a class="page-link" href="http://localhost:3000/shop?search=&amp;sort=&amp;category=&amp;brand=&amp;page=2">2</a>
+                                            </li>
+                                        
+                                            <li class="page-item ">
+                                                <a class="page-link" href="http://localhost:3000/shop?search=&amp;sort=&amp;category=&amp;brand=&amp;page=3">3</a>
+                                            </li>
+                                        
+                        
+                                        
+                                            <li class="page-item">
+                                                <a class="page-link" href="http://localhost:3000/shop?search=&amp;sort=&amp;category=&amp;brand=&amp;page=2">Next</a>
+                                            </li>
+                                        
+                                    </ul>
+                                </nav>
+                        
+                                <!-- <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-end mt-50">
+                                        
+                        
+                                        
+                                            <li class="page-item active">
+                                                <a class="page-link" href="?page=1">1</a>
+                                            </li>
+                                        
+                                            <li class="page-item ">
+                                                <a class="page-link" href="?page=2">2</a>
+                                            </li>
+                                        
+                                            <li class="page-item ">
+                                                <a class="page-link" href="?page=3">3</a>
+                                            </li>
+                                        
+                        
+                                        
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page=2">Next</a>
+                                            </li>
+                                        
+                                    </ul>
+                                </nav> -->
+                            </div>
+                        </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### Main Content Wrapper End ##### -->
+    </div>
+    <!-- ##### Footer Area Start ##### -->
+<footer class="footer_area clearfix">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Single Widget Area -->
+            <div class="col-12 col-lg-4">
+                <div class="single_widget_area">
+                    <!-- Logo -->
+                    <div class="footer-logo mr-50">
+                        <a href="http://localhost:3000/index.html"><img src="./Amado - Furniture Ecommerce Template _ Home_files/logo2.png" alt=""></a>
+                    </div>
+                    <!-- Copywrite Text -->
+                    <p class="copywrite">
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Copyright ©
+                        <script>document.write(new Date().getFullYear());</script>2024 All rights reserved | This template
+                        is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com/" target="_blank">Colorlib</a> &amp; Re-distributed by <a href="https://themewagon.com/" target="_blank">Themewagon</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </p>
+                </div>
+            </div>
+            <!-- Single Widget Area -->
+            <div class="col-12 col-lg-8">
+                <div class="single_widget_area">
+                    <!-- Footer Menu -->
+                    <div class="footer_menu">
+                        <nav class="navbar navbar-expand-lg justify-content-end">
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#footerNavContent" aria-controls="footerNavContent" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
+                            <div class="collapse navbar-collapse" id="footerNavContent">
+                                <ul class="navbar-nav ml-auto">
+                                    <li class="nav-item active">
+                                        <a class="nav-link" href="http://localhost:3000/index.html">Home</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="http://localhost:3000/shop.html">Shop</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="http://localhost:3000/product-details.html">Product</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="http://localhost:3000/cart.html">Cart</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="http://localhost:3000/checkout.html">Checkout</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- ##### Footer Area End ##### -->
+
+<!-- ##### jQuery (Necessary for All JavaScript Plugins) ##### -->
+<script src="./Amado - Furniture Ecommerce Template _ Home_files/jquery-2.2.4.min.js.download"></script>
+<!-- Popper js -->
+<script src="./Amado - Furniture Ecommerce Template _ Home_files/popper.min.js.download"></script>
+<!-- Bootstrap js -->
+<script src="./Amado - Furniture Ecommerce Template _ Home_files/bootstrap.min.js.download"></script>
+<!-- Plugins js -->
+<script src="./Amado - Furniture Ecommerce Template _ Home_files/plugins.js.download"></script>
+<!-- Active js -->
+<script src="./Amado - Furniture Ecommerce Template _ Home_files/active.js.download"></script><a id="scrollUp" href="http://localhost:3000/shop#top" style="position: fixed; z-index: 2147483647;"><i class="fa fa-angle-up" aria-hidden="true"></i></a>
+
+<script>
+   
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const editAddressLinks = document.querySelectorAll('.edit-address');
+    const editAddressForms = document.querySelectorAll('.edit-address-form');
+    const deliverHereButtons = document.querySelectorAll('.deliver-here-btn');
+    const createNewAddressLink = document.getElementById('createNewAddressLink');
+    const newAddressForm = document.getElementById('newAddressForm');
+
+    // Function to update visibility of edit forms and deliver buttons based on selected address
+    function updateVisibility() {
+        const selectedRadio = document.querySelector('input[name="selectedAddress"]:checked');
+        if (selectedRadio) {
+            const selectedIndex = selectedRadio.getAttribute('data-index');
+
+            // Hide all edit forms and buttons
+            editAddressForms.forEach(form => form.style.display = 'none');
+            editAddressLinks.forEach(link => link.style.display = 'none');
+            deliverHereButtons.forEach(btn => btn.style.display = 'none');
+
+            // Show the edit icon and deliver here button for the selected address
+            document.querySelector(`.edit-address[data-index="${selectedIndex}"]`).style.display = 'inline';
+            document.querySelector(`.deliver-here-btn[data-index="${selectedIndex}"]`).style.display = 'block';
+        }
+    }
+
+    // Add click event listeners to edit address links
+    editAddressLinks.forEach(link => {
+        link.addEventListener('click', function () {
+            const index = this.getAttribute('data-index');
+
+            // Hide all edit forms
+            editAddressForms.forEach(form => form.style.display = 'none');
+
+            // Show the clicked edit form
+            document.getElementById(`editAddressForm${index}`).style.display = 'block';
+        });
+    });
+
+    // Update visibility on radio button change
+    document.querySelectorAll('input[name="selectedAddress"]').forEach(radio => {
+        radio.addEventListener('change', updateVisibility);
+    });
+
+    // Show new address form and hide the create new address link
+    if (createNewAddressLink) {
+        createNewAddressLink.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent the default link behavior
+
+            // Hide all edit forms and deliver buttons
+            editAddressForms.forEach(form => form.style.display = 'none');
+            deliverHereButtons.forEach(btn => btn.style.display = 'none');
+
+            // Show the new address form
+            newAddressForm.style.display = 'block';
+            this.style.display = 'none'; // Hide the create new address link
+        });
+    }
+
+    // Initialize visibility based on the selected radio button on page load
+    updateVisibility();
+});
+
+</script>
+
+
+
+</body></html>

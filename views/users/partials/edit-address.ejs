@@ -1,0 +1,65 @@
+<style>
+    .edit-address-container {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 0rem 3rem;
+        position: relative;
+    }
+
+    .error-message {
+        color: red;
+        display: none;
+    }
+</style>
+<div class="container edit-address-container">
+    <div class="row justify-content-start">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-12 account-content-wrapper">
+            <div class="account-details-content mt-3 mb-3">
+                <h4>Update Address</h4>
+                <form id="edit-address-form" action="/account/edit-address/<%= address._id %>" method="POST">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Name"
+                            value="<%= address.name%>" required>
+                        <span class="error-message" id="name-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="addressLine1" name="addressLine1"
+                            placeholder="Address Line 1" value="<%= address.addressLine1%>" required>
+                        <span class="error-message" id="addressLine1-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="addressLine2" name="addressLine2"
+                            placeholder="Address Line 2" value="<%= address.addressLine2%>">
+                        <span class="error-message" id="addressLine2-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="mobile" name="mobile" placeholder="Mobile"
+                            value="<%= address.mobile%>" required>
+                        <span class="error-message" id="mobile-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="city" name="city" placeholder="City"
+                            value="<%= address.city%>" required>
+                        <span class="error-message" id="city-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="district" name="district" placeholder="District"
+                            value="<%= address.district%>" required>
+                        <span class="error-message" id="district-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="state" name="state" placeholder="State"
+                            value="<%= address.state%>" required>
+                        <span class="error-message" id="state-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="zip" name="zip" placeholder="ZIP Code"
+                            value="<%= address.zip%>" required>
+                        <span class="error-message" id="zip-error"></span>
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="Update">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

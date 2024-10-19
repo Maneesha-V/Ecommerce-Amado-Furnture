@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="/css/core-style.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- <div class="single-product-area section-padding-100 clearfix"> -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <a href="/admin/products" class="btn btn-secondary mt-5 ml-5">Go Back</a>
+            </div>
+        </div>
+        <h3 class="text-center">Add Product</h3>
+        <div class="row d-flex justify-content-center">
+            <div class="col-6">
+                <form id="productForm" action="/admin/add-product" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="name">Product Name</label>
+                        <input type="text" class="form-control" id="name" name="name">
+                        <span id="nameError" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        <span id="descriptionError" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="number" class="form-control" id="price" name="price">
+                        <span id="priceError" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Stock</label>
+                        <input type="number" class="form-control" id="stock" name="stock">
+                        <span id="stockError" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select class="form-control" id="category" name="category">
+                            <option value="">Select Category</option>
+                            <%categoryData.forEach(category=>{%>
+                                <option value="<%= category._id%>">
+                                    <%= category.name%>
+                                </option>
+                                <%})%>
+                        </select>
+                        <span id="categoryError" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subcategory">Brand</label>
+                        <select class="form-control" id="brand" name="brand">
+                            <option value="">Select Brand</option>
+                            <%brandData.forEach(brand=>{%>
+                                <option value="<%= brand._id%>">
+                                    <%= brand.brand_name%>
+                                </option>
+                                <%})%>
+                        </select>
+                        <span id="brandError" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="images">Product Images</label>
+                        <input type="file" class="form-control-file" id="images" name="prodImages" accept="image/*"
+                            multiple>
+                        <span id="imagesError" class="text-danger"></span>
+                    </div>
+                    <div id="imagePreviewContainer" class="d-flex flex-wrap"></div>
+                    <button type="submit" id="submitButton" class="btn btn-success">Add Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="cropperModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Crop Image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="img-container">
+                        <img id="imageToCrop" src="" alt="Image to crop">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="cropButton">Crop</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- </div> -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let cropper;
+            let croppedImages = []; // Array to store cropped images
+            const imageInput = document.getElementById("images");
+            const imagePreviewContainer = document.getElementById("imagePreviewContainer");
+            const cropperModal = document.getElementById("cropperModal");
+            const imageToCrop = document.getElementById("imageToCrop");
+            const cropButton = document.getElementById("cropButton");
+            const productForm = document.getElementById('productForm');
+            const submitButton = document.getElementById('submitButton');
+
+            imageInput.addEventListener('change', function (event) {
+                const files = event.target.files;
+                if (files.length > 0) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        imageToCrop.src = e.target.result;
+                        $('#cropperModal').modal('show');
+                    };
+                    reader.readAsDataURL(files[0]);
+                }
+            });
+
+            $('#cropperModal').on('shown.bs.modal', function () {
+                cropper = new Cropper(imageToCrop, {
+                    aspectRatio: 1,
+                    viewMode: 1
+                });
+            }).on('hidden.bs.modal', function () {
+                cropper.destroy();
+                cropper = null;
+            });
+
+            cropButton.addEventListener('click', function () {
+                const canvas = cropper.getCroppedCanvas();
+                canvas.toBlob(function (blob) {
+                    const url = URL.createObjectURL(blob);
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.style.width = '100px';
+                    img.style.height = 'auto';
+                    img.style.margin = '5px';
+                    imagePreviewContainer.appendChild(img);
+
+                    const file = new File([blob], 'cropped.jpg', { type: 'image/jpeg' });
+
+                    // Add cropped image to the array
+                    croppedImages.push(file);
+
+                    updateImageInput(); // Update the input field with the new list of images
+                    $('#cropperModal').modal('hide');
+                    checkFormValidity(); // Ensure button state is updated after cropping
+                });
+            });
+
+            function updateImageInput() {
+                // Create a DataTransfer object to simulate the file input's FileList
+                const dataTransfer = new DataTransfer();
+
+                // Add each cropped image to the DataTransfer object
+                croppedImages.forEach((image) => {
+                    dataTransfer.items.add(image);
+                });
+
+                // Update the input field's files with the new FileList
+                imageInput.files = dataTransfer.files;
+            }
+
+            function validateForm() {
+                const name = document.getElementById('name').value.trim();
+                const description = document.getElementById('description').value.trim();
+                const price = document.getElementById('price').value.trim();
+                const stock = document.getElementById('stock').value.trim();
+                const category = document.getElementById('category').value;
+                const brand = document.getElementById('brand').value;
+                const images = imageInput.files;
+
+                const nameRegex = /^[A-Za-z\s]{2,50}$/;
+                const descriptionRegex = /^.{10,500}$/;
+                const priceRegex = /^\d+(\.\d{1,2})?$/;
+                const stockRegex = /^\d+$/;
+                const nonEmptyRegex = /^.+$/;
+                let isValid = true;
+
+                document.getElementById('nameError').textContent = '';
+                document.getElementById('descriptionError').textContent = '';
+                document.getElementById('priceError').textContent = '';
+                document.getElementById('stockError').textContent = '';
+                document.getElementById('categoryError').textContent = '';
+                document.getElementById('brandError').textContent = '';
+                document.getElementById('imagesError').textContent = '';
+
+                if (!name) {
+                    document.getElementById('nameError').textContent = 'Product Name is required.';
+                    isValid = false;
+                } else if (!nameRegex.test(name)) {
+                    document.getElementById('nameError').textContent = 'Product Name must be between 2 and 50 characters and can only contain letters and spaces.';
+                    isValid = false;
+                }
+
+                if (!description) {
+                    document.getElementById('descriptionError').textContent = 'Description is required.';
+                    isValid = false;
+                } else if (!descriptionRegex.test(description)) {
+                    document.getElementById('descriptionError').textContent = 'Description must be between 10 and 500 characters.';
+                    isValid = false;
+                }
+
+                if (!price) {
+                    document.getElementById('priceError').textContent = 'Price is required.';
+                    isValid = false;
+                } else if (!priceRegex.test(price)) {
+                    document.getElementById('priceError').textContent = 'Price must be a positive number with up to two decimal places.';
+                    isValid = false;
+                }
+
+                if (!stock) {
+                    document.getElementById('stockError').textContent = 'Stock is required.';
+                    isValid = false;
+                } else if (!stockRegex.test(stock)) {
+                    document.getElementById('stockError').textContent = 'Stock must be a positive integer.';
+                    isValid = false;
+                }
+
+                if (!category || !nonEmptyRegex.test(category)) {
+                    document.getElementById('categoryError').textContent = 'Category is required.';
+                    isValid = false;
+                }
+
+                if (!brand || !nonEmptyRegex.test(brand)) {
+                    document.getElementById('brandError').textContent = 'Brand is required.';
+                    isValid = false;
+                }
+
+                if (images.length < 3) {
+                    document.getElementById('imagesError').textContent = 'At least three images must be uploaded.';
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            function checkFormValidity() {
+                const isValid = validateForm();
+                submitButton.disabled = !isValid;
+            }
+
+            // Validate form fields on input
+            document.getElementById('name').addEventListener('input', checkFormValidity);
+            document.getElementById('description').addEventListener('input', checkFormValidity);
+            document.getElementById('price').addEventListener('input', checkFormValidity);
+            document.getElementById('stock').addEventListener('input', checkFormValidity);
+            document.getElementById('category').addEventListener('change', checkFormValidity);
+            document.getElementById('brand').addEventListener('change', checkFormValidity);
+            document.getElementById('images').addEventListener('change', checkFormValidity);
+
+            productForm.addEventListener('submit', function (event) {
+                if (!validateForm()) {
+                    event.preventDefault();
+                } else {
+                    submitButton.disabled = false; // Enable the button after submission if needed
+                }
+            });
+        });
+    </script>
+    <!-- <script>   
+      document.addEventListener('DOMContentLoaded', function () {
+            let cropper;
+            const imageInput = document.getElementById("images");
+            const imagePreviewContainer = document.getElementById("imagePreviewContainer");
+            const cropperModal = document.getElementById("cropperModal");
+            const imageToCrop = document.getElementById("imageToCrop");
+            const cropButton = document.getElementById("cropButton");
+            const productForm = document.getElementById('productForm');
+            const submitButton = document.getElementById('submitButton');
+
+            imageInput.addEventListener('change', function (event) {
+                const files = event.target.files;
+                if (files.length > 0) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        imageToCrop.src = e.target.result;
+                        $('#cropperModal').modal('show');
+                    };
+                    reader.readAsDataURL(files[0]);
+                }
+            });
+
+            $('#cropperModal').on('shown.bs.modal', function () {
+                cropper = new Cropper(imageToCrop, {
+                    aspectRatio: 1,
+                    viewMode: 1
+                });
+            }).on('hidden.bs.modal', function () {
+                cropper.destroy();
+                cropper = null;
+            });
+
+            cropButton.addEventListener('click', function () {
+                const canvas = cropper.getCroppedCanvas();
+                canvas.toBlob(function (blob) {
+                    const url = URL.createObjectURL(blob);
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.style.width = '100px';
+                    img.style.height = 'auto';
+                    img.style.margin = '5px';
+                    imagePreviewContainer.appendChild(img);
+
+                    const file = new File([blob], 'cropped.jpg', { type: 'image/jpeg' });
+
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    imageInput.files = dataTransfer.files;
+                    $('#cropperModal').modal('hide');
+                });
+            });
+
+            function validateForm() {
+                const name = document.getElementById('name').value.trim();
+                const description = document.getElementById('description').value.trim();
+                const price = document.getElementById('price').value.trim();
+                const stock = document.getElementById('stock').value.trim();
+                const category = document.getElementById('category').value;
+                const brand = document.getElementById('brand').value;
+                const images = document.getElementById('images').files;
+
+                const nameRegex = /^[A-Za-z\s]{2,50}$/;
+                const descriptionRegex = /^.{10,500}$/;
+                const priceRegex = /^\d+(\.\d{1,2})?$/;
+                const stockRegex = /^\d+$/;
+                const nonEmptyRegex = /^.+$/;
+                let isValid = true;
+
+                document.getElementById('nameError').textContent = '';
+                document.getElementById('descriptionError').textContent = '';
+                document.getElementById('priceError').textContent = '';
+                document.getElementById('stockError').textContent = '';
+                document.getElementById('categoryError').textContent = '';
+                document.getElementById('brandError').textContent = '';
+                document.getElementById('imagesError').textContent = '';
+
+                if (!name) {
+                    document.getElementById('nameError').textContent = 'Product Name is required.';
+                    isValid = false;
+                } else if (!nameRegex.test(name)) {
+                    document.getElementById('nameError').textContent = 'Product Name must be between 2 and 50 characters and can only contain letters and spaces.';
+                    isValid = false;
+                }
+
+                if (!description) {
+                    document.getElementById('descriptionError').textContent = 'Description is required.';
+                    isValid = false;
+                } else if (!descriptionRegex.test(description)) {
+                    document.getElementById('descriptionError').textContent = 'Description must be between 10 and 500 characters.';
+                    isValid = false;
+                }
+
+                if (!price) {
+                    document.getElementById('priceError').textContent = 'Price is required.';
+                    isValid = false;
+                } else if (!priceRegex.test(price)) {
+                    document.getElementById('priceError').textContent = 'Price must be a positive number with up to two decimal places.';
+                    isValid = false;
+                }
+
+                if (!stock) {
+                    document.getElementById('stockError').textContent = 'Stock is required.';
+                    isValid = false;
+                } else if (!stockRegex.test(stock)) {
+                    document.getElementById('stockError').textContent = 'Stock must be a positive integer.';
+                    isValid = false;
+                }
+
+                if (!category || !nonEmptyRegex.test(category)) {
+                    document.getElementById('categoryError').textContent = 'Category is required.';
+                    isValid = false;
+                }
+
+                if (!brand || !nonEmptyRegex.test(brand)) {
+                    document.getElementById('brandError').textContent = 'Brand is required.';
+                    isValid = false;
+                }
+
+                if (images.length === 0) {
+                    document.getElementById('imagesError').textContent = 'At least one image must be uploaded.';
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            function checkFormValidity() {
+                const isValid = validateForm();
+                submitButton.disabled = !isValid;
+            }
+
+            // Validate form fields on input
+            document.getElementById('name').addEventListener('input', checkFormValidity);
+            document.getElementById('description').addEventListener('input', checkFormValidity);
+            document.getElementById('price').addEventListener('input', checkFormValidity);
+            document.getElementById('stock').addEventListener('input', checkFormValidity);
+            document.getElementById('category').addEventListener('change', checkFormValidity);
+            document.getElementById('brand').addEventListener('change', checkFormValidity);
+            document.getElementById('images').addEventListener('change', checkFormValidity);
+
+            productForm.addEventListener('submit', function (event) {
+                if (!validateForm()) {
+                    event.preventDefault();
+                } else {
+                    submitButton.disabled = true; // Disable the button to prevent double submission
+                }
+            });
+        });
+
+    </script> -->
+
+</body>
+
+</html>

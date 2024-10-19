@@ -1,0 +1,43 @@
+<style>
+    .card-style {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+    }
+
+    .error-message {
+        color: red;
+        display: none;
+    }
+</style>
+<div class="container" style="padding: 1rem;">
+    <div class="row justify-content-start">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-12">
+            <div class="card card-style">
+                <div class="card-body">
+                    <h4 class="mb-3">Edit Account</h4>
+                    <form id="editAccountForm" action="/account/edit-account" method="post">
+                        <div class="form-group">
+                            <label for="firstname">First Name</label>
+                            <input type="text" id="firstname" name="firstname" class="form-control"
+                                value="<%= user.firstname %>" required>
+                            <span class="error-message" id="firstname-error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname">Last Name</label>
+                            <input type="text" id="lastname" name="lastname" class="form-control"
+                                value="<%= user.lastname %>" required>
+                            <span class="error-message" id="lastname-error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile">Mobile</label>
+                            <input type="number" id="mobile" name="mobile" class="form-control"
+                                value="<%= user.mobile %>" required>
+                            <span class="error-message" id="mobile-error"></span>
+                        </div>
+                        <input type="submit" value="Update" class="btn btn-primary">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

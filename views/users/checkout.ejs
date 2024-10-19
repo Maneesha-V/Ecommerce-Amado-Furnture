@@ -1,0 +1,271 @@
+<%- include('../layouts/user/header.ejs')%>
+    <div class="cart-table-area section-padding-100">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <div class="checkout_details_area mt-50 clearfix">
+
+                        <div class="cart-title">
+                            <h2>Checkout</h2>
+                        </div>
+
+                        <!-- Check if there are saved addresses -->
+                        <% if (savedAddresses.length> 0) { %>
+                            <% savedAddresses.forEach((address, index)=> { %>
+                                <div class="saved-address mb-3 p-3 border rounded">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <!-- Radio Button to Select Address -->
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="selectedAddress"
+                                                id="address<%= index %>" value="<%= address._id %>" <%=index===0
+                                                ? 'checked' : '' %> data-index="<%= index %>" data-address="<%=
+                                                    address.name %>, <%= address.addressLine1 %>, <%=
+                                                            address.addressLine2 %>,<%= address.mobile %>,<%=
+                                                                    address.city %>, <%= address.district %> - <%=
+                                                                            address.state %>, <%= address.zip %>">
+                                                                                <div class="ml-2">
+                                                                                    <label class="form-check-label"
+                                                                                        for="address<%= index %>">
+                                                                                        <%= address.name %>
+                                                                                            <%= address.mobile %>
+                                                                                                <br>
+
+                                                                                                <%= address.addressLine1
+                                                                                                    %>, <%=
+                                                                                                        address.addressLine2
+                                                                                                        %>
+                                                                                                        <%= address.city
+                                                                                                            %>, <%=
+                                                                                                                address.district%>
+                                                                                                                ,<%= address.state
+                                                                                                                    %> -
+                                                                                                                    <%= address.zip
+                                                                                                                        %>
+
+                                                                                    </label>
+                                                                                </div>
+                                        </div>
+                                        <!-- Edit Icon -->
+                                        <a href="javascript:void(0);" class="edit-address" data-index="<%= index %>">
+                                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        </a>
+                                        <!-- <a href="/edit-address/<%= address._id %>" class="edit-address">
+                                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        </a> -->
+                                    </div>
+                                    <!-- Deliver Here Button -->
+                                    <div class="deliver-here-btn mb-1" data-index="<%= index %>" style="display:none;">
+                                        <form action="/order-summary" method="post">
+                                            <input type="hidden" name="selectedAddress" value="<%= address._id %>">
+                                            <button type="submit" class="btn btn-primary">Deliver Here</button>
+                                        </form>
+                                    </div>
+                                    <!-- Edit Address Form -->
+                                    <div class="edit-address-form" id="editAddressForm<%= index %>"
+                                        style="display:none;">
+                                        <form action="/edit-saved-address/<%= address._id %>" method="post">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <input type="text" class="form-control" id="name" name="name"
+                                                        value="<%= address.name %>" placeholder="Name" required>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <input type="number" class="form-control" id="mobile" name="mobile"
+                                                        value="<%= address.mobile %>" placeholder="Mobile" required>
+                                                </div>
+                                                <div class="col-12 mb-3">
+                                                    <input type="text" class="form-control" id="addressline1"
+                                                        value="<%= address.addressLine1 %>" name="addressline1"
+                                                        placeholder="Address Line 1" required>
+                                                </div>
+                                                <div class="col-12 mb-3">
+                                                    <input type="text" class="form-control" id="addressline2"
+                                                        value="<%= address.addressLine2 %>" name="addressline2"
+                                                        placeholder="Address Line 2">
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <input type="text" class="form-control" id="city" name="city"
+                                                        value="<%= address.city %>" placeholder="City" required>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <input type="text" class="form-control" id="district"
+                                                        value="<%= address.district %>" name="district"
+                                                        placeholder="District" required>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <input type="text" class="form-control" id="state" name="state"
+                                                        value="<%= address.state %>" placeholder="State" required>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <input type="number" class="form-control" id="zipCode"
+                                                        value="<%= address.zip %>" name="zipCode" placeholder="Zip Code"
+                                                        required>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <input type="submit" class="btn btn-primary" value="UPDATE ADDRESS">
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                                <% }) %>
+
+                                    <!-- Link to Create New Address -->
+                                    <div class="create-new-address mb-3">
+                                        <a href="#" id="createNewAddressLink" class="text-primary"
+                                            onclick="toggleAddressForm()">+ Add a new
+                                            address</a>
+                                    </div>
+                                    <!-- Hidden New Address Form -->
+                                    <div id="newAddressForm" style="display: none;">
+                                        <h6>Create New Address</h6>
+                                        <form action="/save-address" method="post" onsubmit="return validateForm()">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <input type="text" class="form-control" id="name" name="name"
+                                                        placeholder="Name" required>
+                                                    <span class="text-danger" id="nameError"></span>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <input type="number" class="form-control" id="mobile" name="mobile"
+                                                        placeholder="Mobile" required>
+                                                    <span class="text-danger" id="mobileError"></span>
+                                                </div>
+                                                <div class="col-12 mb-3">
+                                                    <input type="text" class="form-control" id="addressline1"
+                                                        name="addressline1" placeholder="Address Line 1" required>
+                                                    <span class="text-danger" id="addressLine1Error"></span>
+                                                </div>
+                                                <div class="col-12 mb-3">
+                                                    <input type="text" class="form-control" id="addressline2"
+                                                        name="addressline2" placeholder="Address Line 2">
+                                                    <span class="text-danger" id="addressLine2Error"></span>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <input type="text" class="form-control" id="city" name="city"
+                                                        placeholder="City" required>
+                                                    <span class="text-danger" id="cityError"></span>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <input type="text" class="form-control" id="district"
+                                                        name="district" placeholder="District" required>
+                                                    <span class="text-danger" id="districtError"></span>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <input type="text" class="form-control" id="state" name="state"
+                                                        placeholder="State" required>
+                                                    <span class="text-danger" id="stateError"></span>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <input type="number" class="form-control" id="zipCode"
+                                                        name="zipCode" placeholder="Zip Code" required>
+                                                    <span class="text-danger" id="zipCodeError"></span>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <input type="submit" class="btn btn-primary"
+                                                        value="SAVE AND DELIVER HERE">
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <% } else { %>
+                                        <!-- No saved addresses, show the new address form -->
+                                        <div id="newAddressForm" style="display: block;">
+                                            <h4>Create New Address</h4>
+                                            <form action="/save-address" method="post" onsubmit="return validateForm()">
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <input type="text" class="form-control" id="name" name="name"
+                                                            placeholder="Name" required>
+                                                        <span class="text-danger" id="nameError"></span>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <input type="number" class="form-control" id="mobile"
+                                                            name="mobile" placeholder="Mobile" required>
+                                                        <span class="text-danger" id="mobileError"></span>
+                                                    </div>
+                                                    <div class="col-12 mb-3">
+                                                        <input type="text" class="form-control" id="addressline1"
+                                                            name="addressline1" placeholder="Address Line 1" required>
+                                                        <span class="text-danger" id="addressLine1Error"></span>
+                                                    </div>
+                                                    <div class="col-12 mb-3">
+                                                        <input type="text" class="form-control" id="addressline2"
+                                                            name="addressline2" placeholder="Address Line 2">
+                                                        <span class="text-danger" id="addressLine2Error"></span>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <input type="text" class="form-control" id="city" name="city"
+                                                            placeholder="City" required>
+                                                        <span class="text-danger" id="cityError"></span>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <input type="text" class="form-control" id="district"
+                                                            name="district" placeholder="District" required>
+                                                        <span class="text-danger" id="districtError"></span>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <input type="text" class="form-control" id="state" name="state"
+                                                            placeholder="State" required>
+                                                        <span class="text-danger" id="stateError"></span>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <input type="number" class="form-control" id="zipCode"
+                                                            name="zipCode" placeholder="Zip Code" required>
+                                                        <span class="text-danger" id="zipCodeError"></span>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <input type="submit" class="btn btn-primary"
+                                                            value="SAVE AND DELIVER HERE">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <% } %>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="cart-summary">
+                        <h5>PRICE DETAILS</h5>
+                        <ul class="summary-table">
+                            <li><span>Price(<%= qty%>items)</span> <span> ₹ <%= total%></span></li>
+
+                            <li><span>Discount:</span>
+                                <span>
+                                    <% if (totalDiscount> 0) { %>
+                                        <span>-₹<%= totalDiscount %></span>
+                                        <% } else { %>
+                                            <span>₹0</span>
+                                            <% } %>
+                                </span>
+                            </li>
+                            <li><span>Delivery Charges</span> <span>Free</span></li>
+                            <hr>
+                            <li><span>Total Payable</span> <span> ₹ <%= totAmtAftDisc%></span></li>
+                        </ul>
+
+                        <!-- <div class="payment-method"> -->
+                        <!-- Cash on delivery -->
+                        <!-- <div class="custom-control custom-checkbox mr-sm-2">
+                                <input type="checkbox" class="custom-control-input" id="cod" checked>
+                                <label class="custom-control-label" for="cod">Cash on Delivery</label>
+                            </div> -->
+                        <!-- Paypal -->
+                        <!-- <div class="custom-control custom-checkbox mr-sm-2">
+                                <input type="checkbox" class="custom-control-input" id="paypal">
+                                <label class="custom-control-label" for="paypal">Paypal <img class="ml-15"
+                                        src="img/core-img/paypal.png" alt=""></label>
+                            </div>
+                        </div> -->
+
+                        <!-- <div class="cart-btn mt-100">
+                            <a href="#" class="btn amado-btn w-100">Checkout</a>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <%- include('../layouts/user/footer.ejs')%>

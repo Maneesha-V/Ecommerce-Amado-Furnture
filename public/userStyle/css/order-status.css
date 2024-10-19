@@ -1,0 +1,70 @@
+
+    .account-details-container {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        margin-bottom: 20px;
+    }
+
+    .order-item {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+    .order-details {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    .order-item .item-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .order-item .item-details {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .order-item .item-status,
+    .order-item .item-actions {
+        text-align: center;
+    }
+
+    .order-item .btn {
+        width: 100%;
+    }
+
+    .return-status-text {
+        font-size: 11px;
+    }
+
+    .font-12 {
+        font-size: 12px;
+    }
+
+    .divider-line {
+        border-right: 1px solid #d1d1d9;
+    }
+
+    .no-underline {
+        text-decoration: none !important;
+    }
+
+    h4 {
+        margin-top: 0;
+    }
+
+    @media (max-width: 767px) {
+        .order-item .item-actions {
+            margin-top: 10px;
+        }
+    }

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- Core Style CSS -->
+  <link rel="stylesheet" href="/css/core-style.css">
+  <!-- <link rel="stylesheet" href="/public/adminStyle.css"> -->
+  <style>
+    #edit-button {
+      background: none;
+      border: none;
+      color: blue;
+      cursor: pointer;
+      font-size: medium;
+    }
+
+    #hide-button {
+      background: none;
+      border: none;
+      color: red;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="single-product-area section-padding-100 clearfix p-5">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <h4 class="text-center">Product Details</h4>
+        </div>
+        <div class="col-12 d-flex justify-content-between mb-3">
+          <div class="d-flex">
+            <a href="/admin/dashboard" class="btn btn-secondary">Go Back</a>
+          </div>
+          <div class="d-flex">
+            <a href="/admin/category" class="btn btn-warning">Add Category</a>&nbsp;
+            <a href="/admin/add-product" class="btn btn-warning">Add Product</a>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="table-responsive">
+            <table class="table table-warning table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Id</th>
+                  <th scope="col">Image</th>
+                  <th scope="col">Product Name</th>
+                  <th scope="col">Category</th>
+                  <!-- <th scope="col">Sub Category</th> -->
+                  <th scope="col">Brand</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Stock</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% productData.forEach(product=>{%>
+                  <!-- <%if(product.is_block ){%>
+                        <tr style="background-color:#d13434ab;">                        
+                       <% }else{%>
+                          <tr>
+                        <%}%> -->
+                  <tr style="<%= product.is_block ? 'background-color:#d13434ab' : '' %>">
+                    <td>
+                      <%= product._id%>
+                    </td>
+                    <td>
+                      <%if(Array.isArray(product.prodImages) && product.prodImages.length>0){%>
+                        <%product.prodImages.forEach(images=>{%>
+                          <img src="/<%= images%>" alt="Product Image" style="width: 100px;height: auto;">
+                          <%})%>
+                            <%}%>
+                    </td>
+                    <td>
+                      <%= product.name%>
+                    </td>
+                    <td>
+                      <%= product.categoryId.name%>
+                    </td>
+                    <!-- <td><%= product.subcategory%></td> -->
+                    <td>
+                      <%= product.brand.brand_name%>
+                    </td>
+                    <td>
+                      <%= product.description%>
+                    </td>
+                    <td>
+                      <%= product.price%>
+                    </td>
+                    <td>
+                      <%= product.stock%>
+                    </td>
+                    <td style="display:flex;">
+                      <a href="/admin/edit-product/<%= product._id%>">
+                        <button type="submit" id="edit-button">Edit</button>
+                      </a>&nbsp;
+                      <form action="/admin/hide-product/<%= product._id %>" method="POST">
+                        <button type="submit" id="hide-button">
+                          <%= product.is_block ? 'Unhide' : 'Hide' %>
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                  <%})%>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="d-flex justify-content-between">
+            <nav aria-label="Page navigation">
+              <ul class="pagination">
+                <% for(let i=1; i <=totalPages; i++) { %>
+                  <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>&limit=<%= limit %>">
+                      <%= i %>
+                    </a>
+                  </li>
+                  <% } %>
+              </ul>
+            </nav>
+            <div>
+              <span>Page <%= currentPage %> of <%= totalPages %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <!-- </div>  -->
+</body>
+
+</html>

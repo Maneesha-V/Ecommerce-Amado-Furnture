@@ -1,0 +1,124 @@
+<%- include('../layouts/admin/header.ejs')%>
+    <div class="single-product-area section-padding-100 clearfix">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 d-flex justify-content-end">
+                    <a href="/admin/products" class="btn btn-success">Go Back</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <h3>Add New Category</h3>
+                    <form action="/admin/add-category" method="POST">
+                        <div class="form-group">
+                            <label for="new-category">New Category</label>
+                            <input type="text" class="form-control" id="new-category" name="name">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Category</button>
+                    </form>
+                    <br>
+                    <% if (typeof categoryError !=='undefined' ) { %>
+                        <div style="color: red;">
+                            <%= categoryError %>
+                        </div>
+                        <% } %>
+                </div>
+                <div class="col-6">
+                    <h3>Add New Brand</h3>
+                    <form action="/admin/add-brand" method="POST">
+                        <div class="form-group">
+                            <label for="new-brand">New Brand</label>
+                            <input type="text" class="form-control" id="new-brand" name="newBrand">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Brand</button>
+                    </form>
+                    <br>
+                    <% if (typeof brandError !=='undefined' ) { %>
+                        <div style="color: red;">
+                            <%= brandError %>
+                        </div>
+                        <% } %>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-12">
+                <h3>Manage Categories</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% categories.forEach(category=> { %>
+                            <%if(category.isDelete ){%>
+                                <tr style="background-color:#d13434ab;">
+                                    <% }else{%>
+                                <tr>
+                                    <%}%>
+                                        <td>
+                                            <%= category._id %>
+                                        </td>
+                                        <td>
+                                            <%= category.name %>
+                                        </td>
+                                        <td>
+                                            <form action="/admin/edit-category/<%= category._id %>" method="POST"
+                                                style="display:inline;">
+                                                <input type="text" name="name" value="<%= category.name %>"
+                                                    class="form-control d-inline" style="width:auto;">
+                                                <button type="submit" class="btn btn-warning btn-sm">Edit</button>
+                                            </form>
+                                            <form action="/admin/delete-category/<%= category._id %>" method="POST"
+                                                style="display:inline;">
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </td>
+                                </tr>
+                                <% }); %>
+                    </tbody>
+                </table>
+                <!-- <% if (typeof manageCategoryError !== 'undefined') { %>
+                        <div style="color: red;"><%= manageCategoryError %></div>
+                    <% } %> -->
+                <!-- Pagination Controls -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <% if (currentPage> 1) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= currentPage - 1 %>&limit=<%= limit %>"
+                                    aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <% } %>
+
+                                <% for(let i=1; i <=totalPages; i++) { %>
+                                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                        <a class="page-link" href="?page=<%= i %>&limit=<%= limit %>">
+                                            <%= i %>
+                                        </a>
+                                    </li>
+                                    <% } %>
+
+                                        <% if (currentPage < totalPages) { %>
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                    href="?page=<%= currentPage + 1 %>&limit=<%= limit %>"
+                                                    aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                            <% } %>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    <%- include('../layouts/admin/footer.ejs')%>

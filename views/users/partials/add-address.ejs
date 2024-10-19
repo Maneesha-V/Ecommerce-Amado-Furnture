@@ -1,0 +1,61 @@
+<style>
+    .add-address-container {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 0rem 3rem;
+        position: relative;
+    }
+
+    .error-message {
+        color: red;
+        display: none;
+    }
+</style>
+<div class="container add-address-container">
+    <div class="row justify-content-start">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-12 account-content-wrapper">
+            <div class="account-details-content mt-3 mb-3">
+                <h4>Add Address</h4>
+                <form id="add-address-form" action="/account/add-address" method="POST">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+                        <span class="error-message" id="name-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="addressLine1" name="addressLine1"
+                            placeholder="Address Line 1" required>
+                        <span class="error-message" id="addressLine1-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="addressLine2" name="addressLine2"
+                            placeholder="Address Line 2">
+                        <span class="error-message" id="addressLine2-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="mobile" name="mobile" placeholder="Mobile"
+                            required>
+                        <span class="error-message" id="mobile-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="city" name="city" placeholder="City" required>
+                        <span class="error-message" id="city-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="district" name="district" placeholder="District"
+                            required>
+                        <span class="error-message" id="district-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="state" name="state" placeholder="State" required>
+                        <span class="error-message" id="state-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="zip" name="zip" placeholder="ZIP Code" required>
+                        <span class="error-message" id="zip-error"></span>
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="Add Address">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

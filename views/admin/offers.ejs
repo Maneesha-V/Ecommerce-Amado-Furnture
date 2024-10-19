@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offer</title>
+    <link rel="stylesheet" href="/css/core-style.css">
+    <!-- <link rel="stylesheet" href="/style.css"> -->
+    <style>
+        #edit-button {
+            background: none;
+            border: none;
+            color: blue;
+            cursor: pointer;
+            font-size: medium;
+        }
+
+        #hide-button {
+            background: none;
+            border: none;
+            color: red;
+            cursor: pointer;
+            font-size: medium;
+        }
+
+        .dis-flex {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="single-product-area section-padding-100 clearfix ">
+        <div class="container-fluid">
+            <div class="row mx-5">
+                <div class="col-12">
+                    <h4 class="text-center">Existing Offers</h4>
+                </div>
+                <div class="col-12 d-flex justify-content-between mb-3">
+                    <div class="d-flex">
+                        <a href="/admin/dashboard" class="btn btn-secondary">Go Back</a>
+                    </div>
+                    <div class="d-flex">
+                        <a href="/admin/add-offer" class="btn btn-warning">Add Offer</a>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table class="table table-warning table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th> Name</th>
+                                    <th>Discount %</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Applicable To</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% offers.forEach((offer, index)=> { %>
+                                    <tr style="<%= offer.isActive ? '':'background-color:#d13434ab' %>">
+                                        <td>
+                                            <%= index + 1 %>
+                                        </td>
+                                        <td>
+                                            <%= offer.offerName %>
+                                        </td>
+                                        <td>
+                                            <%= offer.discountPercentage %>%
+                                        </td>
+                                        <td>
+                                            <%= new Date(offer.startDate).toLocaleDateString() %>
+                                        </td>
+                                        <td>
+                                            <%= new Date(offer.endDate).toLocaleDateString() %>
+                                        </td>
+                                        <td>
+                                            <%= offer.applicableTo %> (<%= offer.applicableId.name %>)
+                                        </td>
+                                        <td class="dis-flex">
+                                            <form action="/admin/edit-offer/<%= offer._id %>" method="get">
+                                                <button type="submit" id="edit-button">Edit</button>
+                                            </form>&nbsp;
+                                            <form action="/admin/hide-offer/<%= offer._id %>" method="post">
+                                                <button type="submit" id="hide-button">
+                                                    <%= offer.isActive ? 'Hide' :'Unhide' %>
+                                                </button>
+                                            </form>
+                                            <!-- <a href="/edit-offer/<%= offer._id %>" id="edit-button">Edit</a>
+                                            <a href="/hide-offer/<%= offer._id %>" id="hide-button">Hide</a> -->
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+    </script>
+</body>
+
+</html>

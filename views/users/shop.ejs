@@ -1,0 +1,428 @@
+<style>
+    /* Style for the Favorites button */
+    .favorites-btn {
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        outline: none !important;
+        box-shadow: none !important;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    /* Remove any focus or active state outlines and shadows */
+    .favorites-btn:focus,
+    .favorites-btn:active,
+    .favorites-btn:focus-visible {
+        outline: none;
+        box-shadow: none;
+        border: none;
+    }
+
+    /* Style the image inside the button to remove any default spacing */
+    .favorites-btn img {
+        width: 20px;
+        /* Adjust the image size */
+        display: block;
+        margin: 0;
+        padding: 0;
+        border: none;
+        vertical-align: middle;
+        /* Align image vertically in the button */
+    }
+
+    /* Reset button default styles */
+    .cart-image-btn {
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        outline: none !important;
+        box-shadow: none !important;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    /* Remove any focus or active state outlines and shadows */
+    .cart-image-btn:focus,
+    .cart-image-btn:active,
+    .cart-image-btn:focus-visible {
+        outline: none;
+        box-shadow: none;
+        border: none;
+    }
+
+    /* Style the image inside the button to remove any default spacing */
+    .cart-image-btn img {
+        width: 24px;
+        /* Adjust the image size */
+        display: block;
+        margin: 0;
+        padding: 0;
+        border: none;
+        vertical-align: middle;
+        /* Align image vertically in the button */
+    }
+
+    /* Reset the form and container div to remove any extra padding or margin */
+    .cart {
+        padding: 0;
+        margin: 0;
+        display: inline-block;
+        /* Keep the cart container inline */
+    }
+
+    .cart form {
+        padding: 0;
+        margin: 0;
+        border: none;
+        display: inline-block;
+    }
+
+    /* Global reset for all elements to avoid unexpected inherited styles */
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        /* Include padding and border in the element's width and height */
+    }
+
+    /* Additional reset for the body to remove any default margins or padding */
+    body {
+        padding: 0;
+        margin: 0;
+    }
+
+    .small-alert {
+        padding: 10px 15px;
+        /* Adjust the padding to reduce height */
+        font-size: 14px;
+        /* Adjust the font size if needed */
+        /* max-height: 200px; */
+        /* Optionally, adjust the width */
+    }
+
+    .small-alert .swal2-title {
+        font-size: 16px;
+        /* Smaller title font size */
+        margin: 0;
+        /* Reduce margin to save space */
+    }
+
+    .small-alert .swal2-content {
+        font-size: 14px;
+        /* Smaller text font size */
+        margin: 0;
+        /* Reduce margin to save space */
+    }
+</style>
+<%- include('../layouts/user/header.ejs')%>
+
+    <div class="shop_sidebar_area">
+
+        <!-- ##### Single Widget ##### -->
+        <div class="widget catagory mb-50">
+            <!-- Widget Title -->
+            <h6 class="widget-title mb-30">Categories</h6>
+
+            <!--  Catagories  -->
+            <div class="catagories-menu">
+                <ul>
+                    <%categories.forEach(category=>{%>
+                        <li>
+                            <a
+                                href="/shop/advanced-search?category=<%= category._id %>&search=<%= search%>&sort=<%= sort%>&page=<%= currentPage %>">
+                                <%= category.name%>
+                            </a>
+                            <!-- <a href="/shop/category/<%= category._id %>">
+                                <%= category.name%>
+                            </a> -->
+                        </li>
+                        <%})%>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ##### Single Widget ##### -->
+        <!--  Brands  -->
+        <div class="widget brands mb-50">
+            <!-- Widget Title -->
+            <h6 class="widget-title mb-30">Brands</h6>
+
+            <form action="/shop/advanced-search" method="GET" id="brandFilterForm">
+                <!-- <form action="/shop/brand" method="GET" id="brandFilterForm"> -->
+                <input type="hidden" name="search" value="<%= search %>">
+                <input type="hidden" name="sort" value="<%= sort %>">
+                <input type="hidden" name="category" value="<%= category %>">
+                <div class="widget-desc">
+                    <!-- Single Form Check -->
+                    <%brands.forEach(brand=>{%>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="brand" value="<%= brand._id%>"
+                                id="brand_<%= brand._id%>"
+                                onchange="document.getElementById('brandFilterForm').submit()">
+                            <label class="form-check-label" for="brand_<%= brand._id%>">
+                                <%= brand.brand_name%>
+                            </label>
+                        </div>
+                        <%})%>
+
+                </div>
+            </form>
+        </div>
+
+        <!-- ##### Single Widget ##### -->
+        <!-- <div class="widget color mb-50"> -->
+        <!-- Widget Title -->
+        <!-- <h6 class="widget-title mb-30">Color</h6> -->
+        <!-- 
+            <div class="widget-desc">
+                <ul class="d-flex">
+                    <li><a href="#" class="color1"></a></li>
+                    <li><a href="#" class="color2"></a></li>
+                    <li><a href="#" class="color3"></a></li>
+                    <li><a href="#" class="color4"></a></li>
+                    <li><a href="#" class="color5"></a></li>
+                    <li><a href="#" class="color6"></a></li>
+                    <li><a href="#" class="color7"></a></li>
+                    <li><a href="#" class="color8"></a></li>
+                </ul>
+            </div>
+        </div> -->
+
+        <!-- ##### Single Widget ##### -->
+        <div class="widget price mb-50">
+            <!-- Widget Title -->
+            <!-- <h6 class="widget-title mb-30">Price</h6> -->
+
+            <!-- <div class="widget-desc">
+                <div class="slider-range">
+                    <div data-min="10" data-max="1000" data-unit="$"
+                        class="slider-range-price ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
+                        data-value-min="10" data-value-max="1000" data-label-result="">
+                        <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
+                        <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
+                        <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
+                    </div>
+                    <div class="range-price">$10 - $1000</div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+    <div class="amado_product_area section-padding-100">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="product-topbar d-xl-flex align-items-end justify-content-between">
+                        <!-- Total Products -->
+                        <div class="total-products">
+                            <p>Showing 1-8 0f 25</p>
+                            <div class="view d-flex">
+                                <a href="#"><i class="fa fa-th-large" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-bars" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                        <!-- Sorting -->
+                        <form action="/shop/advanced-search" method="GET">
+                            <div class="pb-3">
+                                <input type="text" name="search" placeholder="Search products..."
+                                    value="<%= typeof search !== 'undefined' ? search:'' %>">
+                                <button type="submit">Search</button>
+                            </div>
+                            <div class="product-sorting d-flex">
+
+                                <div class="sort-by-date d-flex align-items-center mr-15">
+                                    <p style="width: auto;">Sort by</p>
+                                    <!-- Advanced Search and Sort Form -->
+
+                                    <select name="sort" id="sortByselect" onchange="this.form.submit()">
+
+                                        <!-- <option value="price-low-high" <%= typeof sort !== 'undefined' && sort === 'price-low-high' ? 'selected' : '' %>
+                                            >Price: Low to High</option> -->
+                                        <option value="popularity" <%=typeof sort !=='undefined' && sort==='popularity'
+                                            ? 'selected' : '' %>>Popularity</option>
+                                        <option value="price-low-high" <%=typeof sort !=='undefined' &&
+                                            sort==='price-low-high' ? 'selected' : '' %>>Price: Low to High</option>
+                                        <option value="price-high-low" <%=typeof sort !=='undefined' &&
+                                            sort==='price-high-low' ? 'selected' : '' %>>Price: High to Low</option>
+                                        <option value="average-rating" <%=typeof sort !=='undefined' &&
+                                            sort==='average-rating' ? 'selected' : '' %>>Average Rating</option>
+                                        <option value="featured" <%=typeof sort !=='undefined' && sort==='featured'
+                                            ? 'selected' : '' %>>Featured</option>
+                                        <option value="new-arrivals" <%=typeof sort !=='undefined' &&
+                                            sort==='new-arrivals' ? 'selected' : '' %>>New Arrivals</option>
+                                        <option value="a-z" <%=typeof sort !=='undefined' && sort==='a-z' ? 'selected'
+                                            : '' %>>Alphabetical: A-Z</option>
+                                        <option value="z-a" <%=typeof sort !=='undefined' && sort==='z-a' ? 'selected'
+                                            : '' %>>Alphabetical: Z-A</option>
+
+                                    </select>
+
+                                </div>
+                                <div class="view-product d-flex align-items-center">
+                                    <p>View</p>
+                                    <form action="#" method="get">
+                                        <select name="select" id="viewProduct">
+                                            <option value="value">12</option>
+                                            <option value="value">24</option>
+                                            <option value="value">48</option>
+                                            <option value="value">96</option>
+                                        </select>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <!-- Single Product Area -->
+                <% products.forEach(product=>{%>
+
+                    <div class="col-12 col-sm-6 col-md-12 col-xl-6">
+                        <div class="single-product-wrapper">
+                            <!-- Product Image -->
+                            <a href="/product-details/<%= product._id %>">
+                                <div class="product-img">
+                                    <img src="/<%= product.prodImages[0] %>" alt="">
+                                    <!-- Hover Thumb -->
+                                    <img class="hover-img" src="/<%= product.prodImages[1] %>" alt="">
+                                </div>
+                            </a>
+
+                            <!-- Product Description -->
+                            <div class="product-description d-flex align-items-center justify-content-between">
+                                <!-- Product Meta Data -->
+                                <div class="product-meta-data">
+                                    <div class="line"></div>
+                                    <p class="product-price">
+                                        <% if (product.offerDiscountedPrice && product.offerDiscountedPrice <
+                                            product.price) { %>
+                                            <span style="text-decoration: line-through; color: red;font-size: 18px;">
+                                                ₹<%= product.price %>
+                                            </span>
+                                            &nbsp;
+                                            <span style="font-weight: bold;">
+                                                ₹<%= product.offerDiscountedPrice %>
+                                            </span>
+                                            <% } else { %>
+                                                ₹<%= product.price %>
+                                                    <% } %>
+                                    </p>
+                                    <a href="/product-details/<%= product._id %>">
+                                        <h6>
+                                            <%= product.name%>
+                                        </h6>
+                                    </a>
+                                </div>
+                                <!-- Ratings & Cart -->
+                                <div class="ratings-cart text-right">
+                                    <div class="ratings">
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                    </div>
+                                    <div>
+                                        <%if(product.stock>0){%>
+                                            <h6 id="stock-not-error"> (<%= product.stock%>) left</h6>
+                                            <%}else{%>
+                                                <h6 id="stock-error">(<%= product.stock%>) left</h6>
+                                                <%}%>
+                                    </div>
+                                    <div class="cart">
+                                        <form id="add-to-cart-form-<%= product._id %>"
+                                            action="/shop-to-cart/<%= product._id %>" method="post">
+                                            <input type="hidden" name="productId" value="<%= product._id %>">
+                                            <input type="hidden" name="quantity" value="1" min="1"
+                                                max="<%= product.stock %>">
+                                            <button type="submit" data-toggle="tooltip" data-placement="left"
+                                                title="Add to Cart" class="cart-image-btn"
+                                                data-stock="<%= product.stock %>"
+                                                onclick="addToCart('<%= product._id%>',event)">
+                                                <img src="img/core-img/cart.png" alt="">
+                                            </button>
+                                        </form>
+                                        <form id="add-to-favorites-form-<%= product._id %>"
+                                            action="/shop-to-wishlist/<%= product._id %>" method="post">
+                                            <input type="hidden" name="productId" value="<%= product._id %>">
+                                            <button type="submit" data-toggle="tooltip" data-placement="right"
+                                                title="Add to Wishlist" class="favorites-btn"
+                                                onclick="addToWishlist('<%= product._id %>', event)">
+                                                <img src="img/core-img/favorites.png" alt="Add to Wishlist">
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <%})%>
+
+
+                        <div class="row">
+                            <div class="col-12">
+                                <!-- Pagination -->
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-end mt-50">
+                                        <% if (currentPage> 1) { %>
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                    href="/shop?search=<%= search %>&sort=<%= sort %>&category=<%= category %>&brand=<%= brand %>&page=<%= currentPage - 1 %>">Prev</a>
+                                            </li>
+                                            <% } %>
+
+                                                <% for (let i=1; i <=totalPages; i++) { %>
+                                                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                                        <a class="page-link"
+                                                            href="/shop?search=<%= search %>&sort=<%= sort %>&category=<%= category %>&brand=<%= brand %>&page=<%= i %>">
+                                                            <%= i %>
+                                                        </a>
+                                                    </li>
+                                                    <% } %>
+
+                                                        <% if (currentPage < totalPages) { %>
+                                                            <li class="page-item">
+                                                                <a class="page-link"
+                                                                    href="/shop?search=<%= search %>&sort=<%= sort %>&category=<%= category %>&brand=<%= brand %>&page=<%= currentPage + 1 %>">Next</a>
+                                                            </li>
+                                                            <% } %>
+                                    </ul>
+                                </nav>
+
+                                <!-- <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-end mt-50">
+                                        <% if (currentPage > 1) { %>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?search=<%= search %>&sort=<%= sort %>&category=<%= category %>&page=<%= currentPage - 1 %>">Previous</a>
+                                            </li>
+                                        <% } %>
+                        
+                                        <% for (let i = 1; i <= totalPages; i++) { %>
+                                            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                                <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                            </li>
+                                        <% } %>
+                        
+                                        <% if (currentPage < totalPages) { %>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+                                            </li>
+                                        <% } %>
+                                    </ul>
+                                </nav> -->
+                            </div>
+                        </div>
+            </div>
+        </div>
+    </div>
+    <!-- ##### Main Content Wrapper End ##### -->
+    </div>
+    <%- include('../layouts/user/footer.ejs')%>

@@ -1,0 +1,122 @@
+<style>
+    .account-content-wrapper {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        position: relative;
+    }
+
+    .billing-address-div {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 10px;
+        position: relative;
+        margin-bottom: 10px;
+    }
+
+    .add-address-link {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .edit-address-link {
+        position: absolute;
+        top: 10px;
+        right: 55px;
+    }
+
+    .img-style {
+        width: 20px;
+        height: 20px;
+    }
+
+    .manage-addresses-content {
+        margin-top: 20px;
+    }
+
+    .address-item {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 10px;
+        position: relative;
+        margin-bottom: 10px;
+    }
+
+    .label-select-default-address {
+        position: absolute;
+        top: 10px;
+        right: 45px;
+    }
+
+    .delete-address-link {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .img-style-delete {
+        width: 15px;
+        height: 15px;
+    }
+</style>
+<div class="account-content-wrapper">
+    <div class="account-details-content">
+        <h3>Billing address</h3>
+        <div id="billing-address" class="billing-address-div">
+            <p>
+                <% if (user && user.addresses && user.addresses.length> 0) { %>
+                    <% user.addresses.forEach(function(address,index) { if(user.defaultAddress &&
+                        user.defaultAddress.toString()===address._id.toString()){%>
+                        <%= address.name%><br>
+                            <%= address.addressLine1 %><br>
+                                <%= address.addressLine2 %><br>
+                                    <%= address.mobile%><br>
+                                        <%= address.city %><br>
+                                            <%= address.district %><br>
+                                                <%= address.state %>, <%= address.zip %>
+                                                        <% } })}%>
+            </p>
+            <a href="#" class="add-address-link" data-url="/account/add-address">
+                <img src="/img/core-img/addressicon.png" alt="Add" class="img-style">Add</a>
+
+            <a href="#" class="edit-address-link" data-url="/account/edit-address/<%= user.defaultAddress%>">
+                <img src="/img/core-img/edit.jpg" alt="Edit" class="img-style">Edit
+            </a>
+        </div>
+        <div class="manage-addresses-content">
+            <h3>Manage Addresses</h3>
+            <% if (user && user.addresses && user.addresses.length> 0) { %>
+                <% user.addresses.forEach(function(address,index) { %>
+                    <div class="address-item" data-address-id="<%= address._id %>">
+                        <p>
+                        <h5 class="text-secondary">Address <%= index+1%>
+                        </h5>
+                        <%= address.name%><br>
+                            <%= address.addressLine1 %><br>
+                                <%= address.addressLine2 %><br>
+                                    <%= address.mobile%><br>
+                                        <%= address.city %><br>
+                                            <%= address.district %><br>
+                                                <%= address.state %>, <%= address.zip %>
+                                                        </p>
+                                                        <!-- <a href="#" class="edit-address-link" data-url="/account/edit-address/<%= address._id %>" style="position: absolute; top: 9px; right: 27px;">
+                            <img src="/img/core-img/edit.jpg" alt="Edit" style="width: 20px; height: 20px;">
+                        </a> -->
+                                                        <label class="text-secondary label-select-default-address">
+                                                            <input type="checkbox" class="select-default-address"
+                                                                data-address-index="<%= index %>"> Set as default
+                                                        </label>
+                                                        <a href="#" class="delete-address-link"
+                                                            data-url="/account/delete-address">
+                                                            <img src="/img/core-img/delete.jpg" alt="Delete"
+                                                                class="img-style-delete">
+                                                        </a>
+                    </div>
+                    <% }); %>
+                        <% } else { %>
+                            <p>No additional addresses found.</p>
+                            <% } %>
+        </div>
+    </div>
+</div>

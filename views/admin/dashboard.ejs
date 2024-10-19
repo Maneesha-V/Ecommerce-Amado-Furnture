@@ -1,0 +1,243 @@
+<%- include('../layouts/admin/header.ejs')%>
+    <div class="single-product-area section-padding-100 clearfix">
+        <div class="container-fluid">
+            <div class="row mx-5">
+                <div class="col-12">
+                    <h4 class="text-center">DASHBOARD</h4>
+                </div>
+                <div class="col-12 d-flex justify-content-end mb-3">
+                    <!-- <div class="d-flex">
+                        <a href="/admin/dashboard" class="btn btn-secondary">Go Back</a>
+                    </div> -->
+                    <div class="d-flex">
+                        <a href="/admin/viewSales" class="btn btn-warning">View Sales</a>
+                    </div>
+                </div>
+                <div class="col">
+                    <select id="filterType" class="form-control">
+                        <option value="Daily">1 Day</option>
+                        <option value="Weekly">1 Week</option>
+                        <option value="Monthly">1 Month</option>
+                        <option value="Yearly">1 Year</option>
+                        <option value="custom">Custom Date</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <input type="date" id="startDate" class="form-control" disabled>
+                </div>
+                <div class="col">
+                    <input type="date" id="endDate" class="form-control" disabled>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary" onclick="applyFilter()">Filter</button>
+                </div>
+            </div>
+
+            <!-- Chart Row -->
+            <div class="row mx-5 mt-5">
+                <div class="col-12 d-flex justify-content-between">
+                    <!-- Chart Column -->
+                    <div class="col-md-6">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+
+                    <!-- Total Sales Column -->
+                    <div class="col-md-6 d-flex align-items-center justify-content-center">
+                        <div>
+                            <h5>Total Sales <span id="filterTypeDisplay"></span></h5>
+                            <h5>Total Orders : <span id="totalOrders">0</span></h5>
+                            <h5>Total Revenue : <span id="totalRevenue">0</span></h5>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="bestSellingContainer" class="container mt-5" style="display: none;">
+                <h3 class="text-center mb-4 text-decoration-underline">Best Selling <span
+                        id="bestSellingFilterDisplay"></span>
+                </h3>
+                <div class="row bg-info text-dark">
+                    <!-- Top Selling Products -->
+                    <div class="col-lg-4 px-2">
+                        <h4 class="text-center text-white my-3">Best Selling Products</h4>
+                        <ul class="list-group mb-3" id="bestSellingProductsList">
+                            <!-- The list items for products will be dynamically populated here -->
+                        </ul>
+                    </div>
+
+                    <!-- Top Selling Categories -->
+                    <div class="col-lg-4 px-2">
+                        <h4 class="text-center text-white my-3">Best Selling Categories</h4>
+                        <ul class="list-group mb-3" id="bestSellingCategoriesList">
+                            <!-- The list items for categories will be dynamically populated here -->
+                        </ul>
+                    </div>
+
+                    <!-- Top Selling Brands -->
+                    <div class="col-lg-4 px-2">
+                        <h4 class="text-center text-white my-3">Best Selling Brands</h4>
+                        <ul class="list-group mb-3" id="bestSellingBrandsList">
+                            <!-- The list items for brands will be dynamically populated here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+    <%- include('../layouts/admin/footer.ejs')%>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                // Initialize chart
+                const ctx = document.getElementById('salesChart').getContext('2d');
+                let salesChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [], // Fill with dynamic data
+                        datasets: [{
+                            label: 'Sales Amount',
+                            data: [], // Fill with dynamic data
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+                // Enable custom date filter
+                document.getElementById('filterType').addEventListener('change', function () {
+                    const filterType = this.value;
+                    const startDate = document.getElementById('startDate');
+                    const endDate = document.getElementById('endDate');
+
+                    if (filterType === 'custom') {
+                        startDate.disabled = false;
+                        endDate.disabled = false;
+                    } else {
+                        startDate.disabled = true;
+                        endDate.disabled = true;
+                    }
+                });
+
+                // Apply the filter and fetch data
+                window.applyFilter = async function () {
+                    const filterType = document.getElementById('filterType').value;
+                    const startDate = document.getElementById('startDate').value;
+                    const endDate = document.getElementById('endDate').value;
+
+                    try {
+                        const response = await fetch('/admin/filterSales', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ filterType, startDate, endDate })
+                        });
+
+                        const data = await response.json();
+                        console.log("Response Data:", data);
+
+                        // Extract labels and amounts based on the filter type
+                        let labels, amounts, totalOrders, totalRevenue;
+
+                        if (filterType === 'Daily' || filterType === 'Weekly' || filterType === 'Monthly') {
+                            labels = data.salesData.map(sale => sale._id); // Dates for the x-axis
+                            amounts = data.salesData.map(sale => sale.totalAmount); // Total amounts for the y-axis
+
+                            // Calculate total orders and total revenue from sales data
+                            totalOrders = data.salesData.reduce((acc, sale) => acc + sale.totalOrders, 0);
+                            totalRevenue = amounts.reduce((acc, amount) => acc + amount, 0);
+                        } else if (filterType === 'Yearly') {
+                            labels = data.salesData.map(sale => sale._id); // Months for the x-axis
+                            amounts = data.salesData.map(sale => sale.totalAmount); // Total amounts for the y-axis
+
+                            // Calculate total orders and total revenue from sales data
+                            totalOrders = data.salesData.reduce((acc, sale) => acc + sale.totalOrders, 0);
+                            totalRevenue = amounts.reduce((acc, amount) => acc + amount, 0);
+                        } else if (filterType === 'custom') {
+                            labels = data.salesData.map(sale => sale._id); // Custom date labels
+                            amounts = data.salesData.map(sale => sale.totalAmount); // Total amounts for the y-axis
+
+                            // Calculate total orders and total revenue for custom date range
+                            totalOrders = data.salesData.length; // Number of sales entries
+                            totalRevenue = amounts.reduce((acc, amount) => acc + amount, 0);
+                        }
+
+                        // Display total orders, total revenue, and filter type in the UI
+                        document.getElementById('totalOrders').textContent = `${totalOrders}`;
+                        document.getElementById('totalRevenue').textContent = `₹${totalRevenue}`;
+                        document.getElementById('filterTypeDisplay').textContent = `Based on ${data.filterType} Filter Applied`;
+                        document.getElementById('bestSellingFilterDisplay').textContent = `on a ${data.filterType} Basis`;
+                        // Update chart data
+                        salesChart.data.labels = labels;
+                        salesChart.data.datasets[0].data = amounts;
+                        salesChart.update();
+
+                        // Update Top Selling Products
+                        const productList = document.getElementById('bestSellingProductsList');
+                        productList.innerHTML = ''; // Clear existing content
+                        data.topSellingProducts.forEach(product => {
+                            const listItem = `
+                        <li class="list-group-item d-flex justify-content-center gap-5 align-items-center h6">
+                            <div class="col-lg-6 text-center">
+                                ${product.productName}
+                            </div>
+                            <div class="badge bg-success rounded-pill col-lg-3 text-center">
+                                ${product.totalSales} sold
+                            </div>
+                        </li>
+                    `;
+                            productList.innerHTML += listItem;
+                        });
+                        // Update Top Selling Categories
+                        const categoryList = document.getElementById('bestSellingCategoriesList');
+                        categoryList.innerHTML = '';
+                        data.topSellingCategories.forEach(category => {
+                            const listItem = `
+                        <li class="list-group-item d-flex justify-content-center gap-5 align-items-center h6">
+                            <div class="col-lg-6 text-center">
+                                ${category._id}
+                            </div>
+                            <div class="badge bg-success rounded-pill col-lg-3 text-center">
+                                ${category.totalSales} sold
+                            </div>
+                        </li>
+                    `;
+                            categoryList.innerHTML += listItem;
+                        })
+                        // Update Top Selling Brands
+                        const brandList = document.getElementById('bestSellingBrandsList');
+                        brandList.innerHTML = '';
+                        data.topSellingBrands.forEach(brand => {
+                            const listItem = `
+                         <li class="list-group-item d-flex justify-content-center gap-5 align-items-center h6">
+                            <div class="col-lg-6 text-center">
+                                ${brand._id}
+                            </div>
+                            <div class="badge bg-success rounded-pill col-lg-3 text-center">
+                                ${brand.totalSales} sold
+                            </div>                          
+                        </li>
+                        `;
+                            brandList.innerHTML += listItem;
+                        })
+                        // Show best selling container if filter is applied
+                        document.getElementById('bestSellingContainer').style.display = 'block';
+
+                    } catch (error) {
+                        console.error('Error fetching sales data:', error);
+                    }
+                };
+            });
+        </script>
