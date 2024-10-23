@@ -84,7 +84,7 @@ const getItemsInOrder = async (req, res) => {
     const { orderId } = req.params;
     try {
         const order = await Order.findById(new ObjectId(orderId))
-        // console.log("order",order);
+        console.log("order-items",order);
         res.render('items-status', { order })
     }
     catch (err) {

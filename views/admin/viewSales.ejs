@@ -34,9 +34,11 @@
                 </div>
                 <div class="col">
                     <input type="date" id="startDate" class="form-control" disabled>
+                    <span id="startError" style="color: red;"></span>
                 </div>
                 <div class="col">
                     <input type="date" id="endDate" class="form-control" disabled>
+                    <span id="endError" style="color: red;"></span>
                 </div>
                 <div class="col">
                     <button class="btn btn-primary" onclick="fetchSalesReport()">Generate Report</button>
@@ -114,7 +116,10 @@
             let filter = this.value;
             let startDate = document.getElementById('startDate');
             let endDate = document.getElementById('endDate');
-
+            let startError = document.getElementById('startError');
+            let endError = document.getElementById('endError');
+            startError.textContent = '';
+            endError.textContent = '';
             if (filter === 'custom') {
                 startDate.disabled = false;
                 endDate.disabled = false;
@@ -131,6 +136,31 @@
             let filterType = document.getElementById('filterType').value;
             let startDate = document.getElementById('startDate').value;
             let endDate = document.getElementById('endDate').value;
+            
+            let startError = document.getElementById('startError');
+            let endError = document.getElementById('endError');
+            let today = new Date().toISOString().split('T')[0];
+            startError.textContent = '';
+            endError.textContent = '';
+            if (filterType === 'custom') {
+                // Validate custom date range
+                if (!startDate) {
+                    startError.textContent = 'Please select a start date.';
+                    return;
+                }
+                if (!endDate) {
+                    endError.textContent = 'Please select an end date.';
+                    return;
+                }
+                if (startDate > endDate) {
+                    endError.textContent = 'End date must be greater than or equal to the start date.';
+                    return;
+                }
+                if (endDate > today) {
+                    endError.textContent = 'End date cannot be in the future.';
+                    return;
+                }
+            }
             console.log("filter,start,end", filterType, startDate, endDate);
 
             // Send data to server via AJAX
@@ -181,6 +211,8 @@
                             tableBody.innerHTML += row;
                         });
                     }
+                      // Show PDF content after generating report
+                document.getElementById('pdfContent').style.display = 'block';
                 }).catch(error => {
                     console.error('Error fetching sales report:', error);
                 });

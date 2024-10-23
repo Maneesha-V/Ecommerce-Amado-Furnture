@@ -24,9 +24,12 @@
                 </div>
                 <div class="col">
                     <input type="date" id="startDate" class="form-control" disabled>
+                    <span id="startError" style="color: red;"></span>
                 </div>
                 <div class="col">
                     <input type="date" id="endDate" class="form-control" disabled>
+                    <span id="endError" style="color: red;"></span>
+                    <span id="generalError" style="color: red;"></span>
                 </div>
                 <div class="col">
                     <button class="btn btn-primary" onclick="applyFilter()">Filter</button>
@@ -92,6 +95,54 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
+                // Get references to the elements
+                const startDateInput = document.getElementById('startDate');
+                const endDateInput = document.getElementById('endDate');
+                const startError = document.getElementById('startError');
+                const endError = document.getElementById('endError');
+                const generalError = document.getElementById('generalError');
+                const bestSellingContainer = document.getElementById('bestSellingContainer');
+                // Function to validate dates
+                function validateDates() {
+                    const today = new Date();
+                    const startDate = new Date(startDateInput.value);
+                    const endDate = new Date(endDateInput.value);
+
+                    // Clear previous error messages
+                    startError.textContent = '';
+                    endError.textContent = '';
+                    generalError.textContent = '';
+                    let isValid = true;
+                    // Check if start date is valid and not in the future
+                    if (startDateInput.value === '' || isNaN(startDate.getTime())) {
+                        startError.textContent = 'Please select a valid start date.';
+                        isValid = false;
+                    } else if (startDate > today) {
+                        startError.textContent = 'Start date cannot be in the future.';
+                        isValid = false;
+                    }
+
+                    // Check if end date is valid and not in the future
+                    if (endDateInput.value === '' || isNaN(endDate.getTime())) {
+                        endError.textContent = 'Please select a valid end date.';
+                        isValid = false;
+                    } else if (endDate > today) {
+                        endError.textContent = 'End date cannot be in the future.';
+                        isValid = false;
+                    }
+
+                    // Validate the date range if both dates are valid
+                    if (startDateInput.value && endDateInput.value) {
+                        if (endDate < startDate) {
+                            generalError.textContent = 'End date must be greater than or equal to start date.';
+                            isValid = false;
+                        }
+                    }
+
+                    return isValid;
+
+                }
+
                 // Initialize chart
                 const ctx = document.getElementById('salesChart').getContext('2d');
                 let salesChart = new Chart(ctx, {
@@ -118,25 +169,47 @@
                 // Enable custom date filter
                 document.getElementById('filterType').addEventListener('change', function () {
                     const filterType = this.value;
-                    const startDate = document.getElementById('startDate');
-                    const endDate = document.getElementById('endDate');
+                    // const startDate = document.getElementById('startDate');
+                    // const endDate = document.getElementById('endDate');
 
+                    // if (filterType === 'custom') {
+                    //     startDate.disabled = false;
+                    //     endDate.disabled = false;
+                    // } else {
+                    //     startDate.disabled = true;
+                    //     endDate.disabled = true;
+                    // }
                     if (filterType === 'custom') {
-                        startDate.disabled = false;
-                        endDate.disabled = false;
+                        startDateInput.disabled = false;
+                        endDateInput.disabled = false;
                     } else {
-                        startDate.disabled = true;
-                        endDate.disabled = true;
+                        startDateInput.disabled = true;
+                        endDateInput.disabled = true;
+                        // Hide error messages when not using custom filter
+                        startError.textContent = '';
+                        endError.textContent = '';
+                        generalError.textContent = '';
+                        bestSellingContainer.style.display = 'none'; // Hide the container for non-custom filters
                     }
                 });
 
                 // Apply the filter and fetch data
                 window.applyFilter = async function () {
                     const filterType = document.getElementById('filterType').value;
-                    const startDate = document.getElementById('startDate').value;
-                    const endDate = document.getElementById('endDate').value;
+
+                    // Only validate dates if filterType is "custom"
+                    if (filterType === 'custom' && !validateDates()) {
+                        bestSellingContainer.style.display = 'none'; // Hide if validation fails
+                        return;
+                    }
+
+                    // const filterType = document.getElementById('filterType').value;
+                    // const startDate = document.getElementById('startDate').value;
+                    // const endDate = document.getElementById('endDate').value;
 
                     try {
+                        const startDate = startDateInput.value;
+                        const endDate = endDateInput.value;
                         const response = await fetch('/admin/filterSales', {
                             method: 'POST',
                             headers: {

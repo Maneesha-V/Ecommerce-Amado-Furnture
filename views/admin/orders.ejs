@@ -184,6 +184,7 @@
                         <th>Items</th>
                         <th>Total Amount</th>
                         <th>Shipping Address</th>
+                        <th>Coupon Code</th>
                         <th>Payment Status</th>
                         <th>Payment Method</th>
                         <th>Created At</th>
@@ -220,6 +221,9 @@
                                                 <li>No Address Provided</li>
                                                 <% } %>
                                     </ul>
+                                </td>
+                                <td>
+                                    <%= order.couponCode%>
                                 </td>
                                 <td>
                                     <form action="/admin/orders/<%= order._id%>/status?_method=PATCH" method="POST">
