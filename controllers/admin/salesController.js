@@ -50,7 +50,10 @@ const getSalesReport = async (req, res) => {
         let filter = {};
 
         if (filterType === 'daily') {
-            filter.createdAt = { $gte: today.setHours(0, 0, 0, 0), $lte: today };
+            // filter.createdAt = { $gte: today.setHours(0, 0, 0, 0), $lte: today };
+            const startOfDay = new Date(today.setHours(0, 0, 0, 0)); 
+            const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+            filter.createdAt = { $gte: startOfDay, $lte: endOfDay };
         } else if (filterType === 'weekly') {
             const oneWeekAgo = new Date(today);
             oneWeekAgo.setDate(today.getDate() - 7);
@@ -65,7 +68,12 @@ const getSalesReport = async (req, res) => {
             filter.createdAt = { $gte: oneYearAgo, $lte: today };
         } else if (filterType === 'custom') {
             if (startDate && endDate) {
-                filter.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
+                // filter.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
+                const start = new Date(startDate); 
+                const end = new Date(endDate);
+                end.setHours(23, 59, 59, 999); 
+
+                filter.createdAt = { $gte: start, $lte: end };
             }
         }
         console.log("filter", filter);
@@ -84,6 +92,7 @@ const getSalesReport = async (req, res) => {
             const totalDiscount = totalDiscountFromItems + order.couponDiscount;
             return {
                 orderId: order.orderNumber,
+                date: order.createdAt.toISOString().split('T')[0],
                 userName: `${order.user.firstname} ${order.user.lastname}`,
                 products: order.items, // Assuming products are stored in 'items' field
                 totalAmount: order.totalAmount,

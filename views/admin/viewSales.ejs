@@ -78,6 +78,7 @@
                             <thead>
                                 <tr>
                                     <th>Order Id</th>
+                                    <th>Date</th>
                                     <th>User Name</th>
                                     <th>Products</th>
                                     <th>Total Amount</th>
@@ -143,7 +144,6 @@
             startError.textContent = '';
             endError.textContent = '';
             if (filterType === 'custom') {
-                // Validate custom date range
                 if (!startDate) {
                     startError.textContent = 'Please select a start date.';
                     return;
@@ -171,7 +171,6 @@
             })
                 // .then(response => response.json())
                 .then(response => {
-                    // Check if response is HTML
                     return response.text().then(text => {
                         if (response.headers.get('content-type').includes('application/json')) {
                             return JSON.parse(text);
@@ -189,7 +188,7 @@
                     tableBody.innerHTML = ''; // Clear previous data
 
                     if (data.length === 0) {
-                        tableBody.innerHTML = '<tr><td colspan="8" class="text-center">No transactions found</td></tr>';
+                        tableBody.innerHTML = '<tr><td colspan="9" class="text-center">No transactions found</td></tr>';
                     } else {
                         data.forEach(order => {
                             // Ensure items array exists before attempting to map
@@ -200,6 +199,7 @@
                             let row = `
                     <tr>
                         <td>${order.orderId}</td>
+                        <td>${order.date}</td>
                         <td>${order.userName}</td>
                         <td>${itemsList}</td>
                         <td>${order.totalAmount}</td>
