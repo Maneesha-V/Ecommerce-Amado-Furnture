@@ -18,7 +18,12 @@ const loginUser = async (req, res) => {
         const email = req.body.email
         const password = req.body.password
         const userData = await User.findOne({ email: email })
+        console.log("user",userData);
+        
         if (userData) {
+            if(userData.is_block == true){
+                return res.render('error', { message: "Your access is restricted" })
+            }
             const passwordMatch = await bcrypt.compare(password, userData.password)
             if (passwordMatch) {
                 req.session.user_id = userData._id
@@ -46,10 +51,14 @@ const successGoogleLogin = async (req, res) => {
         }
 
         const userData = await User.findOne({ email: req.user.email });
-
+        console.log("user-google",userData);
+        
         if (!userData) {
             console.error("User not found in the database.");
             return res.render('error', { message: "User not found in the database." });
+        }
+        if (userData.is_block) {
+            return res.render('error', { message: "Your access is restricted.", title: "Access Restricted" });
         }
 
         req.session.user_id = userData._id;
