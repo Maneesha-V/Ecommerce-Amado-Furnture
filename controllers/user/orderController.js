@@ -550,16 +550,18 @@ const placeOrder = async (req, res) => {
             });
 
         } else if (paymentMethod === 'Wallets') {
-            const { order: walletOrder } = await paymentController.processWalletPayment(parsedTotalAmount, userId, selectedAddressId, cart.items);
+            const { order: walletOrder, error } = await paymentController.processWalletPayment(parsedTotalAmount, userId, selectedAddressId, cart.items);
+            if (error) {
+                return res.status(error.status).send(error.message);
+            }
             cart.items = [];
             await cart.save();
-            // Update the product stock after successful payment
             await updateProductStock(walletOrder.items);
             order = walletOrder;
         } else {
             return res.status(400).send('Invalid payment method');
         }
-        // Rendering the order confirmation page with the order details
+
         res.render('order-confirmation', {
             order: order,
             address: selectedAddress,
