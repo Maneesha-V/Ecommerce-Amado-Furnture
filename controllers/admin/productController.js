@@ -96,7 +96,8 @@ const updateProduct = async (req, res) => {
         if (req.files && req.files.length > 0) {
             const files = req.files
             const newImages = files.map(file => {
-                const relativePath = file.path.split('public\\')[1];
+                // const relativePath = file.path.split('public\\')[1];
+                const relativePath = file.path.split(/public[\\/]/)[1];
                 return relativePath;
             });
 
