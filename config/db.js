@@ -5,8 +5,8 @@ dotenv.config();
 const mongoDBUrl = process.env.MONGODB_URL;
 
 function connectDB() {
-<<<<<<< HEAD
-    mongoose.set('strictQuery', true);
+
+   // mongoose.set('strictQuery', true);
    // mongoose.connect(mongoDBUrl, {
      //   useNewUrlParser: true,
        // useUnifiedTopology: true,
@@ -24,30 +24,8 @@ function connectDB() {
          });
         
      } catch (error) {
-         return res.status(500).send({status: "error", message: ''+err});
+         return res.status(500).send({status: "error", message: ''+error});
      }
-=======
-    // mongoose.set('strictQuery', true);
-    // mongoose.connect(mongoDBUrl, {
-    //     useNewUrlParser: true,
-    //     useUnifiedTopology: true,
-    //     serverSelectionTimeoutMS: 15000,
-    // }, (err) => {
-    //     if (err) {
-    //         console.log('Error connecting to MongoDB:', err);
-    //     } else {
-    //         console.log('Connected to MongoDB');
-    //     }
-    // });
-    try{
-        mongoose.connect('mongodb+srv://manudaffodils13:j2oxYij52lPtQQMY@ecomwebapp.tm576.mongodb.net/ecom-furniture?retryWrites=true&w=majority&appName=ecomwebapp',{
-            useNewUrlParser:true
-        });
-        
-    } catch (error) {
-        return res.status(500).send({status: "error", message: ''+err});
-    }
->>>>>>> 2fe33a2f2c60711f99b4c0fa0d2e83045e7039d8
 }
 
 module.exports = connectDB;
