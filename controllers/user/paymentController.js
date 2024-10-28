@@ -107,29 +107,29 @@ async function processCardPayment(totalAmount, userId, selectedAddressId, cartIt
 //Handle wallet payment
 
 async function processWalletPayment(totalAmount, userId, selectedAddressId, cartItems, couponDiscount) {
-    try {
-        // Find the user's wallet
+    try {    
         const wallet = await Wallet.findOne({ user: userId });
         if (!wallet) {
-            return res.status(404).send('Wallet not found for this user.');
+            return { error: true, status: 404, message: 'Wallet not found for this user.' };
+            // return res.status(404).send('Wallet not found for this user.');
         }
 
         const walletBalance = wallet.balance;
 
-        // Check if the wallet has sufficient balance
         if (walletBalance < totalAmount) {
             // throw new Error('Insufficient wallet balance.');
-            return res.redirect('/order-summary');
+            // return res.redirect('/order-summary');
+            // return res.status(404).send('Insufficient wallet balance.');
+            return { error: true, status: 400, message: 'Insufficient wallet balance.' };
         }
 
-        // Deduct the total amount from the user's wallet
+      
         wallet.balance -= totalAmount;
         const transactionId = await generateTransactionId();
         console.log("transactionId", transactionId);
 
-        // Create the order before recording the transaction
         const orderNumber = await generateOrderNumber();
-        const orderItems = await getOrderItems(cartItems);  // Use the common function for generating items
+        const orderItems = await getOrderItems(cartItems); 
 
         const order = new Order({
             orderNumber: orderNumber,
@@ -138,34 +138,35 @@ async function processWalletPayment(totalAmount, userId, selectedAddressId, cart
             totalAmount: totalAmount,
             address: selectedAddressId,
             paymentMethod: 'Wallet',
-            status: 'Paid', // Wallet payments are immediately 'Paid'
+            status: 'Paid',
             couponDiscount: couponDiscount
         });
 
-        await order.save();  // Save the order first to get the order ID
+        await order.save(); 
         console.log("Order created:", order);
 
-        // Record a transaction in the wallet for a debit type
+      
         const walletTransaction = {
             transactionId: transactionId,
-            type: 'Debit', // Debit type transaction
+            type: 'Debit', 
             amount: totalAmount,
             description: `Order payment using wallet for order number ${orderNumber}`,
             date: new Date(),
-            orderId: order._id  // Add the order ID here
+            orderId: order._id  
         };
 
-        // Add the transaction to the user's wallet
+      
         wallet.transactions.push(walletTransaction);
-        await wallet.save();  // Save the updated wallet balance and transaction
+        await wallet.save();
 
         console.log("Wallet updated with debit transaction:", walletTransaction);
 
-        return { order };  // Return the order object
+        return { error: false, order };  
 
     } catch (error) {
         console.error('Error processing wallet payment:', error);
-        return res.status(500).send('Internal Server Error');
+        return { error: true, status: 500, message: 'Internal Server Error' };
+        // return res.status(500).send('Internal Server Error');
     }
 };
 

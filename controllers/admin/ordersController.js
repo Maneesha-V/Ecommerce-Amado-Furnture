@@ -136,20 +136,22 @@ const updateItemStatus = async (req, res) => {
 }
 const manageReturnRequest = async (req, res) => {
     try {
-        const { orderId, itemId } = req.params;
-        const action = req.body.returnAction;
-        console.log(req.body.returnAction);
+        console.log("body",req.body.returnAction);
         console.log(req.params);
+        const { orderId, itemId } = req.params;
+        const action = req.body.returnAction;       
         const order = await Order.findById(orderId);
+        console.log("order",order);
         if (!order) {
             return res.status(404).json({ success: false, message: "Order not found" });
         }
 
         const item = order.items.id(itemId);
+        console.log("item",item);
+        
         if (!item) {
             return res.status(404).json({ success: false, message: "Item not found" });
         }
-
 
         if (action === 'Approve') {
             if (item.isRefunded) {
@@ -180,55 +182,207 @@ const manageReturnRequest = async (req, res) => {
     }
 }
 
-const processWalletRefund = async (userId, item, order) => {
+// const processWalletRefund = async (userId, item, order) => {
+//     try {
+//         // Check payment method and order status
+//         if (order.paymentMethod === 'COD' || order.status === 'Paid') {
+//             let wallet = await Wallet.findOne({ userId });
+//             const transactionId = await generateTransactionId();  // Assume this generates a unique ID
+
+//             if (!wallet) {
+//                 // Create new wallet for the user if none exists
+//                 wallet = new Wallet({
+//                     userId,
+//                     balance: item.price,
+//                     transactions: [{
+//                         transactionId,
+//                         amount: item.price,
+//                         description: `Refund for returned item: ${item.prodName}`,
+//                         type: 'Refund',
+//                         date: new Date(),
+//                         orderId: order._id
+//                     }]
+//                 });
+//                 await wallet.save();
+//             } else {
+//                 // Add refund to existing wallet balance
+//                 wallet.balance += item.price;
+//                 wallet.transactions.push({
+//                     transactionId,
+//                     amount: item.price,
+//                     description: `Refund for returned item: ${item.prodName}`,
+//                     type: 'Refund',
+//                     date: new Date(),
+//                     orderId: order._id
+//                 });
+//                 await wallet.save();
+//             }
+
+//             // Mark the item as refunded to avoid double refunds
+//             item.isRefunded = true;
+//             await order.save();
+
+//             return { success: true, message: `Refund of ₹${item.price} added to wallet.` };
+//         } else {
+//             return { success: false, message: 'Refund cannot be processed. Order is not paid or item is not returned.' };
+//         }
+//     } catch (err) {
+//         console.error('Error processing wallet refund:', err);
+//         return { success: false, message: 'Error processing wallet refund.' };
+//     }
+// }
+
+// const processWalletRefund = async (userId, item, orderId) => {
+//     try {
+//         // Find the order by orderId
+//         const order = await Order.findById(orderId);
+//         console.log("order-processwallet",order);
+        
+//         if (!order) {
+//             return { success: false, message: 'Order not found.' };
+//         }
+
+//         // Find the item in the order by itemId
+//         // const item = order.items.find(item => item._id.toString() === itemId);
+//         console.log("item-processwallet",item);
+        
+//         if (!item || item.isRefunded) {
+//             return { success: false, message: 'Item not found or already refunded.' };
+//         }
+
+//         // Check if the order is eligible for refund
+//         if (order.paymentMethod === 'COD' || order.status === 'Paid') {
+//             let wallet = await Wallet.findOne({ userId });
+//             const transactionId = await generateTransactionId(); // Assume this generates a unique ID
+
+//             // Step 1: Calculate refund amount based on item's offer-adjusted price
+//             let refundAmount = item.price - (item.offerDiscount || 0);
+
+//             // Step 2: Calculate coupon discount proportionally for this item if applicable
+//             if (order.couponDiscount > 0) {
+//                 // Calculate the total quantity of items in the order
+//                 const totalQuantity = order.items.reduce((total, orderItem) => total + orderItem.quantity, 0);
+
+//                 // Calculate this item's coupon discount based on its quantity share of the total quantity
+//                 const itemCouponDiscount = (order.couponDiscount * item.quantity) / totalQuantity;
+
+//                 // Subtract the calculated coupon discount for this item from the refund amount
+//                 refundAmount -= itemCouponDiscount;
+//             }
+
+//             // Step 3: Ensure refund amount is not negative
+//             refundAmount = Math.max(refundAmount, 0);
+//             console.log("refundAmt",refundAmount);
+            
+//             // Create or update the wallet with the refund amount
+//             if (!wallet) {
+//                 // Create new wallet for the user if none exists
+//                 wallet = new Wallet({
+//                     userId,
+//                     balance: refundAmount,
+//                     transactions: [{
+//                         transactionId,
+//                         amount: refundAmount,
+//                         description: `Refund for returned item: ${item.prodName}`,
+//                         type: 'Refund',
+//                         date: new Date(),
+//                         orderId: order._id
+//                     }]
+//                 });
+//                 await wallet.save();
+//             } else {
+//                 // Add refund to existing wallet balance
+//                 wallet.balance += refundAmount;
+//                 wallet.transactions.push({
+//                     transactionId,
+//                     amount: refundAmount,
+//                     description: `Refund for returned item: ${item.prodName}`,
+//                     type: 'Refund',
+//                     date: new Date(),
+//                     orderId: order._id
+//                 });
+//                 await wallet.save();
+//             }
+
+//             // Mark the item as refunded to avoid double refunds
+//             item.isRefunded = true;
+//             await order.save();
+
+//             return { success: true, message: `Refund of ₹${refundAmount.toFixed(2)} added to wallet.` };
+//         } else {
+//             return { success: false, message: 'Refund cannot be processed. Order is not paid or item is not returned.' };
+//         }
+//     } catch (err) {
+//         console.error('Error processing wallet refund:', err);
+//         return { success: false, message: 'Error processing wallet refund.' };
+//     }
+// };
+
+const processWalletRefund = async (userId, item, orderId) => {
     try {
-        // Check payment method and order status
-        if (order.paymentMethod === 'COD' || order.status === 'Paid') {
-            let wallet = await Wallet.findOne({ userId });
-            const transactionId = await generateTransactionId();  // Assume this generates a unique ID
 
-            if (!wallet) {
-                // Create new wallet for the user if none exists
-                wallet = new Wallet({
-                    userId,
-                    balance: item.price,
-                    transactions: [{
-                        transactionId,
-                        amount: item.price,
-                        description: `Refund for returned item: ${item.prodName}`,
-                        type: 'Refund',
-                        date: new Date(),
-                        orderId: order._id
-                    }]
-                });
-                await wallet.save();
-            } else {
-                // Add refund to existing wallet balance
-                wallet.balance += item.price;
-                wallet.transactions.push({
-                    transactionId,
-                    amount: item.price,
-                    description: `Refund for returned item: ${item.prodName}`,
-                    type: 'Refund',
-                    date: new Date(),
-                    orderId: order._id
-                });
-                await wallet.save();
-            }
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return { success: false, message: 'Order not found.' };
+        }
 
-            // Mark the item as refunded to avoid double refunds
-            item.isRefunded = true;
-            await order.save();
-
-            return { success: true, message: `Refund of ₹${item.price} added to wallet.` };
-        } else {
+        if (!item || item.isRefunded) {
+            return { success: false, message: 'Item not found or already refunded.' };
+        }
+        if (order.paymentMethod !== 'COD' && order.status !== 'Paid') {
             return { success: false, message: 'Refund cannot be processed. Order is not paid or item is not returned.' };
         }
+        const totalItemPrice = item.price * item.quantity
+
+        let refundAmount = totalItemPrice - (item.offerDiscount || 0);
+        if (order.couponDiscount > 0) {
+            const totalQuantity = order.items.reduce((total, orderItem) => total + orderItem.quantity, 0);
+            const itemCouponDiscount = (order.couponDiscount * item.quantity) / totalQuantity;
+            refundAmount -= itemCouponDiscount;
+        }
+        refundAmount = Math.max(refundAmount, 0);
+
+        let wallet = await Wallet.findOne({ userId });
+        const transactionId = await generateTransactionId();
+        const transaction = {
+            transactionId,
+            amount: refundAmount,
+            description: `Refund for returned item: ${item.prodName}`,
+            type: 'Refund',
+            date: new Date(),
+            orderId: order._id
+        };
+
+        if (!wallet) {
+            wallet = new Wallet({ userId, balance: refundAmount, transactions: [transaction] });
+        } else {
+            wallet.balance += refundAmount;
+            wallet.transactions.push(transaction);
+        }
+
+        try {
+            await wallet.save();
+        } catch (error) {
+            if (error.code === 11000) {
+                transaction.transactionId = await generateTransactionId();
+                wallet.transactions.pop(); 
+                wallet.transactions.push(transaction);
+                await wallet.save();
+            } else {
+                throw error;
+            }
+        }
+
+        item.isRefunded = true;
+        await order.save();
+
+        return { success: true, message: `Refund of ₹${refundAmount.toFixed(2)} added to wallet.` };
     } catch (err) {
         console.error('Error processing wallet refund:', err);
-        return { success: false, message: 'Error processing wallet refund.' };
+        return { success: false, message: `Error processing wallet refund: ${err.message}` };
     }
-}
+};
+
 async function generateTransactionId() {
     // Generate 3 random uppercase letters
     const letters = Array(3).fill(null).map(() => {

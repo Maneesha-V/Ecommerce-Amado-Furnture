@@ -61,7 +61,7 @@ const removeItemFromPlacedOrder = async (req, res) => {
         console.log("params", req.params);
         const orderStatus = req.body.orderStatus;
         console.log("orderStatus", orderStatus);
-        const cancellationReason = req.body.reason; // Access reason from the request body
+        const cancellationReason = req.body.reason;
         const order = await Order.findById(orderId);
         console.log("order", order);
 
@@ -75,7 +75,6 @@ const removeItemFromPlacedOrder = async (req, res) => {
         }
         console.log("item found", item);
 
-        // Check if the item has already been refunded
         if (item.isRefunded) {
             return res.status(400).json({
                 success: false,
