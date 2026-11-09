@@ -151,8 +151,9 @@
                                     <% product.prodImages.forEach((image, index)=> { %>
                                         <li class="<%= index === 0 ? 'active' : '' %>"
                                             data-target="#product_details_slider" data-slide-to="<%= index %>"
-                                            style="background-image: url(/<%= image.replace('\\', '/') %>);"></li>
-                                        <% }); %>
+                                            style="background-image: urlurl('/<%= image.replace(/\\/g, '/') %>');">
+                                        </li>
+                                    <% }); %>
                                 </ol>
                                 <div class="carousel-inner">
                                     <% product.prodImages.forEach((image, index)=> { %>
