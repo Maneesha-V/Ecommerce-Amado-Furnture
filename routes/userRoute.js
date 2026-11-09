@@ -58,7 +58,7 @@ user_route.get('/reset-password/:userId/:token', authController.getResetPassword
 user_route.post('/reset-password/:userId/:token', authController.resetPassword)
 user_route.get('/search', homeController.getSearchDataFromHome)
 user_route.get('/home', homeController.loadHome)
-user_route.get('/shop', shopController.loadShop)
+user_route.get('/shop', isLogin, shopController.loadShop)
 user_route.get('/wishlist', isLogin, wishListController.loadWishlist)
 user_route.post('/shop-to-wishlist/:prodId', isLogin, wishListController.addProdShopToWishList)
 user_route.post('/wishlist/remove/:prodId', isLogin, wishListController.remProdFromWishList)

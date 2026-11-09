@@ -9,7 +9,7 @@ const Razorpay = require("razorpay");
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env
-// Razorpay instance
+
 const razorpayInstance = new Razorpay({
     key_id: RAZORPAY_ID_KEY,
     key_secret: RAZORPAY_SECRET_KEY
@@ -42,8 +42,7 @@ const loadOrderSummary = async (req, res) => {
             return res.status(404).send("Address not found for this order.");
         }
         console.log("selectedAddress", selectedAddress)
-        // const cartItems = order.items;
-        // console.log("cartItems", cartItems)
+
         const { qty, totalAmount, discount } = order.items.reduce((acc, item) => {
             acc.qty += item.quantity;
             acc.totalAmount += item.price * item.quantity;
@@ -65,16 +64,14 @@ const loadOrderSummary = async (req, res) => {
             console.log("totalAfterDisc", totalAfterDisc);
 
         }
-        // Fetch available coupons only if no coupon discount is applied
+    
         const coupons = (order.couponDiscount > 0) ? [] : await Coupon.find({
             usedBy: { $nin: [userId] },
             isActive: true,
         });
 
-        // Fetch user's wallet
         const wallet = await Wallet.findOne({ userId });
 
-        // Check if wallet exists
         const newBalance = wallet ? wallet.balance : 0; // Default to 0 if wallet doesn't exist
 
         res.render('order-summary', {
@@ -100,7 +97,6 @@ const selectAddressForOrder = async (req, res) => {
         const { selectedAddress: selectedAddressId } = req.body;
         const { user_id: userId } = req.session;
 
-        // Fetch user and populate addresses
         const user = await User.findById(userId).populate('addresses');
         if (!user || !user.addresses.length) {
             console.error("User not found or no addresses available.");
@@ -111,7 +107,7 @@ const selectAddressForOrder = async (req, res) => {
             console.error("Selected address not found:", selectedAddressId);
             return res.redirect('/checkout');
         }
-        // Fetch user's cart
+ 
         const cart = await Cart.findOne({ user: userId }).populate({
             path: 'items.product',
             model: 'Product',
@@ -119,13 +115,11 @@ const selectAddressForOrder = async (req, res) => {
         });
         console.log("cart", cart);
 
-        // Check if cart exists and has items
         if (!cart || !cart.items || cart.items.length === 0) {
             console.error("Cart is empty or does not exist");
-            return res.redirect('/checkout'); // Redirect if cart is empty
+            return res.redirect('/checkout');
         }
 
-        // Calculate total quantity, amount, discounts, and total after discount
         let qty = 0;
         let totalAmount = 0;
         let totalDiscount = 0;
@@ -135,36 +129,33 @@ const selectAddressForOrder = async (req, res) => {
             console.log("item", item);
 
             if (!item.product || !item.product.name) {
-                // throw new Error("Product not found or not populated correctly");
                 return res.status(400).send('Product not found or not populated correctly.');
             }
 
-            // Use offerDiscountPrice if it exists, otherwise use the regular price
             const regularPrice = item.product.price;
             const discountedPrice = item.product.offerDiscountedPrice || regularPrice; // If no discount, use regular price
 
-            // Calculate discount if applicable
             const discount = regularPrice - discountedPrice;
 
             return {
                 ...item.toObject(),
-                effectivePrice: discountedPrice, // Add the effective price for use later
-                discount: discount > 0 ? discount : 0, // Store the discount for each item
-                regularPrice: regularPrice // Store regular price for total calculation
+                effectivePrice: discountedPrice, 
+                discount: discount > 0 ? discount : 0, 
+                regularPrice: regularPrice
             };
         });
 
         cartItems.forEach(order => {
             console.log("order", order);
 
-            qty += order.quantity; // Track total quantity
+            qty += order.quantity; 
 
             if (order.product) {
-                totalAmount += order.regularPrice * order.quantity; // Total amount without discount
-                totalAfterDisc += order.effectivePrice * order.quantity; // Total after discount
-                totalDiscount += order.discount * order.quantity; // Total discount
+                totalAmount += order.regularPrice * order.quantity;
+                totalAfterDisc += order.effectivePrice * order.quantity; 
+                totalDiscount += order.discount * order.quantity; 
             } else {
-                console.error("Order product is undefined for", order); // Log an error if product is missing
+                console.error("Order product is undefined for", order); 
             }
         });
 
@@ -173,24 +164,19 @@ const selectAddressForOrder = async (req, res) => {
         console.log("Total After Discount:", totalAfterDisc);
         console.log("Total Discount:", totalDiscount);
 
-        // Store total amounts in session
         req.session.totalAmount = totalAmount;
         req.session.totalAfterDisc = totalAfterDisc;
         req.session.totalDiscount = totalDiscount;
 
-        // Fetch available coupons
         const coupons = await Coupon.find({
             usedBy: { $nin: [userId] },
             isActive: true,
         });
 
-        // Fetch user's wallet
         const wallet = await Wallet.findOne({ userId });
 
-        // Check if wallet exists
-        const newBalance = wallet ? wallet.balance : 0; // Default to 0 if wallet doesn't exist
+        const newBalance = wallet ? wallet.balance : 0; 
 
-        // Render order summary page
         res.render('order-summary', {
             selectedAddress,
             orders: cartItems,
@@ -203,7 +189,7 @@ const selectAddressForOrder = async (req, res) => {
         });
     } catch (err) {
         console.error("Error in loading order summary:", err);
-        res.redirect('/checkout'); // Redirect on error
+        res.redirect('/checkout'); 
     }
 };
 
@@ -251,11 +237,9 @@ const applyCoupon = async (req, res) => {
             { $addToSet: { usedBy: mongoose.Types.ObjectId(userId) } }
         )
 
-        // After calculating the discount and new total:
-        req.session.totalAmtAftDisc = newTotal;  // Assign the new total to the session
-        console.log("Updated session totalAmtAftDisc:", req.session.totalAmtAftDisc); // Should log new total
+        req.session.totalAmtAftDisc = newTotal; 
+        console.log("Updated session totalAmtAftDisc:", req.session.totalAmtAftDisc); 
 
-        // Save the session explicitly if needed
         req.session.save((err) => {
             if (err) {
                 console.error("Error saving session:", err);
@@ -290,12 +274,10 @@ const removeCoupon = async (req, res) => {
             return res.json({ success: false, message: 'Invalid coupon code' });
         }
 
-        // Check if the coupon is already used
         if (!coupon.usedBy.includes(userId)) {
             return res.json({ success: false, message: 'Coupon not applied or already removed.' });
         }
 
-        // Remove the user from the usedBy array
         await Coupon.updateOne(
             { _id: coupon._id },
             { $pull: { usedBy: mongoose.Types.ObjectId(userId) } }
@@ -308,26 +290,23 @@ const removeCoupon = async (req, res) => {
     }
 }
 const applyRepayCoupon = async (req, res) => {
-    const { couponCode, orderId } = req.body; // Get the coupon code from the request body
-    const userId = req.session.user_id; // Get the user ID from the session
+    const { couponCode, orderId } = req.body; 
+    const userId = req.session.user_id;
 
     try {
-        // Fetch the order details using the userId (you may need to adjust the query based on your schema)
-        const order = await Order.findOne({ _id: orderId, status: 'Pending' }); // Adjust query to find the relevant order
+        const order = await Order.findOne({ _id: orderId, status: 'Pending' }); 
 
         if (!order) {
             return res.json({ success: false, message: 'No pending order found.' });
         }
 
-        const originalTotal = order.totalAmount; // Get the original total from the order
+        const originalTotal = order.totalAmount; 
         const coupon = await Coupon.findOne({ code: couponCode });
 
-        // Check if the coupon exists
         if (!coupon) {
             return res.json({ success: false, message: 'Invalid coupon code.' });
         }
 
-        // Check if the user has already used this coupon
         if (coupon.usedBy.includes(userId)) {
             return res.json({ success: false, message: 'You have already used this coupon.' });
         }
@@ -337,7 +316,6 @@ const applyRepayCoupon = async (req, res) => {
             return res.json({ success: false, message: `You need to purchase items above Rs ${coupon.minAmount} to use this coupon.` });
         }
 
-        // Calculate the discount based on coupon type
         let discount = 0;
         if (coupon.discountType === 'percentage') {
             discount = (coupon.discountValue / 100) * originalTotal;
@@ -350,10 +328,8 @@ const applyRepayCoupon = async (req, res) => {
             discount = coupon.maxAmount;
         }
 
-        // Calculate the new total
         const newTotal = originalTotal - discount;
 
-        // Update the order with the new total and coupon code
         await Order.updateOne(
             { _id: order._id },
             { totalAmount: newTotal, couponCode: couponCode, couponDiscount: discount }
@@ -365,7 +341,6 @@ const applyRepayCoupon = async (req, res) => {
             { $addToSet: { usedBy: mongoose.Types.ObjectId(userId) } }
         );
 
-        // Respond with success and details
         return res.json({ success: true, discount, originalTotal, newTotal, couponCode });
     } catch (err) {
         console.error('Error applying coupon for repayment:', err);
@@ -382,19 +357,17 @@ const addMoneyToWallet = async (req, res) => {
         if (isNaN(amountToAdd) || amountToAdd <= 0) {
             return res.status(400).json({ success: false, message: "Please enter a valid amount." });
         }
-        // Create Razorpay Order
+
         const options = {
-            amount: amountToAdd * 100, // Amount in paise
+            amount: amountToAdd * 100, 
             currency: 'INR',
             receipt: `wallet_${userId.slice(0, 10)}_${Date.now().toString().slice(-5)}`,
-            payment_capture: 1 // Auto-capture payment
+            payment_capture: 1 
         };
 
         const order = await razorpayInstance.orders.create(options);
         console.log("order", order);
 
-
-        // Send the Razorpay order details to the client
         res.json({
             success: true,
             razorpayOrderId: order.id,
@@ -422,7 +395,6 @@ const verifyAndAddMoneyToWallet = async (req, res) => {
             return res.status(401).json({ success: false, message: "User not logged in." });
         }
 
-        // Verify the payment signature (optional but recommended)
         const isValidSignature = verifyPaymentSignature({
             razorpay_order_id,
             razorpay_payment_id,
@@ -434,7 +406,7 @@ const verifyAndAddMoneyToWallet = async (req, res) => {
             return res.status(400).json({ success: false, message: "Invalid payment signature." });
         }
 
-        // Find user's wallet and add the money
+   
         let wallet = await Wallet.findOne({ userId });
         console.log("wallet", wallet);
 
@@ -524,14 +496,11 @@ const placeOrder = async (req, res) => {
             }
 
             const { address, order: codOrder } = await paymentController.handleCODPayment(cart, userId, selectedAddressId, parsedTotalAmount, couponDiscount);
-            // await Coupon.updateOne(
-            //     {_id:coupon._id},
-            //     {$addToSet:{ usedBy: mongoose.Types.ObjectId(userId)}}
-            // )
+       
             await updateProductStock(codOrder.items);
             order = codOrder;
             console.log("ordercod", order);
-            // console.log("address",address);ddress });
+
 
         } else if (paymentMethod === 'Cards') {
             const { razorpayOrder: rzpOrder, orderData, orderId } = await paymentController.processCardPayment(parsedTotalAmount, userId, selectedAddressId, cart.items, couponDiscount, coupon);
@@ -540,7 +509,7 @@ const placeOrder = async (req, res) => {
             console.log("cardorder", order);
             // req.session.orderId = orderId;
             req.session.order = orderData; // Storing the orderData in session
-            // Send response with Razorpay order ID and total amount
+
             return res.json({
                 razorpayOrderId: razorpayOrder.id,
                 totalAmount: parsedTotalAmount,

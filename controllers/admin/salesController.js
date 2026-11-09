@@ -84,17 +84,17 @@ const getSalesReport = async (req, res) => {
         console.log("coupons", coupons);
 
         const result = orders.map(order => {
-            // Find the coupon if the user used it
             const couponUsed = order.couponDiscount > 0 ? 'Yes' : 'No';
             const totalDiscountFromItems = order.items.reduce((sum, item) => {
-                return sum + (item.offerDiscount || 0); // Ensure item.offerDiscount is valid
+                return sum + (item.offerDiscount || 0); 
             }, 0);
             const totalDiscount = totalDiscountFromItems + order.couponDiscount;
             return {
                 orderId: order.orderNumber,
-                date: order.createdAt.toISOString().split('T')[0],
+                // date: order.createdAt.toISOString().split('T')[0],
+                date: order.createdAt.toLocaleDateString('en-GB').replace(/\//g, '-'),
                 userName: `${order.user.firstname} ${order.user.lastname}`,
-                products: order.items, // Assuming products are stored in 'items' field
+                products: order.items, 
                 totalAmount: order.totalAmount,
                 discount: totalDiscount,
                 coupon: couponUsed,
