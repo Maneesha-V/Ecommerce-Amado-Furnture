@@ -26,18 +26,7 @@ admin_route.use(session({
     saveUninitialized: false,
     cookie: { secure: false }
 }))
-// admin_route.use(bodyParser.json())
-// admin_route.use(bodyParser.urlencoded({ extended: true }))
 
-// admin_route.use(express.static(path.join(__dirname,'../public/adminStyle/assets')))
-// admin_route.use(flash());
-// admin_route.use((req, res, next) => {
-//     res.locals.successMessage = req.flash('success');
-//     res.locals.errorMessage = req.flash('error');
-//     next();
-// });
-
-// admin_route.set('view engine', 'ejs')
 admin_route.set('views', './views/admin')
 
 admin_route.get('/login', isLogout, authController.loadLogin)
