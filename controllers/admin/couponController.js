@@ -47,7 +47,7 @@ const createCoupon = async (req, res) => {
             const errorMessage = `Coupon code "${req.body.code}" already exists. Please use a different code.`;
             return res.status(400).render('add-coupon', {
                 errorMessage,
-                formData: req.body // Keep the form data to display on the page
+                formData: req.body 
             });
         } else {
             console.log(err);

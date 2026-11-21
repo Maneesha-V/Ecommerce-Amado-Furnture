@@ -28,16 +28,16 @@ const createOffer = async (req, res) => {
     try {
         const { offerName, discountPercentage, startDate, endDate, applicableTo, applicableId, categoryDropdown } = req.body;
         console.log("body", req.body);
-        // Determine the applicable ID and model
+
         let applicableModel = '';
         let applicableIdValue = '';
 
         if (applicableTo === 'Product') {
             applicableModel = 'Product';
-            applicableIdValue = applicableId; // Use the product ID from req.body
+            applicableIdValue = applicableId; 
         } else if (applicableTo === 'Category') {
             applicableModel = 'Category';
-            applicableIdValue = categoryDropdown; // Use the category ID from req.body
+            applicableIdValue = categoryDropdown; 
         } else {
             return res.status(400).send({ message: 'Invalid applicable type.' });
         }
@@ -51,7 +51,6 @@ const createOffer = async (req, res) => {
             applicableModel
         });
 
-        // Save the offer to the database
         await newOffer.save();
         res.redirect('/admin/offers')
     }
@@ -84,10 +83,10 @@ const updateOffer = async (req, res) => {
 
         if (applicableTo === 'Product') {
             applicableModel = 'Product';
-            applicableIdValue = applicableId; // Use the product ID from req.body
+            applicableIdValue = applicableId; 
         } else if (applicableTo === 'Category') {
             applicableModel = 'Category';
-            applicableIdValue = categoryDropdown; // Use the category ID from req.body
+            applicableIdValue = categoryDropdown; 
         } else {
             return res.status(400).send({ message: 'Invalid applicable type.' });
         }
@@ -108,7 +107,6 @@ const updateOffer = async (req, res) => {
 
         console.log("Offer updated successfully:", updatedOffer);
 
-        // Redirect back to the offers page after successful update
         res.redirect('/admin/offers');
     }
     catch (err) {

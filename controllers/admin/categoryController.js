@@ -5,18 +5,16 @@ const { ObjectId } = require('mongodb')
 const getAddCategory = async (req, res) => {
     try {
         const { newBrand } = req.body
-        const page = parseInt(req.query.page) || 1; // Get the current page number from query params or default to 1
-        const limit = 5; // Number of categories per page
-        const skip = (page - 1) * limit; // Calculate the number of documents to skip
-        // Get the total count of categories
-        const totalCategories = await Category.countDocuments();
+        const page = parseInt(req.query.page) || 1; 
+        const limit = 5; 
+        const skip = (page - 1) * limit; 
 
-        // Fetch the categories with pagination
+        const totalCategories = await Category.countDocuments();
         const categoryData = await Category.find()
             .skip(skip)
             .limit(limit);
 
-        const totalPages = Math.ceil(totalCategories / limit); // Calculate the total number of pages
+        const totalPages = Math.ceil(totalCategories / limit); 
 
         res.render('category', {
             categories: categoryData,

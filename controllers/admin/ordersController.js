@@ -20,9 +20,9 @@ const loadOrders = async (req, res) => {
             .lean()
             .exec();
         console.log("ord", orders);
-        // Total count of orders for pagination
+ 
         const totalCount = await Order.countDocuments();
-        const totalPages = Math.ceil(totalCount / limit); // Calculate total pages
+        const totalPages = Math.ceil(totalCount / limit); 
         orders.forEach(order => {
             const addressId = order.address
             const matchingAddress = order.user.addresses.find(addr => addr._id.equals(addressId))
@@ -73,7 +73,7 @@ const updateOrderStatus = async (req, res) => {
             return res.status(400).json({ error: 'Order status unchanged or invalid transition' });
         }
 
-        res.json({ message: 'Order status updated successfully' }); // Send success response
+        res.json({ message: 'Order status updated successfully' }); 
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'An error occurred while updating the order status' });
@@ -100,7 +100,6 @@ const updateItemStatus = async (req, res) => {
         console.log("status", req.body);
         console.log("orderId ItemId", orderId, itemId);
 
-        // Validate the new status
         const validStatuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Canceled', 'Returned'];
         if (!validStatuses.includes(status)) {
             return res.status(400).json({ message: 'Invalid status.' });
@@ -112,14 +111,14 @@ const updateItemStatus = async (req, res) => {
         console.log("order", order);
         const item = order.items.id(itemId)
         const currentStatus = item.itemStatus
-        // Prevent rolling back statuses
+
         const statusProgression = {
             'Pending': ['Processing', 'Canceled'],
             'Processing': ['Shipped', 'Canceled'],
             'Shipped': ['Delivered', 'Canceled'],
             'Delivered': ['Returned'],
-            'Canceled': [], // No further progression
-            'Returned': [] // No further progression
+            'Canceled': [], 
+            'Returned': [] 
         };
         if (!statusProgression[currentStatus].includes(status)) {
             return res.status(400).json({ message: `Cannot revert status from ${currentStatus} to ${status}.` });
@@ -160,7 +159,6 @@ const manageReturnRequest = async (req, res) => {
             item.returnStatus = 'Approved';
             item.itemStatus = 'Returned';
 
-            // Process the wallet refund
             const userId = order.user
             console.log("userId", userId);
 
@@ -170,7 +168,6 @@ const manageReturnRequest = async (req, res) => {
             }
         } else if (action === 'Reject') {
             item.returnStatus = 'Rejected';
-            // Optionally update `item.itemStatus` if needed
         }
 
         await order.save();
@@ -182,141 +179,6 @@ const manageReturnRequest = async (req, res) => {
     }
 }
 
-// const processWalletRefund = async (userId, item, order) => {
-//     try {
-//         // Check payment method and order status
-//         if (order.paymentMethod === 'COD' || order.status === 'Paid') {
-//             let wallet = await Wallet.findOne({ userId });
-//             const transactionId = await generateTransactionId();  // Assume this generates a unique ID
-
-//             if (!wallet) {
-//                 // Create new wallet for the user if none exists
-//                 wallet = new Wallet({
-//                     userId,
-//                     balance: item.price,
-//                     transactions: [{
-//                         transactionId,
-//                         amount: item.price,
-//                         description: `Refund for returned item: ${item.prodName}`,
-//                         type: 'Refund',
-//                         date: new Date(),
-//                         orderId: order._id
-//                     }]
-//                 });
-//                 await wallet.save();
-//             } else {
-//                 // Add refund to existing wallet balance
-//                 wallet.balance += item.price;
-//                 wallet.transactions.push({
-//                     transactionId,
-//                     amount: item.price,
-//                     description: `Refund for returned item: ${item.prodName}`,
-//                     type: 'Refund',
-//                     date: new Date(),
-//                     orderId: order._id
-//                 });
-//                 await wallet.save();
-//             }
-
-//             // Mark the item as refunded to avoid double refunds
-//             item.isRefunded = true;
-//             await order.save();
-
-//             return { success: true, message: `Refund of ₹${item.price} added to wallet.` };
-//         } else {
-//             return { success: false, message: 'Refund cannot be processed. Order is not paid or item is not returned.' };
-//         }
-//     } catch (err) {
-//         console.error('Error processing wallet refund:', err);
-//         return { success: false, message: 'Error processing wallet refund.' };
-//     }
-// }
-
-// const processWalletRefund = async (userId, item, orderId) => {
-//     try {
-//         // Find the order by orderId
-//         const order = await Order.findById(orderId);
-//         console.log("order-processwallet",order);
-        
-//         if (!order) {
-//             return { success: false, message: 'Order not found.' };
-//         }
-
-//         // Find the item in the order by itemId
-//         // const item = order.items.find(item => item._id.toString() === itemId);
-//         console.log("item-processwallet",item);
-        
-//         if (!item || item.isRefunded) {
-//             return { success: false, message: 'Item not found or already refunded.' };
-//         }
-
-//         // Check if the order is eligible for refund
-//         if (order.paymentMethod === 'COD' || order.status === 'Paid') {
-//             let wallet = await Wallet.findOne({ userId });
-//             const transactionId = await generateTransactionId(); // Assume this generates a unique ID
-
-//             // Step 1: Calculate refund amount based on item's offer-adjusted price
-//             let refundAmount = item.price - (item.offerDiscount || 0);
-
-//             // Step 2: Calculate coupon discount proportionally for this item if applicable
-//             if (order.couponDiscount > 0) {
-//                 // Calculate the total quantity of items in the order
-//                 const totalQuantity = order.items.reduce((total, orderItem) => total + orderItem.quantity, 0);
-
-//                 // Calculate this item's coupon discount based on its quantity share of the total quantity
-//                 const itemCouponDiscount = (order.couponDiscount * item.quantity) / totalQuantity;
-
-//                 // Subtract the calculated coupon discount for this item from the refund amount
-//                 refundAmount -= itemCouponDiscount;
-//             }
-
-//             // Step 3: Ensure refund amount is not negative
-//             refundAmount = Math.max(refundAmount, 0);
-//             console.log("refundAmt",refundAmount);
-            
-//             // Create or update the wallet with the refund amount
-//             if (!wallet) {
-//                 // Create new wallet for the user if none exists
-//                 wallet = new Wallet({
-//                     userId,
-//                     balance: refundAmount,
-//                     transactions: [{
-//                         transactionId,
-//                         amount: refundAmount,
-//                         description: `Refund for returned item: ${item.prodName}`,
-//                         type: 'Refund',
-//                         date: new Date(),
-//                         orderId: order._id
-//                     }]
-//                 });
-//                 await wallet.save();
-//             } else {
-//                 // Add refund to existing wallet balance
-//                 wallet.balance += refundAmount;
-//                 wallet.transactions.push({
-//                     transactionId,
-//                     amount: refundAmount,
-//                     description: `Refund for returned item: ${item.prodName}`,
-//                     type: 'Refund',
-//                     date: new Date(),
-//                     orderId: order._id
-//                 });
-//                 await wallet.save();
-//             }
-
-//             // Mark the item as refunded to avoid double refunds
-//             item.isRefunded = true;
-//             await order.save();
-
-//             return { success: true, message: `Refund of ₹${refundAmount.toFixed(2)} added to wallet.` };
-//         } else {
-//             return { success: false, message: 'Refund cannot be processed. Order is not paid or item is not returned.' };
-//         }
-//     } catch (err) {
-//         console.error('Error processing wallet refund:', err);
-//         return { success: false, message: 'Error processing wallet refund.' };
-//     }
-// };
 
 const processWalletRefund = async (userId, item, orderId) => {
     try {
@@ -384,18 +246,14 @@ const processWalletRefund = async (userId, item, orderId) => {
 };
 
 async function generateTransactionId() {
-    // Generate 3 random uppercase letters
     const letters = Array(3).fill(null).map(() => {
-        return String.fromCharCode(65 + Math.floor(Math.random() * 26)); // ASCII 65-90 for 'A'-'Z'
+        return String.fromCharCode(65 + Math.floor(Math.random() * 26));
     }).join('');
 
-    // Get the current timestamp as a string
-    const timestamp = Date.now().toString(); // Milliseconds since epoch
+    const timestamp = Date.now().toString(); 
 
-    // Generate 4 random digits
-    const randomDigits = Math.floor(1000 + Math.random() * 9000); // Generates a 4-digit number
+    const randomDigits = Math.floor(1000 + Math.random() * 9000); 
 
-    // Combine letters, timestamp, and random digits to form the transaction ID
     return `${letters}${timestamp}${randomDigits}`;
 }
 module.exports = {

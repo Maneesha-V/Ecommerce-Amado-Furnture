@@ -45,12 +45,10 @@ const getSalesReport = async (req, res) => {
         const { filterType, startDate, endDate } = req.body;
         let orders = [];
 
-        // Build filter query
         const today = new Date();
         let filter = {};
 
         if (filterType === 'daily') {
-            // filter.createdAt = { $gte: today.setHours(0, 0, 0, 0), $lte: today };
             const startOfDay = new Date(today.setHours(0, 0, 0, 0)); 
             const endOfDay = new Date(today.setHours(23, 59, 59, 999));
             filter.createdAt = { $gte: startOfDay, $lte: endOfDay };
@@ -68,7 +66,6 @@ const getSalesReport = async (req, res) => {
             filter.createdAt = { $gte: oneYearAgo, $lte: today };
         } else if (filterType === 'custom') {
             if (startDate && endDate) {
-                // filter.createdAt = { $gte: new Date(startDate), $lte: new Date(endDate) };
                 const start = new Date(startDate); 
                 const end = new Date(endDate);
                 end.setHours(23, 59, 59, 999); 
@@ -91,7 +88,6 @@ const getSalesReport = async (req, res) => {
             const totalDiscount = totalDiscountFromItems + order.couponDiscount;
             return {
                 orderId: order.orderNumber,
-                // date: order.createdAt.toISOString().split('T')[0],
                 date: order.createdAt.toLocaleDateString('en-GB').replace(/\//g, '-'),
                 userName: `${order.user.firstname} ${order.user.lastname}`,
                 products: order.items, 
@@ -118,32 +114,30 @@ const getFilteredSales = async (req, res) => {
         const today = new Date();
         let matchStage = {};
 
-        // Define the match stage based on filter type
         if (filterType === 'Daily') {
             const startOfDay = new Date();
             startOfDay.setHours(0, 0, 0, 0);
             matchStage.createdAt = { $gte: startOfDay, $lte: new Date() };
         } else if (filterType === 'Weekly') {
             const startOfWeek = new Date(today);
-            startOfWeek.setDate(today.getDate() - today.getDay()); // Set to the start of the week (Sunday)
+            startOfWeek.setDate(today.getDate() - today.getDay()); 
             matchStage.createdAt = { $gte: startOfWeek, $lte: new Date() };
         } else if (filterType === 'Monthly') {
             const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
             const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
             matchStage.createdAt = { $gte: startOfMonth, $lte: endOfMonth };
         } else if (filterType === 'Yearly') {
-            const startOfYear = new Date(today.getFullYear(), 0, 1); // Start of the year
-            const endOfYear = new Date(today.getFullYear() + 1, 0, 0); // End of the year (Dec 31)            
-            // Update matchStage for yearly filter
+            const startOfYear = new Date(today.getFullYear(), 0, 1); 
+            const endOfYear = new Date(today.getFullYear() + 1, 0, 0);            
             matchStage.createdAt = { $gte: startOfYear, $lt: endOfYear };
         } else if (filterType === 'custom') {
             if (startDate && endDate) {
                 const start = new Date(startDate);
-                start.setHours(0, 0, 0, 0); // Start of the custom date range
+                start.setHours(0, 0, 0, 0); 
                 const end = new Date(endDate);
-                end.setHours(23, 59, 59, 999); // End of the custom date range
+                end.setHours(23, 59, 59, 999); 
 
-                matchStage.createdAt = { $gte: start, $lte: end }; // Custom range
+                matchStage.createdAt = { $gte: start, $lte: end }; 
 
                 console.log("Custom Filter Match Stage:", matchStage);
             }
@@ -151,7 +145,6 @@ const getFilteredSales = async (req, res) => {
 
         console.log("Match Stage:", matchStage);
 
-        // Use aggregation to get sales data based on the filter type
         let salesData;
 
         if (filterType === 'Daily') {
@@ -159,19 +152,19 @@ const getFilteredSales = async (req, res) => {
                 { $match: matchStage },
                 {
                     $group: {
-                        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, // Group by date
-                        totalAmount: { $sum: "$totalAmount" }, // Sum total amounts for each day
-                        totalOrders: { $sum: 1 } // Count total orders for each day
+                        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, 
+                        totalAmount: { $sum: "$totalAmount" }, 
+                        totalOrders: { $sum: 1 } 
                     }
                 },
-                { $sort: { _id: 1 } } // Sort by date
+                { $sort: { _id: 1 } } 
             ]);
         } else if (filterType === 'Weekly') {
             salesData = await Order.aggregate([
                 { $match: matchStage },
                 {
                     $group: {
-                        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, // Group by each day in the week
+                        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, 
                         totalAmount: { $sum: "$totalAmount" },
                         totalOrders: { $sum: 1 }
                     }
@@ -183,7 +176,7 @@ const getFilteredSales = async (req, res) => {
                 { $match: matchStage },
                 {
                     $group: {
-                        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, // Group by each day in the month
+                        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, 
                         totalAmount: { $sum: "$totalAmount" },
                         totalOrders: { $sum: 1 }
                     }
@@ -195,7 +188,7 @@ const getFilteredSales = async (req, res) => {
                 { $match: matchStage },
                 {
                     $group: {
-                        _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } }, // Group by month in the year
+                        _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
                         totalAmount: { $sum: "$totalAmount" },
                         totalOrders: { $sum: 1 }
                     }
@@ -207,74 +200,73 @@ const getFilteredSales = async (req, res) => {
                 { $match: matchStage },
                 {
                     $group: {
-                        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, // Group by date
-                        totalAmount: { $sum: "$totalAmount" }, // Sum total amounts for each day
-                        totalOrders: { $sum: 1 } // Count total orders for each day
+                        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, 
+                        totalAmount: { $sum: "$totalAmount" }, 
+                        totalOrders: { $sum: 1 } 
                     }
                 },
-                { $sort: { _id: 1 } } // Sort by date
+                { $sort: { _id: 1 } } 
             ]);
         }
 
         console.log("Sales Data:", salesData);
 
-        // Top-selling products
         const topSellingProducts = await Order.aggregate([
             { $match: matchStage },
             { $unwind: "$items" },
             {
                 $group: {
-                    _id: "$items.prodName", // Group by product name
-                    totalSales: { $sum: "$items.quantity" }, // Sum up the quantity sold
-                    totalRevenue: { $sum: { $multiply: ["$items.price", "$items.quantity"] } } // Total revenue
+                    _id: "$items.prodName", 
+                    totalSales: { $sum: "$items.quantity" }, 
+                    totalRevenue: { $sum: { $multiply: ["$items.price", "$items.quantity"] } } 
                 }
             },
-            { $sort: { totalSales: -1 } }, // Sort by total sales in descending order
-            { $limit: 2 }, // Get top 2 selling products
+            { $sort: { totalSales: -1 } }, 
+            { $limit: 2 }, 
             {
                 $project: {
                     _id: 1,
                     totalSales: 1,
                     totalRevenue: 1,
-                    productName: "$_id" // Use product name as the name
+                    productName: "$_id" 
                 }
             }
         ]);
         console.log("topSellingProducts Data:", topSellingProducts);
-        // Top-selling categories aggregation
+
         const topSellingCategories = await Order.aggregate([
             { $match: matchStage },
             { $unwind: "$items" },
             {
                 $lookup: {
-                    from: 'products', // Assuming 'products' collection contains product data
+                    from: 'products', 
                     localField: 'items.product',
                     foreignField: '_id',
                     as: 'productDetails'
                 }
             },
-            { $unwind: "$productDetails" }, // Unwind the product details to access the category
+            { $unwind: "$productDetails" }, 
             {
                 $lookup: {
-                    from: 'categories', // Assuming 'categories' collection contains category data
-                    localField: 'productDetails.categoryId', // This should be the field in productDetails that contains category ID
+                    from: 'categories', 
+                    localField: 'productDetails.categoryId', 
                     foreignField: '_id',
                     as: 'categoryDetails'
                 }
             },
-            { $unwind: "$categoryDetails" }, // Unwind the category details to access the category name
+            { $unwind: "$categoryDetails" },
             {
                 $group: {
-                    _id: "$categoryDetails.name", // Group by category name instead of ID
+                    _id: "$categoryDetails.name", 
                     totalSales: { $sum: "$items.quantity" },
                     totalRevenue: { $sum: { $multiply: ["$items.price", "$items.quantity"] } }
                 }
             },
-            { $sort: { totalSales: -1 } }, // Sort by total sales in descending order
-            { $limit: 2 } // Limit to top 3 categories
+            { $sort: { totalSales: -1 } }, 
+            { $limit: 2 } 
         ]);
         console.log("topSellingCategories Data:", topSellingCategories);
-        // Top-selling brands aggregation
+
         const topSellingBrands = await Order.aggregate([
             { $match: matchStage },
             { $unwind: "$items" },
@@ -307,10 +299,10 @@ const getFilteredSales = async (req, res) => {
             { $limit: 2 }
         ])
         console.log("topSellingBrands Data:", topSellingBrands);
-        // Send response with sales data
+
         res.json({
             filterType,
-            salesData, // Send the aggregated sales data
+            salesData, 
             topSellingProducts,
             topSellingCategories,
             topSellingBrands

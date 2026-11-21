@@ -4,13 +4,13 @@ const Brand = require('../../models/brandModel')
 // brand
 const addBrand = async (req, res) => {
     const { newBrand } = req.body;
-    const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
-    const limit = parseInt(req.query.limit) || 5; // Default limit is 5
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5; 
 
     try {
         const existingBrand = await Brand.findOne({ brand_name: newBrand });
         const totalCategories = await Category.countDocuments();
-        const totalPages = Math.ceil(totalCategories / limit); // Calculate total pages
+        const totalPages = Math.ceil(totalCategories / limit); 
 
         const categories = await Category.find()
             .skip((page - 1) * limit)

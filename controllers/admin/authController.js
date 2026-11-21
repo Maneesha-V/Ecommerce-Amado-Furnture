@@ -67,23 +67,18 @@ const loadLogout = async (req, res) => {
 }
 const exitLogout = async (req, res) => {
     try {
-        // Destroy the session
         req.session.destroy((err) => {
             if (err) {
                 console.error("Error destroying session:", err);
                 return res.status(500).send('Failed to log out. Please try again.');
             }
 
-            // Session successfully destroyed
-            console.log("Session destroyed:", req.session);  // This will likely be `undefined` since the session is destroyed
+            console.log("Session destroyed:", req.session); 
             res.redirect('/admin/login');
         });
     }
     catch (err) {
-        // Log any unexpected errors
         console.error("Error during logout process:", err);
-
-        // Respond with an internal server error
         return res.status(500).send('Something went wrong. Please try again later.');
     }
 }

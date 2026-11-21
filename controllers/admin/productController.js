@@ -23,10 +23,8 @@ const loadProducts = async (req, res) => {
 
         const totalProducts = await Product.countDocuments();
 
-        // Calculate total pages based on limit
         const totalPages = Math.ceil(totalProducts / limit);
 
-        // If page is out of bounds, redirect to the last valid page
         if (page > totalPages && totalProducts > 0) {
             return res.redirect(`?page=${totalPages}`);
         }
@@ -96,7 +94,6 @@ const updateProduct = async (req, res) => {
         if (req.files && req.files.length > 0) {
             const files = req.files
             const newImages = files.map(file => {
-                // const relativePath = file.path.split('public\\')[1];
                 const relativePath = file.path.split(/public[\\/]/)[1];
                 return relativePath;
             });
@@ -145,7 +142,6 @@ const insertProduct = async (req, res) => {
         });
         await product.save()
         res.redirect('/admin/products')
-        // res.json({status : true , message : "Product add success"})
     }
     catch (err) {
         console.error("Error inserting product:", err);
