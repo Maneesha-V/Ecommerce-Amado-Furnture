@@ -5,18 +5,17 @@ const Product = require("../../models/productModel")
 const Wallet = require("../../models/walletModel")
 const Razorpay = require("razorpay");
 const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
-// Initialize Razorpay instance
+
 const razorpayInstance = new Razorpay({
     key_id: RAZORPAY_ID_KEY,
     key_secret: RAZORPAY_SECRET_KEY
 });
-// Handle COD payment and order creation
+
 async function handleCODPayment(cart, userId, selectedAddressId, totalAmount, couponDiscount) {
     try {
         const orderItems = await Promise.all(cart.items.map(async (item) => {
             const product = await Product.findById(item.product._id);
             if (!product) {
-                // throw new Error(`Product with ID ${item.product._id} not found.`);
                 return res.status(404).send(`Product with ID ${item.product._id} not found.`);
             }
 
@@ -26,7 +25,7 @@ async function handleCODPayment(cart, userId, selectedAddressId, totalAmount, co
             return {
                 product: product._id,
                 prodName: product.name,
-                prodImage: prodImage, // Include product image
+                prodImage: prodImage, 
                 quantity: item.quantity,
                 price: product.price,
                 itemStatus: 'Pending',
@@ -58,11 +57,11 @@ async function handleCODPayment(cart, userId, selectedAddressId, totalAmount, co
         return res.status(500).send('Internal Server Error');
     }
 }
-// Handle card payment and order creation using Razorpay
+
 async function processCardPayment(totalAmount, userId, selectedAddressId, cartItems, couponDiscount, coupon) {
     try {
         const options = {
-            amount: totalAmount * 100, // Amount in paise
+            amount: totalAmount * 100,
             currency: 'INR',
             receipt: `order_rcptid_${Date.now()}`,
         };
@@ -111,15 +110,11 @@ async function processWalletPayment(totalAmount, userId, selectedAddressId, cart
         const wallet = await Wallet.findOne({ user: userId });
         if (!wallet) {
             return { error: true, status: 404, message: 'Wallet not found for this user.' };
-            // return res.status(404).send('Wallet not found for this user.');
         }
 
         const walletBalance = wallet.balance;
 
         if (walletBalance < totalAmount) {
-            // throw new Error('Insufficient wallet balance.');
-            // return res.redirect('/order-summary');
-            // return res.status(404).send('Insufficient wallet balance.');
             return { error: true, status: 400, message: 'Insufficient wallet balance.' };
         }
 
@@ -166,13 +161,12 @@ async function processWalletPayment(totalAmount, userId, selectedAddressId, cart
     } catch (error) {
         console.error('Error processing wallet payment:', error);
         return { error: true, status: 500, message: 'Internal Server Error' };
-        // return res.status(500).send('Internal Server Error');
     }
 };
 
 async function generateOrderNumber() {
-    const timestamp = Date.now(); // Use the current timestamp
-    const randomSuffix = Math.floor(Math.random() * 1000); // Generate a random suffix
+    const timestamp = Date.now(); 
+    const randomSuffix = Math.floor(Math.random() * 1000);
     return `#${timestamp}${randomSuffix}`;
 }
 
@@ -183,7 +177,6 @@ async function getOrderItems(cartItems) {
 
             if (!product) {
                 return res.status(404).send(`Product with ID ${item.product._id} not found.`);
-                // throw new Error(`Product with ID ${item.product._id} not found.`);
             }
 
             const prodImage = product.prodImages.length > 0 ? product.prodImages[0] : '';
@@ -192,10 +185,10 @@ async function getOrderItems(cartItems) {
             return {
                 product: product._id,
                 prodName: product.name,
-                prodImage: prodImage, // Include product image
+                prodImage: prodImage, 
                 quantity: item.quantity,
                 price: product.price,
-                itemStatus: 'Pending', // Set item status to pending initially
+                itemStatus: 'Pending', 
                 offerDiscount
             };
         }));
@@ -210,18 +203,16 @@ async function getOrderedAddress(userId, selectedAddressId) {
     return address
 }
 async function generateTransactionId() {
-    // Generate 3 random uppercase letters
+
     const letters = Array(3).fill(null).map(() => {
-        return String.fromCharCode(65 + Math.floor(Math.random() * 26)); // ASCII 65-90 for 'A'-'Z'
+        return String.fromCharCode(65 + Math.floor(Math.random() * 26)); 
     }).join('');
 
-    // Get the current timestamp as a string
-    const timestamp = Date.now().toString(); // Milliseconds since epoch
 
-    // Generate 4 random digits
-    const randomDigits = Math.floor(1000 + Math.random() * 9000); // Generates a 4-digit number
+    const timestamp = Date.now().toString(); 
 
-    // Combine letters, timestamp, and random digits to form the transaction ID
+    const randomDigits = Math.floor(1000 + Math.random() * 9000); 
+
     return `${letters}${timestamp}${randomDigits}`;
 }
 

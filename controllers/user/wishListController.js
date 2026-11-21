@@ -48,7 +48,6 @@ const remProdFromWishList = async (req, res) => {
         console.log("user prod", userId, productId);
         const wishlist = await Wishlist.findOne({ user: userId });
         if (wishlist) {
-            // wishlist.products = wishlist.products.filter(id => id.toString() !== productId);
             wishlist.products = wishlist.products.filter(product => product && product._id && product._id.toString() !== productId);
             await wishlist.save();
         }

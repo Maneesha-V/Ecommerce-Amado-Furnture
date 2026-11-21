@@ -32,7 +32,7 @@ const loadShop = async (req, res) => {
             .limit(ITEMS_PER_PAGE)
             .sort(sort ? { price: sort === 'price-low-high' ? 1 : -1 } : {})
             .exec();
-        // Get active offers for each product
+       
         console.log("product-first", productData);
 
         const productIds = productData.map(product => product._id);
@@ -52,22 +52,19 @@ const loadShop = async (req, res) => {
         console.log("activeOffers", activeOffers);
 
         productData = await Promise.all(productData.map(async product => {
-            console.log("product", product);
-
-            // Find the product-specific offer, if any
+            console.log("product", product);      
             const productOffer = activeOffers.find(offer =>
                 offer.applicableTo === 'Product' && offer.applicableId.equals(product._id)
             );
             console.log("productOffer", productOffer);
             console.log("Product Category ID:", product.categoryId);
-            // Find the category-specific offer, if any
+  
             const categoryOffer = activeOffers.find(offer =>
                 offer.applicableTo === 'Category' && offer.applicableId.equals(product.categoryId)
             );
             console.log("categoryOffer", categoryOffer);
 
             if (productOffer && categoryOffer) {
-                // Compare the discount percentages and apply the offer with the greater discount
                 if (productOffer.discountPercentage > categoryOffer.discountPercentage) {
                     product.offerDiscountedPrice = product.price - (product.price * (productOffer.discountPercentage / 100));
                     product.activeOffer = productOffer._id;
@@ -76,20 +73,16 @@ const loadShop = async (req, res) => {
                     product.activeOffer = categoryOffer._id;
                 }
             } else if (productOffer) {
-                // Apply product-specific offer
                 product.offerDiscountedPrice = product.price - (product.price * (productOffer.discountPercentage / 100));
                 product.activeOffer = productOffer._id;
             } else if (categoryOffer) {
-                // Apply category-specific offer
                 product.offerDiscountedPrice = product.price - (product.price * (categoryOffer.discountPercentage / 100));
                 product.activeOffer = categoryOffer._id;
             } else {
-                // No offer applied
                 product.offerDiscountedPrice = product.price;
                 product.activeOffer = null;
             }
 
-            // Update the product in the database
             await Product.updateOne(
                 { _id: product._id },
                 {
@@ -99,7 +92,7 @@ const loadShop = async (req, res) => {
             );
             console.log("Updated Product:", product);
 
-            return product; // Return the updated product
+            return product;
         }));
 
 
@@ -113,21 +106,17 @@ const loadShop = async (req, res) => {
     }
     catch (err) {
         console.log("Error loading shop", err);
-        // Check for specific error types
         if (err.name === 'MongoError') {
-            // Handle MongoDB specific errors
             return res.status(500).render('500', {
                 status: 500,
                 message: 'A database error occurred. Please try again later.'
             });
         } else if (err instanceof TypeError) {
-            // Handle TypeErrors
             return res.status(400).render('500', {
                 status: 400,
                 message: 'There was an issue with the request parameters.'
             });
         } else {
-            // General error handling
             return res.status(500).render('500', {
                 status: 500,
                 message: 'An error occurred while loading the shop. Please try again later.'
@@ -199,8 +188,6 @@ const getSortProduct = async (req, res) => {
             .limit(ITEMS_PER_PAGE)
             .sort(sortOption)
             .exec();
-        // const products = await Product.find(query).sort(sortOption).exec();
-        // console.log("sort",products);
 
         res.render('shop', {
             products, search, sort, categories, brands, category, brand, currentPage: parseInt(page),
@@ -209,7 +196,6 @@ const getSortProduct = async (req, res) => {
     }
     catch (err) {
         console.error("Error fetching sorted products:", err);
-        // Render an error page
         res.status(500).render('500', {
             status: 500,
             message: 'An error occurred while fetching the products. Please try again later.'

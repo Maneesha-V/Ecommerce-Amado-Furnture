@@ -18,7 +18,7 @@ const loadOrder = async (req, res) => {
             .exec();
         orders.forEach(order => {
             console.log("Order ID:", order._id);
-            console.log("Order Items:", order.items);  // Logs items for each order
+            console.log("Order Items:", order.items);  
         });
         console.log("order", orders);
         res.render('partials/orders', { orders })
@@ -82,19 +82,17 @@ const removeItemFromPlacedOrder = async (req, res) => {
             });
         }
 
-        // Update the item's status to 'Canceled'
         item.itemStatus = 'Canceled';
         item.reason = cancellationReason;
-        // Check if all items are canceled to mark the whole order as 'Canceled' later
+    
         const allItemsCanceled = order.items.every(item => item.itemStatus === 'Canceled');
 
-        // Process refund before modifying order status
         if (order.status === 'Paid') {
             let wallet = await Wallet.findOne({ userId });
-            // console.log("wallet", wallet);
+
             const transactionId = await generateTransactionId();
             if (!wallet) {
-                // Create a new wallet if one doesn't exist
+
                 wallet = new Wallet({
                     userId,
                     balance: item.price,
@@ -111,7 +109,7 @@ const removeItemFromPlacedOrder = async (req, res) => {
                 console.log("New wallet created and refund added.");
 
             } else {
-                // Add the refund to the existing wallet balance
+    
                 wallet.balance += item.price;
                 wallet.transactions.push({
                     transactionId,
@@ -125,25 +123,20 @@ const removeItemFromPlacedOrder = async (req, res) => {
                 console.log("Refund added to existing wallet.");
             }
 
-            // Mark the item as refunded to avoid double refunding
             item.isRefunded = true;
         }
 
-        // Now update the order status
         if (allItemsCanceled) {
-            order.status = 'Canceled'; // If all items are canceled, cancel the entire order
-            order.canceledAt = new Date(); // Set the cancellation timestamp
+            order.status = 'Canceled'; 
+            order.canceledAt = new Date();
             console.log("Order canceled at", order.canceledAt);
         } else {
-            // If there are multiple items, subtract the canceled item's price from total
             order.totalAmount -= item.price;
-            order.statusUpdatedAt = new Date(); // Track when the status was updated
+            order.statusUpdatedAt = new Date();
         }
 
-        // Save the order with updated status and total
         await order.save();
 
-        // Send success response with wallet update if applicable
         return res.json({
             success: true,
             message: `Item ${item.prodName} canceled successfully.`,
@@ -179,7 +172,6 @@ const returnItemFromPlacedOrder = async (req, res) => {
             return res.status(404).json({ success: false, message: "Item not found in the order" });
         }
 
-        // Check if the item has already been refunded
         if (item.isRefunded) {
             return res.status(400).json({
                 success: false,
@@ -187,17 +179,11 @@ const returnItemFromPlacedOrder = async (req, res) => {
             });
         }
 
-        // Check if the item is eligible for return
         if (item.itemStatus !== 'Delivered') {
             return res.status(400).json({ success: false, message: "Item is not eligible for return" });
         }
 
-        // Check if the return has been approved
-        // if (item.returnStatus !== 'Approved') {
-        //     return res.status(400).json({ success: false, message: "Return request is not approved yet." });
-        // }
-        // Update the item status and reason for return
-        // item.itemStatus = 'Delivered'
+
         item.returnStatus = 'Pending';
         item.reason = returnedReason;
         await order.save();
@@ -220,21 +206,19 @@ const loadWallet = async (req, res) => {
         const userId = req.session.user_id;
         console.log("user", userId);
 
-        // Fetch wallet for the given user
         const wallet = await Wallet.findOne({ userId: userId });
         console.log("wallet", wallet);
 
-        // Check if wallet exists for the user
         if (!wallet) {
             return res.render('partials/wallet', {
                 user: {
-                    walletBalance: 0, // Default balance
-                    walletTransactions: [] // No transactions
+                    walletBalance: 0, 
+                    walletTransactions: [] 
                 }
             });
         }
         const walletBalance = wallet.balance
-        // Filter out only the transactions of type 'Canceled'
+   
         const canceledTransactions = wallet.transactions.filter(item => item.type === 'Canceled');
         for (const transaction of canceledTransactions) {
             const order = await Order.findById(transaction.orderId)
@@ -289,23 +273,17 @@ const updateChangePassword = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Check if the user logged in via Google
         if (user.googleId) {
             if (newPassword !== confirmPassword) {
-                // return res.render('partials/change-password', {
-                //     user,
-                //     message: "New password and confirm password do not match",
-                // });
                 return res.status(400).json({ message: "New password and confirm password do not match" });
             }
 
             const hashedPassword = await bcrypt.hash(newPassword, 10);
-            user.password = hashedPassword; // Set the new password
+            user.password = hashedPassword; 
             await user.save();
 
             return res.status(200).json({ message: "Password set successfully" });
         } else {
-            // For non-Google users, proceed with current password verification
             const isMatch = await bcrypt.compare(currentPassword, user.password);
             if (!isMatch) {
                 return res.status(400).json({ message: "Incorrect current password" });
@@ -327,18 +305,15 @@ const updateChangePassword = async (req, res) => {
     }
 };
 async function generateTransactionId() {
-    // Generate 3 random uppercase letters
     const letters = Array(3).fill(null).map(() => {
-        return String.fromCharCode(65 + Math.floor(Math.random() * 26)); // ASCII 65-90 for 'A'-'Z'
+        return String.fromCharCode(65 + Math.floor(Math.random() * 26)); 
     }).join('');
 
-    // Get the current timestamp as a string
-    const timestamp = Date.now().toString(); // Milliseconds since epoch
 
-    // Generate 4 random digits
-    const randomDigits = Math.floor(1000 + Math.random() * 9000); // Generates a 4-digit number
+    const timestamp = Date.now().toString(); 
 
-    // Combine letters, timestamp, and random digits to form the transaction ID
+    const randomDigits = Math.floor(1000 + Math.random() * 9000); 
+
     return `${letters}${timestamp}${randomDigits}`;
 }
 
@@ -358,16 +333,13 @@ const downloadInvoice = async (req, res) => {
         const shippingAddress = order.user.addresses.find(address => address._id.equals(addressId));
         console.log("shippingAddress", shippingAddress);
 
-        // Correct path to your invoice HTML template
         const invoiceTemplatePath = path.join(__dirname, '../../views/users/invoice-template.ejs');
 
-        // Render the HTML using EJS
         const htmlContent = await ejs.renderFile(invoiceTemplatePath, {
-            order: order,  // Pass the order data to the template
+            order: order,  
             shippingAddress: shippingAddress
         });
 
-        // const html = await ejs.renderFile(path.join(__dirname, '../../views/users/invoice-template.ejs'), { order });
         const options = {
             format: 'A4',
             border: {
@@ -383,8 +355,7 @@ const downloadInvoice = async (req, res) => {
                 console.error('Error while generating PDF:', err);
                 res.redirect("/pageNotfound")
             }
-            // res.setHeader('Content-Type', 'application/pdf');
-            // res.setHeader('Content-Disposition', attachment; filename=Invoice_${order.orderId}.pdf);
+
             res.setHeader('Content-disposition', `attachment; filename="invoice-${orderId}.pdf"`);
             res.setHeader('Content-type', 'application/pdf');
             stream.pipe(res);
@@ -396,7 +367,6 @@ const downloadInvoice = async (req, res) => {
     }
 };
 
-// Initialize Razorpay instance
 const razorpayInstance = new Razorpay({
     key_id: RAZORPAY_ID_KEY,
     key_secret: RAZORPAY_SECRET_KEY
@@ -408,10 +378,10 @@ const orderRepayment = async (req, res) => {
         const userId = req.session.user_id;
         console.log("userId", userId);
 
-        const orderId = req.params.orderId; // Extract orderId from route params
-        const { selectedAddressId, totalAmount, paymentMethod } = req.body; // Extract data from request body
+        const orderId = req.params.orderId; 
+        const { selectedAddressId, totalAmount, paymentMethod } = req.body; 
         console.log("paymentMethod, selectedAddressId, totalAmount:", paymentMethod, selectedAddressId, totalAmount);
-        // Validate and find the order by orderId
+ 
         const order = await Order.findById(orderId);
         console.log("order", order);
 
@@ -425,27 +395,27 @@ const orderRepayment = async (req, res) => {
         // console.log("user", user);
         const selectedAddress = user.addresses.id(selectedAddressId);
         console.log("addres", selectedAddress);
-        // Proceed to create a Razorpay order
+
         const options = {
-            amount: totalAmount * 100, // Convert to paise
+            amount: totalAmount * 100, 
             currency: 'INR',
-            receipt: `receipt#${orderId}`, // Optional: Unique receipt ID
-            payment_capture: 1, // Auto capture payment
+            receipt: `receipt#${orderId}`, 
+            payment_capture: 1, 
         };
 
         const razorpayOrder = await razorpayInstance.orders.create(options);
         console.log('Razorpay Order:', razorpayOrder);
-        order.razorpayOrderId = razorpayOrder.id; // Save Razorpay order ID in your order model
-        order.paymentMethod = paymentMethod; // Save the payment method used
+        order.razorpayOrderId = razorpayOrder.id; 
+        order.paymentMethod = paymentMethod;
         await order.save();
         console.log("ordernew", order);
 
         res.json({
             razorpayOrderId: razorpayOrder.id,
-            razorpayKeyId: process.env.RAZORPAY_KEY_ID, // Ensure you have your Razorpay key ID in the environment variables
+            razorpayKeyId: process.env.RAZORPAY_KEY_ID, 
             address: {
                 name: selectedAddressId.name,
-                email: selectedAddressId.email || 'example@example.com' // Use email from selected address if available
+                email: selectedAddressId.email || 'example@example.com' 
             },
             orderId: order._id
         });

@@ -23,13 +23,12 @@ const loadCart = async (req, res) => {
 
         const { total, qty, totalDiscountPrice } = cartData.reduce((acc, item) => {
             if (item.product) {
-                // Use offerDiscountedPrice if available, otherwise use price
+
                 const priceToUse = item.product.price;
                 const subtotal = priceToUse * item.quantity;
                 acc.total += subtotal;
                 acc.qty += item.quantity;
 
-                // Add discount price if an active offer is not null
                 if (item.product.activeOffer && item.product.offerDiscountedPrice) {
                     const discountSubtotal = item.product.offerDiscountedPrice * item.quantity;
                     acc.totalDiscountPrice += subtotal - discountSubtotal;
@@ -75,31 +74,7 @@ const addProductToCart = async (req, res) => {
             cart = new Cart({ user: userId, items: [] })
         }
         const cartItem = cart.items.find(item => item.product.toString() == prodId)
-        // if(cartItem){
-        //     const newQty = cartItem.quantity + quantity
-        //     if(newQty>MAX_QTY_PER_PERSON){
-        //         cartItem.quantity = Math.min(MAX_QTY_PER_PERSON,product.stock)
-        //         res.send(`Maximum quantity for this product is ${MAX_QTY_PER_PERSON}.`);
-        //     }
-        //     else if(newQty>product.stock){
-        //         cartItem.quantity = product.stock
-        //         res.send(`Requested quantity exceeds available stock.`);
-        //     }
-        //     else{
-        //         cartItem.quantity = newQty
-        //     }           
-        // }else{
-        //     if(quantity>MAX_QTY_PER_PERSON){
-        //         const qtyToAdd = Math.min(MAX_QTY_PER_PERSON,product.stock)
-        //         cart.items.push({product:prodId,quantity:qtyToAdd})
-        //     }
-        //     else if(quantity>product.stock){
-        //         cart.items.push({product:prodId,quantity:product.stock})
-        //     }
-        //     else{
-        //         cart.items.push({product:prodId,quantity:quantity})
-        //     }          
-        // }
+  
         if (cartItem) {
             const newQty = cartItem.quantity + quantity;
             cartItem.quantity = Math.min(newQty, Math.min(product.stock, MAX_QTY_PER_PERSON));
@@ -146,7 +121,6 @@ const updateCartQuantity = async (req, res) => {
         const { productId, quantity } = req.body;
         console.log(userId, productId, quantity);
 
-        // Find the user and populate cart items
         const user = await User.findById(userId).populate({
             path: 'cart',
             populate: {
@@ -154,37 +128,33 @@ const updateCartQuantity = async (req, res) => {
             }
         });
 
-        // Find the cart item by productId
+
         const cartItem = user.cart.items.find(item => item.product._id.toString() === productId);
         console.log(cartItem);
 
         if (cartItem) {
-            // Update the quantity
+  
             cartItem.quantity = parseInt(quantity);
             await user.cart.save();
 
-            // Recalculate total, quantity, and totalDiscountPrice
             let total = 0;
             let qty = 0;
             let totalDiscountPrice = 0;
 
             user.cart.items.forEach(item => {
-                const priceToUse = item.product.price;  // Use discounted price if available
+                const priceToUse = item.product.price;  
                 const subtotal = priceToUse * item.quantity;
                 total += subtotal;
                 qty += item.quantity;
 
-                // If an active offer exists, calculate the discount
                 if (item.product.activeOffer && item.product.offerDiscountedPrice) {
                     const discountSubtotal = item.product.offerDiscountedPrice * item.quantity;
                     totalDiscountPrice += subtotal - discountSubtotal;
                 }
             });
 
-            // Calculate total amount after discount if applicable
             const totAmtAftDisc = totalDiscountPrice > 0 ? total - totalDiscountPrice : total;
 
-            // Update session data
             req.session.cartTotal = total;
             req.session.cartQty = qty;
             req.session.totalDiscount = totalDiscountPrice;

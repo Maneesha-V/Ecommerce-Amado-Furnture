@@ -23,9 +23,9 @@ const { isLogin, isLogout, checkUserBlocked } = require("../middleware/userAuth"
 const user_route = express()
 const upload = multer()
 user_route.use(session({
-    secret: process.env.SESSION_SECRET, // Replace with your actual secret key
-    resave: false, // Prevents the session from being saved back to the store if it wasn't modified during the request
-    saveUninitialized: false, // Prevents uninitialized sessions from being saved to the store
+    secret: process.env.SESSION_SECRET,
+    resave: false, 
+    saveUninitialized: false, 
     cookie: { secure: false }
 
 }))

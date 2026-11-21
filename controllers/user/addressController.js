@@ -134,11 +134,11 @@ const getEditAddress = async (req, res) => {
 }
 
 const updateEditAddress = async (req, res) => {
-    const { defAddressId } = req.params; // Extract defAddressId from URL parameters
-    const { name, addressLine1, addressLine2, mobile, city, district, state, zip } = req.body; // Extract form data
+    const { defAddressId } = req.params; 
+    const { name, addressLine1, addressLine2, mobile, city, district, state, zip } = req.body; 
 
     try {
-        // Find the user by their ID
+
         const user = await User.findById({ _id: req.session.user_id });
         console.log("user", user);
 
@@ -146,7 +146,6 @@ const updateEditAddress = async (req, res) => {
             return res.status(404).json({ success: false, message: "User not found" });
         }
 
-        // Update the specific address in the user's addresses array
         const updateAddress = await User.updateOne(
             { _id: req.session.user_id, 'addresses._id': defAddressId },
             {
@@ -163,13 +162,12 @@ const updateEditAddress = async (req, res) => {
             }
         );
 
-        // Check if the update was successful
         if (updateAddress.modifiedCount === 0) {
             return res.status(400).json({ success: true, message: "No address was updated." });
         }
 
         console.log("Updated address", updateAddress);
-        // Respond with success message
+
         return res.status(200).json({ success: true, message: "Address updated successfully." });
     } catch (err) {
         console.error("Error updating address:", err);

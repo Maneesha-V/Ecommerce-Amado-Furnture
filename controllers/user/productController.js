@@ -4,17 +4,17 @@ const Brand = require("../../models/brandModel")
 const Cart = require("../../models/cartModel")
 
 const loadProductDetails = async (req, res) => {
-    console.log("Request URL:", req.url); // Logs the full request URL
-    console.log("Query parameters:", req.query); // Logs query parameters
+    console.log("Request URL:", req.url);
+    console.log("Query parameters:", req.query); 
     try {
         const productId = req.params.id;
         const from = req.session.previousPage || 'home';
         const product = await Product.findById(productId)
             .populate('brand')
             .populate('categoryId')
-            .populate('activeOffer')  // Populate the active offer if needed
+            .populate('activeOffer')  
             .exec();
-        // Check if product is null
+       
         if (!product) {
             console.log("Product not found");
             return res.status(404).render('404', { status: 404, message: 'Product not found', redirectUrl: '/home' });

@@ -65,8 +65,8 @@ const successGoogleLogin = async (req, res) => {
         res.redirect('/home');
     } catch (err) {
         console.error("Error during Google login:", err);
-        // Handle different types of errors
-        if (err.code === 11000) { // MongoDB duplicate key error code
+        
+        if (err.code === 11000) { 
             res.status(400).render('404', { status: 404, message: 'This email is already registered. Please log in.' });
         } else {
             res.status(500).render('500', { status: 500, message: 'An error occurred during Google login. Please try again later.' });
@@ -298,7 +298,7 @@ const getResetPassword = async (req, res) => {
                 userId
             });
         }
-        // Handle any other potential errors
+
         res.status(500).render('500', {
             status: 500,
             message: "Something went wrong. Please try again later."
@@ -361,62 +361,27 @@ const loadOtpSignUP = async (req, res) => {
         });
     }
 }
-// const verifyOTP = async (req, res) => {
-//     try {
-//         const { otp } = req.body
-//         if (!req.session.otp || !req.session.userData) {
-//             return res.status(400).json({ success: false, message: "Session expired or invalid session data." });
-//         }
-//         console.log("OTP received:", otp, "Session OTP:", req.session.otp);
-//         if (req.session.otp === otp) {
-//             const user = req.session.userData
-//             const secPassword = await securePassword(user.password)
-//             const userData = new User({
-//                 firstname: user.firstname,
-//                 lastname: user.lastname,
-//                 mobile: user.mobile,
-//                 email: user.email,
-//                 password: secPassword,
-//                 is_admin: false
-//             })
-//             await userData.save()
-//             req.session.user_id = userData._id
-//             res.json({ success: true, redirectUrl: '/home' })
-//         } else {
-//             res.status(400).json({ success: false, message: "Invalid OTP please try again" })
-//         }
-//     }
-//     catch (err) {
-//         console.error("Error during OTP verification:", err);
-//         res.status(500).json({ success: false, message: "An error occurred while verifying the OTP. Please try again later." });
-//     }
-// }
+
 const verifyOTP = async (req, res) => {
     try {
         const { otp } = req.body;
 
-        // Check if the session is valid
         if (!req.session.otp || !req.session.userData) {
             return res.status(400).json({ success: false, message: "Session expired or invalid session data." });
         }
 
         console.log("OTP received:", otp, "Session OTP:", req.session.otp);
         
-        // Validate the OTP
         if (req.session.otp === otp) {
             const user = req.session.userData;
 
-            // Check for an existing user by email
             const existingUser = await User.findOne({ email: user.email });
             if (existingUser) {
-                // Handle case where the user already exists
                 return res.status(400).json({ success: false, message: "User already exists. Please log in." });
             }
 
-            // Hash the password securely
             const secPassword = await securePassword(user.password);
             
-            // Create a new user instance
             const userData = new User({
                 firstname: user.firstname,
                 lastname: user.lastname,
@@ -427,12 +392,10 @@ const verifyOTP = async (req, res) => {
                 googleId: user.googleId || undefined , 
             });
 
-            // Save the new user to the database
             await userData.save();
-            req.session.user_id = userData._id; // Store user ID in session
+            req.session.user_id = userData._id;
             res.json({ success: true, redirectUrl: '/home' });
         } else {
-            // Invalid OTP
             res.status(400).json({ success: false, message: "Invalid OTP. Please try again." });
         }
     } catch (err) {
@@ -480,9 +443,9 @@ const exitLogout = async (req, res) => {
                 console.log("Error destroying session:", err);
                 return res.status(500).render('500', { message: "Failed to log out." });
             }
-            // Optionally, clear the session ID in the cookie (if applicable)
-            res.clearCookie('connect.sid'); // Adjust the cookie name if it's different
-            res.redirect('/'); // Redirect to the home page or login page
+
+            res.clearCookie('connect.sid'); 
+            res.redirect('/'); 
         });
     } catch (err) {
         console.log(err);

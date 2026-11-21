@@ -72,7 +72,7 @@ const loadOrderSummary = async (req, res) => {
 
         const wallet = await Wallet.findOne({ userId });
 
-        const newBalance = wallet ? wallet.balance : 0; // Default to 0 if wallet doesn't exist
+        const newBalance = wallet ? wallet.balance : 0; 
 
         res.render('order-summary', {
             selectedAddress,
@@ -133,7 +133,7 @@ const selectAddressForOrder = async (req, res) => {
             }
 
             const regularPrice = item.product.price;
-            const discountedPrice = item.product.offerDiscountedPrice || regularPrice; // If no discount, use regular price
+            const discountedPrice = item.product.offerDiscountedPrice || regularPrice; 
 
             const discount = regularPrice - discountedPrice;
 
@@ -228,7 +228,7 @@ const applyCoupon = async (req, res) => {
         req.session.couponDiscount = discount
         console.log("discount", discount);
         console.log("newTotal", newTotal);
-        // Store the original total before applying any discount
+
         if (!req.session.originalTotal) {
             req.session.originalTotal = originalTotal;
         }
@@ -263,7 +263,6 @@ const removeCoupon = async (req, res) => {
         if (!originalTotal) {
             return res.json({ success: false, message: 'Original total not found, cannot remove coupon.' });
         }
-        // Find the coupon
         const coupon = await Coupon.findOne({ code: couponCode });
         console.log('Found coupon:', coupon);
         console.log('Coupon usedBy:', coupon.usedBy);
@@ -311,7 +310,6 @@ const applyRepayCoupon = async (req, res) => {
             return res.json({ success: false, message: 'You have already used this coupon.' });
         }
 
-        // Check if the order total meets the minimum amount requirement for the coupon
         if (originalTotal < coupon.minAmount) {
             return res.json({ success: false, message: `You need to purchase items above Rs ${coupon.minAmount} to use this coupon.` });
         }
@@ -323,7 +321,6 @@ const applyRepayCoupon = async (req, res) => {
             discount = coupon.discountValue;
         }
 
-        // Cap discount if it exceeds maxAmount
         if (coupon.maxAmount && discount > coupon.maxAmount) {
             discount = coupon.maxAmount;
         }
@@ -335,7 +332,6 @@ const applyRepayCoupon = async (req, res) => {
             { totalAmount: newTotal, couponCode: couponCode, couponDiscount: discount }
         );
 
-        // Update the coupon to mark it as used by the user
         await Coupon.updateOne(
             { _id: coupon._id },
             { $addToSet: { usedBy: mongoose.Types.ObjectId(userId) } }
@@ -439,7 +435,6 @@ const verifyAndAddMoneyToWallet = async (req, res) => {
 
         await wallet.save();
 
-        // Respond with success
         res.json({ success: true, message: `₹${amount} added to your wallet.`, newBalance: wallet.balance });
     } catch (error) {
         console.error('Error verifying payment or updating wallet:', error);
@@ -508,7 +503,7 @@ const placeOrder = async (req, res) => {
             order = orderData;
             console.log("cardorder", order);
             // req.session.orderId = orderId;
-            req.session.order = orderData; // Storing the orderData in session
+            req.session.order = orderData; 
 
             return res.json({
                 razorpayOrderId: razorpayOrder.id,
@@ -568,7 +563,7 @@ const cardPayment = async (req, res) => {
                 console.log('Order not found for:', razorpay_order_id);
                 return res.json({ success: false, message: 'Order not found' });
             }
-            // Proceed with updating order details and stock
+ 
             order.razorpay_payment_id = razorpay_payment_id;
             order.status = 'Paid';
             await order.save();
@@ -591,64 +586,6 @@ const cardPayment = async (req, res) => {
     }
 }
 
-// async function handleCODPayment(cart, userId, selectedAddressId, totalAmount) {
-//     try {
-//         // Prepare order items with product details
-//         const orderItems = await Promise.all(cart.items.map(async (item) => {
-//             const product = await Product.findById(item.product._id);
-
-//             if (!product) {
-//                 throw new Error(`Product with ID ${item.product._id} not found.`);
-//             }
-
-//             // Choose the first image if there are multiple
-//             const prodImage = product.prodImages.length > 0 ? product.prodImages[0] : '';
-
-//             return {
-//                 product: product._id,
-//                 prodName: product.name,
-//                 prodImage: prodImage, // Include product image
-//                 quantity: item.quantity,
-//                 price: product.price,
-//                 itemStatus: 'Pending'
-//             };
-//         }));
-
-//         console.log("orderItems", orderItems);
-
-//         // Generate unique order number
-//         const orderNumber = await generateOrderNumber();
-//         const order = new Order({
-//             orderNumber: orderNumber,
-//             user: userId,
-//             items: orderItems,
-//             totalAmount: totalAmount,
-//             address: selectedAddressId,
-//             paymentMethod: 'COD',
-//             status: 'Pending'
-//         });
-
-//         console.log("order", order);
-
-//         // Save the order
-//         await order.save();
-//         // Clear the cart after order is placed
-//         // await Cart.findByIdAndUpdate(cart._id, { items: [] });
-
-//         // Fetch the address of the user
-//         const orderedAddress = await User.findById(userId).populate('addresses');
-//         const address = orderedAddress.addresses.id(selectedAddressId);
-
-//         console.log("popOrder", address);
-
-//         return { address, order };
-
-//     } catch (error) {
-//         console.error("Error processing COD payment:", error);
-//         throw error; // Propagate error to be handled by the caller
-//     }
-// }
-
 async function updateProductStock(items) {
     for (const item of items) {
         await Product.findByIdAndUpdate(
@@ -661,31 +598,30 @@ async function updateProductStock(items) {
 const loadOrderConfirmation = async (req, res) => {
     console.log(req.query);
     try {
-        const orderId = req.query.orderId; // Assuming orderId is passed in the query params after payment
+        const orderId = req.query.orderId; 
         if (!orderId) {
             return res.status(400).send('Order ID is required');
         }
-        const order = await Order.findById(orderId); // Retrieve the order from the database
+        const order = await Order.findById(orderId);
         console.log('orderload', order);
 
         if (!order) {
             return res.status(404).render('error', { message: 'Order not found' });
         }
 
-        // Fetch the user to get the address
-        const user = await User.findById(order.user); // Assuming order has a userId field
+        const user = await User.findById(order.user); 
         if (!user) {
             return res.status(404).send('User not found');
         }
 
-        // Find the specific address from the address array
-        const address = user.addresses.id(order.address); // Use Mongoose's `id` method to find the address
+   
+        const address = user.addresses.id(order.address); 
         console.log("address", address);
 
         if (!address) {
             return res.status(404).send('Address not found');
         }
-        // res.render('order-confirmation', { order,address,razorpayKeyId: RAZORPAY_ID_KEY});
+
         res.render('order-confirmation', {
             order,
             address,
@@ -698,18 +634,16 @@ const loadOrderConfirmation = async (req, res) => {
     }
 }
 async function generateTransactionId() {
-    // Generate 3 random uppercase letters
+
     const letters = Array(3).fill(null).map(() => {
-        return String.fromCharCode(65 + Math.floor(Math.random() * 26)); // ASCII 65-90 for 'A'-'Z'
+        return String.fromCharCode(65 + Math.floor(Math.random() * 26)); 
     }).join('');
 
-    // Get the current timestamp as a string
-    const timestamp = Date.now().toString(); // Milliseconds since epoch
 
-    // Generate 4 random digits
-    const randomDigits = Math.floor(1000 + Math.random() * 9000); // Generates a 4-digit number
+    const timestamp = Date.now().toString(); 
 
-    // Combine letters, timestamp, and random digits to form the transaction ID
+    const randomDigits = Math.floor(1000 + Math.random() * 9000); 
+
     return `${letters}${timestamp}${randomDigits}`;
 }
 module.exports = {
