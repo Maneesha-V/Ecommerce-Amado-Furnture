@@ -17,7 +17,11 @@
     <!-- Core Style CSS -->
     <link rel="stylesheet" href="/css/core-style.css">
     <!-- <link rel="stylesheet" href="/userStyle.css"> -->
-    <link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet">
+    <!-- <link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet"> -->
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css"
+/>
     <style>
         #product-image {
             max-width: 100%;
@@ -151,7 +155,7 @@
                                     <% product.prodImages.forEach((image, index)=> { %>
                                         <li class="<%= index === 0 ? 'active' : '' %>"
                                             data-target="#product_details_slider" data-slide-to="<%= index %>"
-                                            style="background-image: urlurl('/<%= image.replace(/\\/g, '/') %>');">
+                                            style="background-image: url('/<%= image.replace(/\\/g, '/') %>');">
                                         </li>
                                     <% }); %>
                                 </ol>
@@ -265,6 +269,53 @@
             </div>
         </div>
         <!-- Product Details Area End -->
+         <!-- Related Products Section Start -->
+          
+<% if (relatedProducts.length > 0) { %>
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-12">
+                <div class="section-heading text-center">
+                    <h2>Related Products</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row <%= relatedProducts.length < 4 ? 'justify-content-center' : '' %>">
+
+            <% relatedProducts.forEach(product => { %>
+                <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+
+                    <a href="/product-details/<%= product._id %>">
+                        <div class="single-product-wrapper">
+
+                            <div class="product-img">
+                                <img
+                                    src="/<%= product.prodImages[0].replace(/\\/g, '/') %>"
+                                    alt="<%= product.name %>">
+                            </div>
+
+                            <div class="product-description">
+                                <h6><%= product.name %></h6>
+
+                                <p class="product-price">
+                                    ₹<%= product.price %>
+                                </p>
+                            </div>
+
+                        </div>
+                    </a>
+
+                </div>
+            <% }); %>
+
+        </div>
+
+    </div>
+<% } %>
+
+    <!-- Related Products Section End -->
     </div>
 
 
@@ -339,7 +390,8 @@
     <script src="/js/plugins.js"></script>
     <!-- Active js -->
     <script src="/js/active.js"></script>
-    <script src="https://unpkg.com/cropperjs/dist/cropper.js"></script>
+    <!-- <script src="https://unpkg.com/cropperjs/dist/cropper.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
     <script>
         function validateStock() {
             const qtyInput = document.getElementById('qty');
@@ -387,6 +439,9 @@
 
             // Initialize Cropper.js on the first image
             function initializeCropper(imageElement) {
+                        if (!imageElement || !imageElement.complete || !imageElement.naturalWidth) {
+            return;
+        }
                 if (cropper) {
                     cropper.destroy(); // Destroy the previous cropper instance
                 }
@@ -404,12 +459,22 @@
 
             // Initialize cropper on the default (first) image
             const firstImage = document.querySelector('.carousel-item.active img');
+             if (firstImage) {
+        if (firstImage.complete) {
             initializeCropper(firstImage);
+        } else {
+            firstImage.addEventListener('load', function () {
+                initializeCropper(firstImage);
+            });
+        }
+    }
 
             // Update cropper when the carousel slides to a new image
             $('#product_details_slider').on('slid.bs.carousel', function () {
                 const activeImage = document.querySelector('.carousel-item.active img');
-                initializeCropper(activeImage);
+                        if (activeImage) {
+            initializeCropper(activeImage);
+        }
             });
         });
     </script>

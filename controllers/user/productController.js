@@ -20,7 +20,10 @@ const loadProductDetails = async (req, res) => {
             return res.status(404).render('404', { status: 404, message: 'Product not found', redirectUrl: '/home' });
         }
         console.log("pr", product);
-        res.render('product-details', { product, from });
+        const relatedProducts = await Product.find({categoryId: product.categoryId._id})
+        console.log("relatedProducts",relatedProducts);
+        
+        res.render('product-details', { product, from, relatedProducts });
     }
     catch (err) {
         console.log("Error fetching product details", err);
